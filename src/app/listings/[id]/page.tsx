@@ -122,10 +122,37 @@ export default function PropertyDetailPage() {
   const monthlyInsurance = isRent ? 25 : Math.round((property.price * 0.005) / 12);
   const totalMonthly = monthlyPI + monthlyTax + monthlyInsurance + property.specs.hoaMonthly;
 
-  const handleInquirySubmit = (e: React.FormEvent) => {
+  const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inquiryName || !inquiryEmail) return;
+    if (!inquiryName.trim() || !inquiryEmail.trim()) return;
+
+    try {
+      // Record inquiry in server database
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId: property.id,
+          propertyTitle: property.title,
+          propertyAddress: `${property.address.street}, ${property.address.city}, ${property.address.state}`,
+          propertyPrice: property.price,
+          userName: inquiryName.trim(),
+          userEmail: inquiryEmail.trim(),
+          message: inquiryMessage.trim() || `I am interested in scheduling a showing for ${property.title}.`,
+        }),
+      });
+    } catch (err) {
+      console.warn('Inquiry local logging error:', err);
+    }
+
     setInquirySent(true);
+
+    // Also trigger email client pre-filled to nookkfinder@gmail.com
+    const subject = encodeURIComponent(`[Nookfinder Inquiry] ${property.title} (${property.id})`);
+    const body = encodeURIComponent(
+      `Hello Nookfinder Staff,\n\nI would like to inquire about the following verified property:\n\nProperty: ${property.title}\nAddress: ${property.address.street}, ${property.address.city}, ${property.address.state}\nPrice: $${property.price.toLocaleString()}\n\nMy Contact Information:\nName: ${inquiryName.trim()}\nEmail: ${inquiryEmail.trim()}\n\nMessage:\n${inquiryMessage.trim() || 'I would like to schedule a showing.'}\n\nThank you!`
+    );
+    window.open(`mailto:nookkfinder@gmail.com?subject=${subject}&body=${body}`, '_blank');
   };
 
   const nextPhoto = () => {
@@ -622,12 +649,44 @@ export default function PropertyDetailPage() {
                   </span>
                 </form>
               ) : (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-2">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center space-y-3">
                   <CheckCircle2 className="w-8 h-8 text-emerald-700 mx-auto" />
-                  <h4 className="text-xs font-bold text-emerald-900">Request Dispatched</h4>
-                  <p className="text-[11px] text-emerald-800">
-                    {property.agent.name} has received your inquiry and will respond to {inquiryEmail} within 2 hours.
-                  </p>
+                  <div>
+                    <h4 className="text-xs font-bold text-emerald-900">Inquiry Dispatched to Staff</h4>
+                    <p className="text-[11px] text-emerald-800 mt-1">
+                      Your showing request for <span className="font-semibold">{property.title}</span> has been routed to verified staff at <span className="font-semibold">nookkfinder@gmail.com</span>.
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-emerald-200/60 flex flex-col gap-2 text-xs">
+                    <a
+                      href={`mailto:nookkfinder@gmail.com?subject=${encodeURIComponent(`[Showing Request] ${property.title} (${property.id})`)}&body=${encodeURIComponent(`Name: ${inquiryName}\nEmail: ${inquiryEmail}\nProperty: ${property.title}\n\nMessage:\n${inquiryMessage || 'I would like to schedule a showing.'}`)}`}
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Open Pre-Filled Email</span>
+                    </a>
+                    <a
+                      href="https://t.me/nook_finder"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded bg-sky-600 text-white font-semibold hover:bg-sky-500 transition-colors"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Follow Up on Telegram (@nook_finder)</span>
+                    </a>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInquirySent(false);
+                      setInquiryMessage('');
+                    }}
+                    className="text-[11px] text-emerald-700 hover:text-emerald-900 font-medium underline pt-1 block mx-auto cursor-pointer"
+                  >
+                    Send another question or tour date
+                  </button>
                 </div>
               )}
             </div>

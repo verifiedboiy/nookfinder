@@ -36,6 +36,9 @@ import {
   FileText,
   UserCheck,
   Eye,
+  Mail,
+  MessageSquare,
+  Send,
 } from 'lucide-react';
 
 const STANDARD_AMENITIES = [
@@ -58,8 +61,9 @@ const STANDARD_AMENITIES = [
 function ControlPanelContent() {
   const searchParams = useSearchParams();
   const [properties, setProperties] = useState<Property[]>([]);
-  // Tabs: 'sale' (For Sale Inventory), 'rent' (For Rent Inventory), 'editor' (Create / Edit Form)
-  const [activeTab, setActiveTab] = useState<'sale' | 'rent' | 'editor'>('sale');
+  // Tabs: 'sale' (For Sale Inventory), 'rent' (For Rent Inventory), 'editor' (Create / Edit Form), 'inquiries' (Tour & Showing Requests)
+  const [activeTab, setActiveTab] = useState<'sale' | 'rent' | 'editor' | 'inquiries'>('sale');
+  const [inquiries, setInquiries] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -116,9 +120,39 @@ function ControlPanelContent() {
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
 
+  const fetchInquiries = async () => {
+    try {
+      const res = await fetch('/api/inquiries');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.inquiries)) {
+          setInquiries(data.inquiries);
+        }
+      }
+    } catch (err) {
+      console.warn('Error fetching inquiries:', err);
+    }
+  };
+
+  const deleteInquiry = async (id: string) => {
+    try {
+      const res = await fetch(`/api/inquiries?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.inquiries)) {
+          setInquiries(data.inquiries);
+          showNotification('Tour inquiry record removed.');
+        }
+      }
+    } catch (err) {
+      console.error('Error deleting inquiry:', err);
+    }
+  };
+
   useEffect(() => {
     const loaded = getStoredProperties();
     setProperties(loaded);
+    fetchInquiries();
 
     // If navigated with ?edit=[id], automatically open edit form
     const editId = searchParams?.get('edit');
@@ -634,6 +668,25 @@ function ControlPanelContent() {
                   : '+ List New House / Rental'}
               </span>
             </button>
+
+            {/* TAB: Tour Inquiries & Leads */}
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab('inquiries');
+                fetchInquiries();
+              }}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+                activeTab === 'inquiries'
+                  ? 'bg-purple-700 text-white shadow-md'
+                  : 'bg-slate-800/90 text-purple-300 hover:bg-slate-800 hover:text-white border border-purple-500/30'
+              }`}
+            >
+              <Mail className="w-4 h-4" />
+              <span>
+                Tour Inquiries ({inquiries.length})
+              </span>
+            </button>
           </div>
 
           {/* Quick Metrics Header */}
@@ -1085,6 +1138,133 @@ function ControlPanelContent() {
                             <span className="text-[10px] text-sky-400 font-mono block">
                               Telegram: {prop.agent.telegram ? '@' + prop.agent.telegram.split('/').pop() : 'Direct'}
                             </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* VIEW: TOUR INQUIRIES & CLIENT LEADS */}
+        {/* ============================================================ */}
+        {activeTab === 'inquiries' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-white font-display flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-purple-400" />
+                  <span>Prospective Buyer & Renter Inquiries ({inquiries.length})</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Showing and tour inquiries submitted by website visitors on property detail pages.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={fetchInquiries}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+
+            {inquiries.length === 0 ? (
+              <div className="p-12 text-center bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto text-purple-400">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-white">No Tour Inquiries Yet</h3>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto">
+                    When visitors submit showing requests on property pages, their contact details and messages will appear here in real time.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300">
+                    <thead className="bg-slate-900/90 border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+                      <tr>
+                        <th className="p-4">Applicant / Prospect</th>
+                        <th className="p-4">Property Inquired</th>
+                        <th className="p-4">Message / Showing Request</th>
+                        <th className="p-4">Date Received</th>
+                        <th className="p-4 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {inquiries.map((inq) => (
+                        <tr key={inq.id} className="hover:bg-slate-900/50 transition-colors">
+                          {/* Prospect */}
+                          <td className="p-4">
+                            <span className="font-bold text-white block text-sm">{inq.userName}</span>
+                            <a
+                              href={`mailto:${inq.userEmail}`}
+                              className="text-emerald-400 hover:underline font-mono text-xs block mt-0.5"
+                            >
+                              {inq.userEmail}
+                            </a>
+                            {inq.userPhone && (
+                              <span className="text-[11px] text-slate-400 block">{inq.userPhone}</span>
+                            )}
+                          </td>
+
+                          {/* Property */}
+                          <td className="p-4">
+                            <span className="font-semibold text-white block">{inq.propertyTitle}</span>
+                            <span className="text-[11px] text-slate-400 block">{inq.propertyAddress}</span>
+                            {inq.propertyId && inq.propertyId !== 'general' && (
+                              <Link
+                                href={`/listings/${inq.propertyId}`}
+                                target="_blank"
+                                className="inline-flex items-center gap-1 text-[11px] text-sky-400 hover:underline mt-1"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                <span>View Listing</span>
+                              </Link>
+                            )}
+                          </td>
+
+                          {/* Message */}
+                          <td className="p-4 max-w-md">
+                            <p className="text-xs text-slate-200 bg-slate-900/80 p-2.5 rounded-md border border-slate-800/80 leading-relaxed">
+                              {inq.message}
+                            </p>
+                          </td>
+
+                          {/* Date */}
+                          <td className="p-4 text-slate-400 whitespace-nowrap text-[11px] font-mono">
+                            {new Date(inq.submittedAt).toLocaleString()}
+                          </td>
+
+                          {/* Actions */}
+                          <td className="p-4 text-center whitespace-nowrap">
+                            <div className="flex items-center justify-center gap-2">
+                              <a
+                                href={`mailto:${inq.userEmail}?subject=Re:%20Showing%20Inquiry%20regarding%20${encodeURIComponent(inq.propertyTitle)}&body=Hello%20${encodeURIComponent(inq.userName)},\n\nThank%20you%20for%20contacting%20Nookfinder%20regarding%20${encodeURIComponent(inq.propertyTitle)}.\n\n`}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-bold bg-purple-700 hover:bg-purple-600 text-white transition-colors"
+                              >
+                                <Mail className="w-3.5 h-3.5" />
+                                <span>Reply</span>
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => deleteInquiry(inq.id)}
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold bg-slate-800 hover:bg-rose-900 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
