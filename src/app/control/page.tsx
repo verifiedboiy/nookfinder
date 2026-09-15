@@ -1,0 +1,1927 @@
+'use client';
+
+import React, { useState, useEffect, useRef, Suspense } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { Property, PropertyType, ListingType, PropertyImage } from '@/types/property';
+import { MAJOR_US_STATES } from '@/data/states';
+import {
+  getStoredProperties,
+  saveStoredProperty,
+  deleteStoredProperty,
+  resetStoredProperties,
+  clearAllStoredProperties,
+} from '@/data/propertyStore';
+import {
+  ShieldCheck,
+  Plus,
+  Trash2,
+  Edit3,
+  ExternalLink,
+  Image as ImageIcon,
+  Home,
+  CheckCircle2,
+  RefreshCw,
+  Sliders,
+  DollarSign,
+  Upload,
+  Building,
+  Key,
+  Calendar,
+  Layers,
+  MapPin,
+  X,
+  AlertCircle,
+  FileText,
+  UserCheck,
+  Eye,
+} from 'lucide-react';
+
+const STANDARD_AMENITIES = [
+  'FHA Loan Grant Eligible',
+  'Down Payment Assistance Available',
+  'Under Market Value Appraisal',
+  'In-Unit Washer & Dryer',
+  'Central Air Conditioning & Heating',
+  'Attached Garage / Reserved Parking',
+  'Stainless Steel Kitchen Appliances',
+  'Private Fenced Yard / Patio',
+  'Water & Trash Included in Lease',
+  'Pet Friendly (Zero Monthly Pet Fee)',
+  'Energy Star High Efficiency Rated',
+  'Walking Distance to Public Transit',
+  'Hardwood Flooring Throughout',
+  'Zero Broker Fee Guarantee',
+];
+
+function ControlPanelContent() {
+  const searchParams = useSearchParams();
+  const [properties, setProperties] = useState<Property[]>([]);
+  // Tabs: 'sale' (For Sale Inventory), 'rent' (For Rent Inventory), 'editor' (Create / Edit Form)
+  const [activeTab, setActiveTab] = useState<'sale' | 'rent' | 'editor'>('sale');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Form Fields - Basic
+  const [title, setTitle] = useState('');
+  const [tagline, setTagline] = useState('');
+  const [description, setDescription] = useState('');
+  const [listingType, setListingType] = useState<ListingType>('sale');
+  const [propertyType, setPropertyType] = useState<PropertyType>('house');
+  const [price, setPrice] = useState('185000');
+  const [isVerified, setIsVerified] = useState(true);
+  const [fhaEligible, setFhaEligible] = useState(true);
+  const [downPaymentAssistance, setDownPaymentAssistance] = useState(true);
+  const [underMarketValue, setUnderMarketValue] = useState(true);
+
+  // Form Fields - Location
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('Atlanta');
+  const [stateCode, setStateCode] = useState('GA');
+  const [zipCode, setZipCode] = useState('30312');
+  const [neighborhood, setNeighborhood] = useState('Riverside District');
+
+  // Form Fields - Specs & Overview
+  const [bedrooms, setBedrooms] = useState(3);
+  const [bathrooms, setBathrooms] = useState(2);
+  const [squareFeet, setSquareFeet] = useState(1250);
+  const [parkingSpaces, setParkingSpaces] = useState(1);
+  const [yearBuilt, setYearBuilt] = useState(2021);
+
+  // Form Fields - True Monthly Cost Breakdown
+  const [monthlyPrincipalInterest, setMonthlyPrincipalInterest] = useState('980');
+  const [hoaMonthly, setHoaMonthly] = useState(0);
+  const [propertyTaxAnnual, setPropertyTaxAnnual] = useState(1800);
+  const [homeInsuranceMonthly, setHomeInsuranceMonthly] = useState(85);
+  const [utilitiesMonthly, setUtilitiesMonthly] = useState(120);
+
+  // Form Fields - Features & Inclusions (Amenities)
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([
+    'FHA Loan Grant Eligible',
+    'Down Payment Assistance Available',
+    'Under Market Value Appraisal',
+    'In-Unit Washer & Dryer',
+    'Zero Broker Fee Guarantee',
+  ]);
+  const [customAmenity, setCustomAmenity] = useState('');
+
+  // Form Fields - Photos (Starts EMPTY as requested by user)
+  const [images, setImages] = useState<PropertyImage[]>([]);
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newImageCaption, setNewImageCaption] = useState('');
+
+  // Form Fields - Staff Specialist
+  const [agentName, setAgentName] = useState('Marcus Vance');
+
+  useEffect(() => {
+    const loaded = getStoredProperties();
+    setProperties(loaded);
+
+    // If navigated with ?edit=[id], automatically open edit form
+    const editId = searchParams?.get('edit');
+    if (editId) {
+      const target = loaded.find((p) => p.id === editId);
+      if (target) {
+        editProperty(target);
+      }
+    }
+  }, [searchParams]);
+
+  const showNotification = (msg: string) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 4000);
+  };
+
+  // Auto-calculate approximate P&I for For Sale
+  useEffect(() => {
+    if (listingType === 'sale') {
+      const numericPrice = Number(price) || 0;
+      const loanAmount = numericPrice * 0.95;
+      const monthlyRate = 0.065 / 12;
+      const numPayments = 360;
+      if (loanAmount > 0) {
+        const monthly =
+          (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+          (Math.pow(1 + monthlyRate, numPayments) - 1);
+        setMonthlyPrincipalInterest(Math.round(monthly).toString());
+      }
+    }
+  }, [price, listingType]);
+
+  // Gallery File Picker Handler
+  const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const remainingSlots = 10 - images.length;
+    if (remainingSlots <= 0) {
+      alert('Maximum 10 photos reached. Please remove a photo before adding more.');
+      return;
+    }
+
+    const filesToLoad = Array.from(files).slice(0, remainingSlots);
+
+    filesToLoad.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        const dataUrl = loadEvent.target?.result as string;
+        if (dataUrl) {
+          const autoCaption = file.name
+            .replace(/\.[^/.]+$/, '')
+            .replace(/[-_]/g, ' ')
+            .replace(/^[0-9]+\s*/, '');
+
+          setImages((prev) => {
+            if (prev.length >= 10) return prev;
+            return [
+              ...prev,
+              {
+                url: dataUrl,
+                caption: autoCaption || `Gallery photo ${prev.length + 1}`,
+                isPrimary: prev.length === 0,
+              },
+            ];
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    e.target.value = '';
+  };
+
+  // Add Photo by URL
+  const handleAddImageUrl = () => {
+    if (!newImageUrl.trim()) return;
+    if (images.length >= 10) {
+      alert('Maximum 10 photos allowed per listing.');
+      return;
+    }
+    setImages([
+      ...images,
+      {
+        url: newImageUrl.trim(),
+        caption: newImageCaption.trim() || `Property view ${images.length + 1}`,
+        isPrimary: images.length === 0,
+      },
+    ]);
+    setNewImageUrl('');
+    setNewImageCaption('');
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updated = images.filter((_, idx) => idx !== index);
+    if (images[index]?.isPrimary && updated.length > 0) {
+      updated[0].isPrimary = true;
+    }
+    setImages(updated);
+  };
+
+  const handleSetPrimaryImage = (index: number) => {
+    const updated = images.map((img, idx) => ({
+      ...img,
+      isPrimary: idx === index,
+    }));
+    setImages(updated);
+  };
+
+  const handleToggleAmenity = (amenity: string) => {
+    if (selectedAmenities.includes(amenity)) {
+      setSelectedAmenities(selectedAmenities.filter((a) => a !== amenity));
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    }
+  };
+
+  const handleAddCustomAmenity = () => {
+    if (!customAmenity.trim()) return;
+    if (!selectedAmenities.includes(customAmenity.trim())) {
+      setSelectedAmenities([...selectedAmenities, customAmenity.trim()]);
+    }
+    setCustomAmenity('');
+  };
+
+  // Reset form for brand new listing
+  const startNewListing = (type: ListingType = 'sale') => {
+    setEditingId(null);
+    setFormError(null);
+    setListingType(type);
+    setTitle('');
+    setTagline('');
+    setDescription('');
+    setPropertyType(type === 'sale' ? 'house' : 'apartment');
+    setPrice(type === 'sale' ? '210000' : '750');
+    setIsVerified(true);
+    setFhaEligible(type === 'sale');
+    setDownPaymentAssistance(type === 'sale');
+    setUnderMarketValue(true);
+
+    setStreet('');
+    setCity('Atlanta');
+    setStateCode('GA');
+    setZipCode('30312');
+    setNeighborhood('Riverside District');
+
+    setBedrooms(type === 'sale' ? 3 : 1);
+    setBathrooms(type === 'sale' ? 2 : 1);
+    setSquareFeet(type === 'sale' ? 1400 : 650);
+    setParkingSpaces(1);
+    setYearBuilt(2021);
+
+    setMonthlyPrincipalInterest(type === 'sale' ? '1100' : '0');
+    setHoaMonthly(0);
+    setPropertyTaxAnnual(type === 'sale' ? 1950 : 0);
+    setHomeInsuranceMonthly(type === 'sale' ? 85 : 25);
+    setUtilitiesMonthly(120);
+
+    // Photos start completely EMPTY as requested
+    setImages([]);
+    setSelectedAmenities([
+      type === 'sale' ? 'FHA Loan Grant Eligible' : 'Water & Trash Included in Lease',
+      'Under Market Value Appraisal',
+      'In-Unit Washer & Dryer',
+      'Zero Broker Fee Guarantee',
+    ]);
+    setAgentName('Marcus Vance');
+    setActiveTab('editor');
+  };
+
+  // Populate form with existing listing data to EDIT
+  const editProperty = (prop: Property) => {
+    setEditingId(prop.id);
+    setFormError(null);
+    setListingType(prop.listingType);
+    setTitle(prop.title);
+    setTagline(prop.tagline || '');
+    setDescription(prop.description || '');
+    setPropertyType(prop.propertyType);
+    setPrice(prop.price.toString());
+    setIsVerified(prop.isVerified);
+    setFhaEligible(prop.fhaEligible || false);
+    setDownPaymentAssistance(prop.downPaymentAssistance || false);
+    setUnderMarketValue(prop.underMarketValue || false);
+
+    setStreet(prop.address.street);
+    setCity(prop.address.city);
+    setStateCode(prop.address.state);
+    setZipCode(prop.address.zipCode);
+    setNeighborhood(prop.address.neighborhood);
+
+    setBedrooms(prop.specs.bedrooms);
+    setBathrooms(prop.specs.bathrooms);
+    setSquareFeet(prop.specs.squareFeet);
+    setParkingSpaces(prop.specs.parkingSpaces || 1);
+    setYearBuilt(prop.specs.yearBuilt);
+
+    setHoaMonthly(prop.specs.hoaMonthly || 0);
+    setPropertyTaxAnnual(prop.specs.propertyTaxAnnual || 0);
+    setUtilitiesMonthly(prop.specs.estimatedUtilitiesMonthly || 120);
+
+    if (prop.listingType === 'sale') {
+      const loanAmount = prop.price * 0.95;
+      const monthlyRate = 0.065 / 12;
+      const numPayments = 360;
+      const monthly =
+        (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments))) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1);
+      setMonthlyPrincipalInterest(Math.round(monthly).toString());
+    }
+
+    setImages(prop.images || []);
+    setSelectedAmenities(prop.amenities || STANDARD_AMENITIES.slice(0, 5));
+    setAgentName(prop.agent.name);
+    setActiveTab('editor');
+  };
+
+  // Delete single property with confirmation
+  const handleDelete = (prop: Property) => {
+    if (
+      confirm(
+        `Are you sure you want to permanently delete "${prop.title}" (ID: ${prop.id})?`
+      )
+    ) {
+      const updated = deleteStoredProperty(prop.id);
+      setProperties(updated);
+      showNotification(`"${prop.title}" was permanently removed.`);
+    }
+  };
+
+  // Delete ALL listings (Clean slate for custom listings)
+  const handleDeleteAll = () => {
+    if (
+      confirm(
+        '⚠️ Are you sure you want to delete ALL default and current listings?\n\nThis will completely clear your catalog so you can start fresh with only your own houses.'
+      )
+    ) {
+      const updated = clearAllStoredProperties();
+      setProperties(updated);
+      showNotification('All listings have been deleted. You now have a clean slate.');
+    }
+  };
+
+  // Reset to default mock listings
+  const handleResetDefaults = () => {
+    if (
+      confirm(
+        'Reset the entire catalog back to factory default mock listings? Any added custom listings will be overwritten.'
+      )
+    ) {
+      const reset = resetStoredProperties();
+      setProperties(reset);
+      showNotification('Inventory reset to original listings.');
+    }
+  };
+
+  // Save handler (Create or Update)
+  const handleSaveProperty = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    // Strict validation
+    if (!title.trim()) {
+      setFormError('Please enter a property headline / title.');
+      return;
+    }
+    if (!street.trim() || !city.trim() || !zipCode.trim()) {
+      setFormError('Please complete the full address (Street, City, and Zip Code).');
+      return;
+    }
+    if (!price || Number(price) <= 0) {
+      setFormError('Please specify a valid price.');
+      return;
+    }
+    if (images.length < 3) {
+      setFormError(
+        `You currently have ${images.length} photo(s). At least 3 photos are required from your gallery so users can view the verified details.`
+      );
+      return;
+    }
+
+    const agentsMap: Record<string, any> = {
+      'Marcus Vance': {
+        name: 'Marcus Vance',
+        title: 'Nookfinder Dedicated Property Specialist',
+        phone: '+1 (404) 890-1244',
+        email: 'nookkfinder@gmail.com',
+        telegram: 'https://t.me/nook_finder',
+        avatarUrl:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+        rating: 4.9,
+        reviewCount: 42,
+        verifiedLicense: 'NF-STAFF-40918',
+        isNookfinderStaff: true,
+      },
+      'Sarah Chen': {
+        name: 'Sarah Chen',
+        title: 'Nookfinder Dedicated Property Specialist',
+        phone: '+1 (614) 732-9011',
+        email: 'nookkfinder@gmail.com',
+        telegram: 'https://t.me/nook_finder',
+        avatarUrl:
+          'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80',
+        rating: 4.8,
+        reviewCount: 38,
+        verifiedLicense: 'NF-STAFF-99120',
+        isNookfinderStaff: true,
+      },
+      'David Reynolds': {
+        name: 'David Reynolds',
+        title: 'Nookfinder Dedicated Property Specialist',
+        phone: '+1 (317) 412-8871',
+        email: 'nookkfinder@gmail.com',
+        telegram: 'https://t.me/nook_finder',
+        avatarUrl:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
+        rating: 5.0,
+        reviewCount: 64,
+        verifiedLicense: 'NF-STAFF-10293',
+        isNookfinderStaff: true,
+      },
+    };
+
+    const normalizedImages = images.map((img, idx) => ({
+      ...img,
+      isPrimary: images.some((i) => i.isPrimary) ? img.isPrimary : idx === 0,
+    }));
+
+    const savedProperty: Property = {
+      id: editingId || `prop-${listingType}-${Date.now().toString().slice(-4)}`,
+      title: title.trim(),
+      tagline: tagline.trim() || 'Audited affordable residential housing in prime commuter setting.',
+      description:
+        description.trim() ||
+        'Verified listing certified compliant with local fair housing guidelines and independent ownership audit.',
+      price: Number(price) || 0,
+      listingType,
+      propertyType,
+      status: 'available',
+      isVerified,
+      featured: true,
+      fhaEligible: listingType === 'sale' ? fhaEligible : false,
+      downPaymentAssistance: listingType === 'sale' ? downPaymentAssistance : false,
+      underMarketValue,
+      address: {
+        street: street.trim(),
+        city: city.trim(),
+        state: stateCode,
+        zipCode: zipCode.trim(),
+        neighborhood: neighborhood.trim() || 'Central Metro',
+        coordinates: {
+          lat: 33.749 + (Math.random() * 0.08 - 0.04),
+          lng: -84.388 + (Math.random() * 0.08 - 0.04),
+        },
+      },
+      specs: {
+        bedrooms,
+        bathrooms,
+        squareFeet,
+        parkingSpaces,
+        yearBuilt,
+        hoaMonthly,
+        propertyTaxAnnual: listingType === 'sale' ? propertyTaxAnnual : 0,
+        estimatedUtilitiesMonthly: utilitiesMonthly,
+      },
+      amenities: selectedAmenities.length > 0 ? selectedAmenities : ['Zero Broker Fee Guarantee'],
+      images: normalizedImages,
+      agent: agentsMap[agentName] || agentsMap['Marcus Vance'],
+      listedAt: new Date().toISOString(),
+    };
+
+    const updatedCatalog = saveStoredProperty(savedProperty);
+    setProperties(updatedCatalog);
+    showNotification(
+      editingId
+        ? `Listing "${savedProperty.title}" successfully updated!`
+        : `New listing "${savedProperty.title}" published live!`
+    );
+
+    setActiveTab(listingType);
+  };
+
+  const saleProperties = properties.filter((p) => p.listingType === 'sale');
+  const rentProperties = properties.filter((p) => p.listingType === 'rent');
+
+  const calcTotalMonthly = () => {
+    if (listingType === 'sale') {
+      const pi = Number(monthlyPrincipalInterest) || 0;
+      const tax = (Number(propertyTaxAnnual) || 0) / 12;
+      const ins = Number(homeInsuranceMonthly) || 0;
+      const hoa = Number(hoaMonthly) || 0;
+      const util = Number(utilitiesMonthly) || 0;
+      return Math.round(pi + tax + ins + hoa + util);
+    } else {
+      const rent = Number(price) || 0;
+      const util = Number(utilitiesMonthly) || 0;
+      return Math.round(rent + util);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+      {/* Top Admin Navigation Bar */}
+      <header className="bg-slate-950 border-b border-slate-800 px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded bg-emerald-700 flex items-center justify-center text-white shadow-md">
+            <Sliders className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-base font-bold tracking-tight text-white font-display">
+                Nookfinder Control Panel
+              </span>
+              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-700 text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
+                Private Admin
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              Live inventory management, 3–10 gallery photo uploader, and staff dispatch
+            </p>
+          </div>
+        </div>
+
+        {/* Global Inventory Actions */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+          >
+            <Eye className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Open Public Site</span>
+          </Link>
+
+          {/* Delete All Listings Button */}
+          <button
+            type="button"
+            onClick={handleDeleteAll}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 transition-colors shadow-xs cursor-pointer"
+            title="Delete all current mock listings to start clean"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+            <span>Delete All Default Listings</span>
+          </button>
+
+          {/* Reset Defaults Button */}
+          <button
+            type="button"
+            onClick={handleResetDefaults}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Reset Defaults</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Flash Notification Banner */}
+      {notification && (
+        <div className="bg-emerald-700 text-white px-4 py-3 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-inner animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{notification}</span>
+        </div>
+      )}
+
+      {/* Main Workspace */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {/* Navigation Tabs - Cleanly Separated for For Sale vs For Rent */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* TAB: For Sale */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('sale')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+                activeTab === 'sale'
+                  ? 'bg-emerald-700 text-white shadow-md'
+                  : 'bg-slate-800/90 text-slate-300 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span>For Sale Homes ({saleProperties.length})</span>
+            </button>
+
+            {/* TAB: For Rent */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('rent')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+                activeTab === 'rent'
+                  ? 'bg-sky-700 text-white shadow-md'
+                  : 'bg-slate-800/90 text-slate-300 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <Building className="w-4 h-4" />
+              <span>For Rent Properties ({rentProperties.length})</span>
+            </button>
+
+            {/* TAB: Create / Edit */}
+            <button
+              type="button"
+              onClick={() => startNewListing(activeTab === 'rent' ? 'rent' : 'sale')}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
+                activeTab === 'editor'
+                  ? 'bg-amber-600 text-white shadow-md'
+                  : 'bg-slate-800/90 text-amber-300 hover:bg-slate-800 hover:text-amber-200 border border-amber-500/30'
+              }`}
+            >
+              <Plus className="w-4 h-4" />
+              <span>
+                {activeTab === 'editor' && editingId
+                  ? 'Editing Property'
+                  : '+ List New House / Rental'}
+              </span>
+            </button>
+          </div>
+
+          {/* Quick Metrics Header */}
+          <div className="flex items-center gap-3 text-xs text-slate-400 bg-slate-950 px-4 py-2 rounded-lg border border-slate-800">
+            <span>
+              Total Live Listings: <strong className="text-white">{properties.length}</strong>
+            </span>
+            <span>•</span>
+            <span>
+              Affordable Rentals Under $800:{' '}
+              <strong className="text-emerald-400">
+                {rentProperties.filter((p) => p.price <= 800).length}
+              </strong>
+            </span>
+            <span>•</span>
+            <span>
+              Starter Homes Under $250k:{' '}
+              <strong className="text-emerald-400">
+                {saleProperties.filter((p) => p.price <= 250000).length}
+              </strong>
+            </span>
+          </div>
+        </div>
+
+        {/* ============================================================ */}
+        {/* VIEW 1: FOR SALE INVENTORY TAB */}
+        {/* ============================================================ */}
+        {activeTab === 'sale' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-white font-display flex items-center gap-2">
+                  <Home className="w-5 h-5 text-emerald-400" />
+                  <span>Verified For Sale Catalog ({saleProperties.length} Properties)</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Starter residences, condos, and single-family homes with FHA and grant compatibility.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => startNewListing('sale')}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add For Sale Home</span>
+              </button>
+            </div>
+
+            {saleProperties.length === 0 ? (
+              <div className="p-12 text-center bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+                  <Home className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-white">No For Sale Listings Yet</h3>
+                  <p className="text-xs text-slate-400">
+                    Your For Sale catalog is clean. Click below to add your first verified house with 3–10 photos.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => startNewListing('sale')}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Post Your First House</span>
+                </button>
+              </div>
+            ) : (
+              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300">
+                    <thead className="bg-slate-900/90 border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+                      <tr>
+                        <th className="p-4">Property</th>
+                        <th className="p-4 text-center">Manage Actions</th>
+                        <th className="p-4">Price</th>
+                        <th className="p-4">Location</th>
+                        <th className="p-4">Specs</th>
+                        <th className="p-4">Photos</th>
+                        <th className="p-4">Assigned Agent</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/80">
+                      {saleProperties.map((prop) => (
+                        <tr key={prop.id} className="hover:bg-slate-900/60 transition-colors">
+                          {/* Col 1: Property Info */}
+                          <td className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-slate-800 shrink-0 border border-slate-700">
+                                {prop.images[0]?.url ? (
+                                  <Image
+                                    src={prop.images[0].url}
+                                    alt={prop.title}
+                                    fill
+                                    unoptimized={prop.images[0].url.startsWith('data:')}
+                                    className="object-cover"
+                                    sizes="56px"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-slate-500">
+                                    <ImageIcon className="w-5 h-5" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="space-y-0.5">
+                                <span className="font-bold text-white text-sm block">
+                                  {prop.title}
+                                </span>
+                                <span className="text-[10px] font-mono text-emerald-400">
+                                  ID: {prop.id}
+                                </span>
+                                <div className="flex items-center gap-1.5 pt-0.5">
+                                  <span className="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-semibold uppercase">
+                                    {prop.propertyType}
+                                  </span>
+                                  {prop.fhaEligible && (
+                                    <span className="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">
+                                      FHA Grant
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Mobile Quick Actions directly under title */}
+                                <div className="flex items-center gap-2 pt-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => editProperty(prop)}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-[11px] shadow-xs cursor-pointer"
+                                  >
+                                    <Edit3 className="w-3 h-3" />
+                                    <span>Edit</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDelete(prop)}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-rose-900 hover:bg-rose-700 text-white font-bold text-[11px] shadow-xs cursor-pointer"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    <span>Delete</span>
+                                  </button>
+                                  <Link
+                                    href={`/listings/${prop.id}`}
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px]"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span>View</span>
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Col 2: Prominent Manage Actions */}
+                          <td className="p-4 text-center whitespace-nowrap">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => editProperty(prop)}
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-emerald-700 hover:bg-emerald-600 text-white transition-colors shadow-xs cursor-pointer"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                                <span>Edit Details</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(prop)}
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-rose-900 hover:bg-rose-700 text-white border border-rose-700/60 transition-colors shadow-xs cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Delete Listing</span>
+                              </button>
+                            </div>
+                          </td>
+
+                          {/* Col 3: Price */}
+                          <td className="p-4">
+                            <span className="font-bold font-mono text-sm text-emerald-400 block">
+                              ${prop.price.toLocaleString()}
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              Est. ${Math.round(prop.price * 0.007).toLocaleString()}/mo
+                            </span>
+                          </td>
+
+                          {/* Col 4: Location */}
+                          <td className="p-4">
+                            <span className="font-semibold text-white block">
+                              {prop.address.city}, {prop.address.state}
+                            </span>
+                            <span className="text-[11px] text-slate-400 block truncate max-w-[140px]">
+                              {prop.address.street}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-mono">
+                              {prop.address.zipCode}
+                            </span>
+                          </td>
+
+                          {/* Col 5: Specs */}
+                          <td className="p-4 text-slate-300">
+                            <span className="font-medium text-white block">
+                              {prop.specs.bedrooms} bed • {prop.specs.bathrooms} bath
+                            </span>
+                            <span className="text-[11px] text-slate-400 block">
+                              {prop.specs.squareFeet} sq ft • Built {prop.specs.yearBuilt}
+                            </span>
+                          </td>
+
+                          {/* Col 6: Photos */}
+                          <td className="p-4">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold ${
+                                prop.images.length >= 3
+                                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                                  : 'bg-amber-950 text-amber-300 border border-amber-800'
+                              }`}
+                            >
+                              <ImageIcon className="w-3.5 h-3.5" />
+                              <span>{prop.images.length} Photos</span>
+                            </span>
+                          </td>
+
+                          {/* Col 7: Assigned Agent */}
+                          <td className="p-4">
+                            <span className="text-white font-semibold block">{prop.agent.name}</span>
+                            <span className="text-[10px] text-emerald-400 font-mono block">
+                              Telegram: {prop.agent.telegram ? '@' + prop.agent.telegram.split('/').pop() : 'Direct'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* VIEW 2: FOR RENT INVENTORY TAB */}
+        {/* ============================================================ */}
+        {activeTab === 'rent' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-white font-display flex items-center gap-2">
+                  <Building className="w-5 h-5 text-sky-400" />
+                  <span>Verified Rental Catalog ({rentProperties.length} Properties)</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Affordable rentals starting under $800/month with zero upfront broker fees and verified landlords.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => startNewListing('rent')}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Rental Unit</span>
+              </button>
+            </div>
+
+            {rentProperties.length === 0 ? (
+              <div className="p-12 text-center bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                <div className="w-12 h-12 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center mx-auto text-slate-400">
+                  <Building className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-white">No Rental Properties Yet</h3>
+                  <p className="text-xs text-slate-400">
+                    Your rental catalog is clean. Click below to add your first affordable rental with 3–10 photos.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => startNewListing('rent')}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Post Your First Rental</span>
+                </button>
+              </div>
+            ) : (
+              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300">
+                    <thead className="bg-slate-900/90 border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+                      <tr>
+                        <th className="p-4">Rental Unit</th>
+                        <th className="p-4 text-center">Manage Actions</th>
+                        <th className="p-4">Monthly Rent</th>
+                        <th className="p-4">Location</th>
+                        <th className="p-4">Specs</th>
+                        <th className="p-4">Photos</th>
+                        <th className="p-4">Assigned Agent</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/80">
+                      {rentProperties.map((prop) => (
+                        <tr key={prop.id} className="hover:bg-slate-900/60 transition-colors">
+                          {/* Col 1: Property Info */}
+                          <td className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-slate-800 shrink-0 border border-slate-700">
+                                {prop.images[0]?.url ? (
+                                  <Image
+                                    src={prop.images[0].url}
+                                    alt={prop.title}
+                                    fill
+                                    unoptimized={prop.images[0].url.startsWith('data:')}
+                                    className="object-cover"
+                                    sizes="56px"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-slate-500">
+                                    <ImageIcon className="w-5 h-5" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="space-y-0.5">
+                                <span className="font-bold text-white text-sm block">
+                                  {prop.title}
+                                </span>
+                                <span className="text-[10px] font-mono text-sky-400">
+                                  ID: {prop.id}
+                                </span>
+                                <div className="flex items-center gap-1.5 pt-0.5">
+                                  <span className="px-1.5 py-0.2 rounded bg-sky-950 text-sky-300 border border-sky-800 text-[10px] font-semibold uppercase">
+                                    {prop.propertyType}
+                                  </span>
+                                  {prop.price <= 800 && (
+                                    <span className="px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px] font-bold">
+                                      Under $800
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Mobile Quick Actions directly under title */}
+                                <div className="flex items-center gap-2 pt-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => editProperty(prop)}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-sky-700 hover:bg-sky-600 text-white font-bold text-[11px] shadow-xs cursor-pointer"
+                                  >
+                                    <Edit3 className="w-3 h-3" />
+                                    <span>Edit</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDelete(prop)}
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-rose-900 hover:bg-rose-700 text-white font-bold text-[11px] shadow-xs cursor-pointer"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    <span>Delete</span>
+                                  </button>
+                                  <Link
+                                    href={`/listings/${prop.id}`}
+                                    target="_blank"
+                                    className="inline-flex items-center gap-1 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px]"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span>View</span>
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Col 2: Prominent Manage Actions */}
+                          <td className="p-4 text-center whitespace-nowrap">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => editProperty(prop)}
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-sky-700 hover:bg-sky-600 text-white transition-colors shadow-xs cursor-pointer"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" />
+                                <span>Edit Details</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(prop)}
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-rose-900 hover:bg-rose-700 text-white border border-rose-700/60 transition-colors shadow-xs cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Delete Listing</span>
+                              </button>
+                            </div>
+                          </td>
+
+                          {/* Col 3: Monthly Rent */}
+                          <td className="p-4">
+                            <span className="font-bold font-mono text-sm text-sky-400 block">
+                              ${prop.price}/mo
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              Zero Broker Fee
+                            </span>
+                          </td>
+
+                          {/* Col 4: Location */}
+                          <td className="p-4">
+                            <span className="font-semibold text-white block">
+                              {prop.address.city}, {prop.address.state}
+                            </span>
+                            <span className="text-[11px] text-slate-400 block truncate max-w-[140px]">
+                              {prop.address.street}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-mono">
+                              {prop.address.zipCode}
+                            </span>
+                          </td>
+
+                          {/* Col 5: Specs */}
+                          <td className="p-4 text-slate-300">
+                            <span className="font-medium text-white block">
+                              {prop.specs.bedrooms} bed • {prop.specs.bathrooms} bath
+                            </span>
+                            <span className="text-[11px] text-slate-400 block">
+                              {prop.specs.squareFeet} sq ft
+                            </span>
+                          </td>
+
+                          {/* Col 6: Photos */}
+                          <td className="p-4">
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold ${
+                                prop.images.length >= 3
+                                  ? 'bg-sky-950 text-sky-300 border border-sky-800'
+                                  : 'bg-amber-950 text-amber-300 border border-amber-800'
+                              }`}
+                            >
+                              <ImageIcon className="w-3.5 h-3.5" />
+                              <span>{prop.images.length} Photos</span>
+                            </span>
+                          </td>
+
+                          {/* Col 7: Assigned Agent */}
+                          <td className="p-4">
+                            <span className="text-white font-semibold block">{prop.agent.name}</span>
+                            <span className="text-[10px] text-sky-400 font-mono block">
+                              Telegram: {prop.agent.telegram ? '@' + prop.agent.telegram.split('/').pop() : 'Direct'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* VIEW 3: COMPREHENSIVE PROPERTY CREATOR & EDITOR FORM */}
+        {/* ============================================================ */}
+        {activeTab === 'editor' && (
+          <form
+            onSubmit={handleSaveProperty}
+            className="bg-slate-950 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-8 shadow-2xl"
+          >
+            {/* Header with Title and Cancel */}
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                  {editingId ? 'Modify Active Listing' : 'Create New Residential Listing'}
+                </span>
+                <h2 className="text-2xl font-bold text-white font-display">
+                  {editingId ? `Editing Listing: ${editingId}` : 'Publish Verified House or Rental'}
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Provide complete property overview, 3–10 gallery photos, verified features, and true monthly cost breakdown.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab(listingType)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+                <span>Cancel & Return</span>
+              </button>
+            </div>
+
+            {/* Validation Error Alert */}
+            {formError && (
+              <div className="p-4 rounded-lg bg-rose-950 border border-rose-600 text-rose-200 text-xs font-bold flex items-center gap-3 animate-in fade-in">
+                <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+                <span>{formError}</span>
+              </div>
+            )}
+
+            {/* SECTION 1: Category & Pricing Type */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <Sliders className="w-4 h-4" />
+                <span>1. Listing Type & Core Category</span>
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Listing Category <span className="text-rose-400">*</span>
+                  </label>
+                  <select
+                    value={listingType}
+                    onChange={(e) => setListingType(e.target.value as ListingType)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2.5 text-white font-semibold"
+                  >
+                    <option value="sale">For Sale (Home Purchase)</option>
+                    <option value="rent">For Rent (Monthly Rental)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Property Architecture <span className="text-rose-400">*</span>
+                  </label>
+                  <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value as PropertyType)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2.5 text-white"
+                  >
+                    <option value="house">Single Family Home</option>
+                    <option value="townhouse">Townhouse</option>
+                    <option value="condo">Starter Condo</option>
+                    <option value="apartment">Garden Apartment</option>
+                    <option value="duplex">Duplex Residence</option>
+                    <option value="studio">Minimalist Studio</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    {listingType === 'sale' ? 'Purchase Price ($ USD)' : 'Monthly Rent ($ USD / mo)'}{' '}
+                    <span className="text-rose-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <DollarSign className="w-4 h-4 absolute left-3 top-2.5 text-emerald-400" />
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded pl-8 pr-3 py-2 text-white font-mono font-bold"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Verification Badges */}
+              <div className="flex flex-wrap gap-4 pt-2">
+                <label className="inline-flex items-center gap-2 cursor-pointer text-xs text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={isVerified}
+                    onChange={(e) => setIsVerified(e.target.checked)}
+                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span>100% Audited Title & Deed (Verified Badge)</span>
+                </label>
+
+                {listingType === 'sale' && (
+                  <>
+                    <label className="inline-flex items-center gap-2 cursor-pointer text-xs text-slate-300">
+                      <input
+                        type="checkbox"
+                        checked={fhaEligible}
+                        onChange={(e) => setFhaEligible(e.target.checked)}
+                        className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span>FHA Loan Eligible</span>
+                    </label>
+
+                    <label className="inline-flex items-center gap-2 cursor-pointer text-xs text-slate-300">
+                      <input
+                        type="checkbox"
+                        checked={downPaymentAssistance}
+                        onChange={(e) => setDownPaymentAssistance(e.target.checked)}
+                        className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span>Down Payment Assistance Compatible</span>
+                    </label>
+                  </>
+                )}
+
+                <label className="inline-flex items-center gap-2 cursor-pointer text-xs text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={underMarketValue}
+                    onChange={(e) => setUnderMarketValue(e.target.checked)}
+                    className="rounded border-slate-700 text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span>Priced Under Regional Market Median</span>
+                </label>
+              </div>
+            </div>
+
+            {/* SECTION 2: Property Overview & Narrative */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <FileText className="w-4 h-4" />
+                <span>2. Property Overview & Description</span>
+              </h3>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Property Headline <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Modern Brick Starter Home with Energy-Efficient HVAC"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Short Tagline / Value Proposition <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Certified affordable residential residence in a prime commuter location."
+                    value={tagline}
+                    onChange={(e) => setTagline(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Comprehensive Property Narrative <span className="text-rose-400">*</span>
+                  </label>
+                  <textarea
+                    rows={4}
+                    required
+                    placeholder="Describe the architectural layout, room finishes, natural lighting, neighborhood amenities, proximity to grocery and transit, and any recent renovations..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded p-3 text-white leading-relaxed"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 3: Geographic Location & 25+ States */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <MapPin className="w-4 h-4" />
+                <span>3. Geographic Location (25+ Major US States)</span>
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Street Address <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 142 Oak Creek Trail"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Neighborhood / District
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Riverside District"
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    City / Municipality <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Atlanta"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    State (25+ Major Housing Markets) <span className="text-rose-400">*</span>
+                  </label>
+                  <select
+                    value={stateCode}
+                    onChange={(e) => setStateCode(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                  >
+                    {MAJOR_US_STATES.map((st) => (
+                      <option key={st.code} value={st.code}>
+                        {st.name} ({st.code}) - {st.primaryCity}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Zip Code <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="30312"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 4: Architectural Specs & Dimensions */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <Layers className="w-4 h-4" />
+                <span>4. Architectural Dimensions & Metrics</span>
+              </h3>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Bedrooms <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    required
+                    value={bedrooms}
+                    onChange={(e) => setBedrooms(Number(e.target.value))}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Bathrooms <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="0.5"
+                    required
+                    value={bathrooms}
+                    onChange={(e) => setBathrooms(Number(e.target.value))}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Square Footage (sq ft) <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="100"
+                    value={squareFeet}
+                    onChange={(e) => setSquareFeet(Number(e.target.value))}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Parking Spaces
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="6"
+                    value={parkingSpaces}
+                    onChange={(e) => setParkingSpaces(Number(e.target.value))}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Year Built
+                  </label>
+                  <input
+                    type="number"
+                    value={yearBuilt}
+                    onChange={(e) => setYearBuilt(Number(e.target.value))}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 5: Verified Features & Inclusions */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>5. Verified Features & Inclusions ({selectedAmenities.length} selected)</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                Select the certified property features and inclusions that will show on the verified details page:
+              </p>
+
+              {/* Standard Amenity Checkboxes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                {STANDARD_AMENITIES.map((amenity) => {
+                  const isChecked = selectedAmenities.includes(amenity);
+                  return (
+                    <button
+                      type="button"
+                      key={amenity}
+                      onClick={() => handleToggleAmenity(amenity)}
+                      className={`p-2.5 rounded-lg border text-left text-xs transition-colors flex items-center gap-2.5 cursor-pointer ${
+                        isChecked
+                          ? 'bg-emerald-950/70 border-emerald-500 text-emerald-200'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded flex items-center justify-center shrink-0 ${
+                          isChecked ? 'bg-emerald-600 text-white' : 'border border-slate-700'
+                        }`}
+                      >
+                        {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
+                      </div>
+                      <span className="truncate">{amenity}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Custom Amenity Adder */}
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="text"
+                  placeholder="Add custom feature (e.g. EV Charger Installed, Screened Porch...)"
+                  value={customAmenity}
+                  onChange={(e) => setCustomAmenity(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddCustomAmenity();
+                    }
+                  }}
+                  className="w-full max-w-md text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddCustomAmenity}
+                  className="px-4 py-2 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-white cursor-pointer"
+                >
+                  + Add Feature
+                </button>
+              </div>
+
+              {/* Active Custom Tags */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {selectedAmenities.map((amenity) => (
+                  <span
+                    key={amenity}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 border border-slate-700 text-xs text-slate-200"
+                  >
+                    <span>{amenity}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleAmenity(amenity)}
+                      className="text-slate-400 hover:text-rose-400 cursor-pointer"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* SECTION 6: True Monthly Cost Breakdown */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <DollarSign className="w-4 h-4" />
+                    <span>6. True Monthly Cost Breakdown</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Full disclosure of every recurring expense. Shows transparency on the live detail page.
+                  </p>
+                </div>
+
+                <div className="bg-emerald-950/80 border border-emerald-700/80 px-4 py-2 rounded-lg text-right">
+                  <span className="text-[10px] uppercase font-bold text-emerald-300 block">
+                    Calculated All-In Monthly Cost
+                  </span>
+                  <span className="text-lg font-bold font-mono text-emerald-400">
+                    ${calcTotalMonthly().toLocaleString()} / mo
+                  </span>
+                </div>
+              </div>
+
+              {listingType === 'sale' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Principal & Interest ($/mo)
+                    </label>
+                    <input
+                      type="number"
+                      value={monthlyPrincipalInterest}
+                      onChange={(e) => setMonthlyPrincipalInterest(e.target.value)}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                    <span className="text-[10px] text-slate-500 mt-0.5 block">Est. 5% down / 6.5%</span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Annual Property Tax ($)
+                    </label>
+                    <input
+                      type="number"
+                      value={propertyTaxAnnual}
+                      onChange={(e) => setPropertyTaxAnnual(Number(e.target.value))}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                    <span className="text-[10px] text-slate-500 mt-0.5 block">
+                      ${Math.round(propertyTaxAnnual / 12)}/mo
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Home Insurance ($/mo)
+                    </label>
+                    <input
+                      type="number"
+                      value={homeInsuranceMonthly}
+                      onChange={(e) => setHomeInsuranceMonthly(Number(e.target.value))}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Monthly HOA Fee ($)
+                    </label>
+                    <input
+                      type="number"
+                      value={hoaMonthly}
+                      onChange={(e) => setHoaMonthly(Number(e.target.value))}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Est. Utilities ($/mo)
+                    </label>
+                    <input
+                      type="number"
+                      value={utilitiesMonthly}
+                      onChange={(e) => setUtilitiesMonthly(Number(e.target.value))}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Base Rent ($/mo)
+                    </label>
+                    <input
+                      type="number"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Est. Utilities ($/mo)
+                    </label>
+                    <input
+                      type="number"
+                      value={utilitiesMonthly}
+                      onChange={(e) => setUtilitiesMonthly(Number(e.target.value))}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Water / Trash ($/mo)
+                    </label>
+                    <input
+                      type="text"
+                      disabled
+                      value="Included / $0"
+                      className="w-full text-xs bg-slate-900 border border-slate-800 rounded px-3 py-2 text-emerald-400 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Broker / Application Fee
+                    </label>
+                    <input
+                      type="text"
+                      disabled
+                      value="$0 Guaranteed"
+                      className="w-full text-xs bg-slate-900 border border-slate-800 rounded px-3 py-2 text-emerald-400 font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* SECTION 7: Multi-Photo Gallery (Starts Empty, 3-10 Photos from User Gallery) */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <ImageIcon className="w-4 h-4" />
+                    <span>
+                      7. Property Photo Gallery ({images.length} of 10 Added • Minimum 3 Required){' '}
+                      <span className="text-rose-400">*</span>
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Upload 3 to 10 photos from your laptop or phone gallery. When users click &apos;View Verified Details&apos;, all photos will display in the interactive lightbox gallery.
+                  </p>
+                </div>
+
+                {images.length < 3 && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-amber-950/80 border border-amber-600 text-amber-300 text-xs font-bold">
+                    <AlertCircle className="w-4 h-4 text-amber-400" />
+                    <span>{3 - images.length} more photo(s) required to publish</span>
+                  </span>
+                )}
+              </div>
+
+              {/* Gallery Direct File Upload Box */}
+              <div className="p-5 bg-slate-900/90 rounded-xl border-2 border-dashed border-slate-700 hover:border-emerald-500 transition-colors text-center space-y-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleGalleryUpload}
+                  className="hidden"
+                />
+
+                <div className="w-12 h-12 rounded-full bg-emerald-950 border border-emerald-700 flex items-center justify-center mx-auto text-emerald-400">
+                  <Upload className="w-6 h-6" />
+                </div>
+
+                <div className="space-y-1">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>Choose Photos from Gallery / Device</span>
+                  </button>
+                  <p className="text-xs text-slate-400">
+                    Select 3 to 10 photos (JPG, PNG, WEBP). Directly loads from your phone or computer.
+                  </p>
+                </div>
+              </div>
+
+              {/* URL fallback adder */}
+              <div className="p-3 bg-slate-900 rounded-lg border border-slate-800 flex flex-col sm:flex-row items-center gap-2">
+                <input
+                  type="url"
+                  placeholder="Or paste an image web URL: https://images.unsplash.com/..."
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  className="flex-1 text-xs bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                />
+                <input
+                  type="text"
+                  placeholder="Caption (e.g. Master Bedroom)"
+                  value={newImageCaption}
+                  onChange={(e) => setNewImageCaption(e.target.value)}
+                  className="sm:w-48 text-xs bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddImageUrl}
+                  className="px-4 py-2 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-white cursor-pointer"
+                >
+                  Add URL
+                </button>
+              </div>
+
+              {/* Photo Previews Grid */}
+              {images.length === 0 ? (
+                <div className="p-8 text-center bg-slate-950/60 rounded-lg border border-slate-800 text-slate-500 text-xs">
+                  No photos added yet. Click &apos;Choose Photos from Gallery / Device&apos; above to add 3 to 10 photos.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                  {images.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className={`relative rounded-lg overflow-hidden border bg-slate-900 flex flex-col justify-between ${
+                        img.isPrimary
+                          ? 'border-emerald-500 ring-2 ring-emerald-500/50'
+                          : 'border-slate-700'
+                      }`}
+                    >
+                      <div className="relative aspect-4/3 w-full bg-slate-800">
+                        <Image
+                          src={img.url}
+                          alt={img.caption || `Photo ${idx + 1}`}
+                          fill
+                          unoptimized={img.url.startsWith('data:')}
+                          className="object-cover"
+                          sizes="160px"
+                        />
+                        {img.isPrimary && (
+                          <span className="absolute top-1.5 left-1.5 bg-emerald-700 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded shadow-sm">
+                            Primary Cover
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="p-2 space-y-1 bg-slate-950">
+                        <input
+                          type="text"
+                          value={img.caption}
+                          onChange={(e) => {
+                            const updated = [...images];
+                            updated[idx].caption = e.target.value;
+                            setImages(updated);
+                          }}
+                          placeholder="Caption..."
+                          className="text-[10px] bg-transparent border-b border-slate-800 text-slate-300 w-full focus:outline-none focus:border-emerald-500 truncate"
+                        />
+                        <div className="flex items-center justify-between pt-1">
+                          {!img.isPrimary ? (
+                            <button
+                              type="button"
+                              onClick={() => handleSetPrimaryImage(idx)}
+                              className="text-[9px] text-emerald-400 hover:underline cursor-pointer"
+                            >
+                              Set Cover
+                            </button>
+                          ) : (
+                            <span className="text-[9px] text-emerald-500 font-bold">Cover</span>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="text-[9px] text-rose-400 hover:underline cursor-pointer"
+                            title="Remove Photo"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* SECTION 8: In-House Nookfinder Staff Specialist */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <UserCheck className="w-4 h-4" />
+                <span>8. Assigned In-House Nookfinder Specialist</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                All leads and visitor inquiries route directly to our verified staff advisors via Telegram and Email:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  {
+                    name: 'Marcus Vance',
+                    role: 'Affordable Housing & FHA Specialist',
+                    tg: '@nook_finder',
+                    email: 'nookkfinder@gmail.com',
+                  },
+                  {
+                    name: 'Sarah Chen',
+                    role: 'Suburban & Single-Family Advisor',
+                    tg: '@nook_finder',
+                    email: 'nookkfinder@gmail.com',
+                  },
+                  {
+                    name: 'David Reynolds',
+                    role: 'Rental Leasing & Grant Coordinator',
+                    tg: '@nook_finder',
+                    email: 'nookkfinder@gmail.com',
+                  },
+                ].map((agent) => (
+                  <button
+                    key={agent.name}
+                    type="button"
+                    onClick={() => setAgentName(agent.name)}
+                    className={`p-3.5 rounded-lg border text-left transition-colors cursor-pointer ${
+                      agentName === agent.name
+                        ? 'bg-emerald-950/80 border-emerald-500 shadow-md'
+                        : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white text-sm">{agent.name}</span>
+                      {agentName === agent.name && (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      )}
+                    </div>
+                    <span className="block text-[11px] text-emerald-400 mt-0.5">
+                      {agent.role}
+                    </span>
+                    <span className="block text-[10px] text-slate-400 mt-1 font-mono">
+                      Telegram: {agent.tg} • {agent.email}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Form Actions */}
+            <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+              <button
+                type="button"
+                onClick={() => setActiveTab(listingType)}
+                className="px-4 py-2.5 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
+              >
+                Cancel & Return
+              </button>
+
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-lg cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>{editingId ? 'Save & Update Listing' : 'Publish to Live Catalog'}</span>
+              </button>
+            </div>
+          </form>
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default function ControlPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-white text-sm">Loading Control Panel...</div>}>
+      <ControlPanelContent />
+    </Suspense>
+  );
+}
