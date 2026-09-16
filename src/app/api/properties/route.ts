@@ -3,6 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { Property } from '@/types/property';
 import { MOCK_PROPERTIES } from '@/data/mockProperties';
+import {
+  dbGetProperties,
+  dbSaveProperty,
+  dbSaveBatchProperties,
+  dbDeleteProperty,
+  dbClearAllProperties,
+} from '@/lib/db';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DATA_FILE = path.join(DATA_DIR, 'properties.json');
@@ -26,7 +33,8 @@ function normalizeProperty(p: Property): Property {
           phone: '+1 (404) 890-1244',
           email: OFFICIAL_EMAIL,
           telegram: OFFICIAL_TELEGRAM,
-          avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
           rating: 4.9,
           reviewCount: 42,
           verifiedLicense: 'NF-STAFF-40918',
@@ -69,17 +77,30 @@ function writeDataFile(properties: Property[]): boolean {
   }
 }
 
-// GET /api/properties - Retrieve all properties from central server storage
+// GET /api/properties - Retrieve all properties from Neon Postgres or file backup
 export async function GET() {
+  try {
+    const dbProps = await dbGetProperties();
+    if (dbProps !== null) {
+      // Sync to local backup in background
+      writeDataFile(dbProps);
+      return NextResponse.json(
+        { success: true, properties: dbProps, source: 'database' },
+        { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+      );
+    }
+  } catch (err) {
+    console.warn('DB GET fallback to file:', err);
+  }
+
   const properties = ensureDataFile();
-  return NextResponse.json({ success: true, properties }, {
-    headers: {
-      'Cache-Control': 'no-store, max-age=0',
-    },
-  });
+  return NextResponse.json(
+    { success: true, properties, source: 'file' },
+    { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+  );
 }
 
-// POST /api/properties - Add or update a property in central server storage
+// POST /api/properties - Add or update a property
 export async function POST(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -87,6 +108,9 @@ export async function POST(req: NextRequest) {
 
     if (action === 'reset') {
       const resetListings = MOCK_PROPERTIES.map(normalizeProperty);
+      try {
+        await dbSaveBatchProperties(resetListings);
+      } catch {}
       writeDataFile(resetListings);
       return NextResponse.json({ success: true, properties: resetListings });
     }
@@ -95,16 +119,24 @@ export async function POST(req: NextRequest) {
 
     // Support batch reseeding / bulk sync
     if (body.properties && Array.isArray(body.properties)) {
+      const normalizedList = body.properties
+        .filter((p: any) => p && p.id && p.title)
+        .map(normalizeProperty);
+
+      let updatedFromDb = await dbSaveBatchProperties(normalizedList);
+      if (updatedFromDb !== null) {
+        writeDataFile(updatedFromDb);
+        return NextResponse.json({ success: true, properties: updatedFromDb, source: 'database' });
+      }
+
       const current = ensureDataFile();
       const currentMap = new Map(current.map((p) => [p.id, p]));
-      for (const p of body.properties) {
-        if (p && p.id && p.title) {
-          currentMap.set(p.id, normalizeProperty(p));
-        }
+      for (const p of normalizedList) {
+        currentMap.set(p.id, p);
       }
       const updated = Array.from(currentMap.values());
       writeDataFile(updated);
-      return NextResponse.json({ success: true, properties: updated });
+      return NextResponse.json({ success: true, properties: updated, source: 'file' });
     }
 
     const propertyToSave: Property = body.property || body;
@@ -114,6 +146,15 @@ export async function POST(req: NextRequest) {
     }
 
     const normalized = normalizeProperty(propertyToSave);
+
+    // Save to Database
+    const dbUpdated = await dbSaveProperty(normalized);
+    if (dbUpdated !== null) {
+      writeDataFile(dbUpdated);
+      return NextResponse.json({ success: true, properties: dbUpdated, source: 'database' });
+    }
+
+    // Fallback to file storage
     const current = ensureDataFile();
     const existingIndex = current.findIndex((p) => p.id === normalized.id);
 
@@ -126,7 +167,7 @@ export async function POST(req: NextRequest) {
     }
 
     writeDataFile(updated);
-    return NextResponse.json({ success: true, properties: updated });
+    return NextResponse.json({ success: true, properties: updated, source: 'file' });
   } catch (error: any) {
     console.error('Error updating property on server:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -141,6 +182,7 @@ export async function DELETE(req: NextRequest) {
     const action = searchParams.get('action');
 
     if (action === 'clear_all') {
+      await dbClearAllProperties();
       writeDataFile([]);
       return NextResponse.json({ success: true, properties: [] });
     }
@@ -149,11 +191,19 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Missing property ID' }, { status: 400 });
     }
 
+    // Delete from Database
+    const dbUpdated = await dbDeleteProperty(id);
+    if (dbUpdated !== null) {
+      writeDataFile(dbUpdated);
+      return NextResponse.json({ success: true, properties: dbUpdated, source: 'database' });
+    }
+
+    // Fallback to file storage
     const current = ensureDataFile();
     const updated = current.filter((p) => p.id !== id);
     writeDataFile(updated);
 
-    return NextResponse.json({ success: true, properties: updated });
+    return NextResponse.json({ success: true, properties: updated, source: 'file' });
   } catch (error: any) {
     console.error('Error deleting property on server:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

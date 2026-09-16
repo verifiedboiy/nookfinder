@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { dbGetInquiries, dbSaveInquiry, getSql, initDb } from '@/lib/db';
 
 export interface Inquiry {
   id: string;
@@ -52,10 +53,24 @@ function writeInquiriesFile(inquiries: Inquiry[]): boolean {
 
 // GET /api/inquiries - List all inquiries
 export async function GET() {
+  try {
+    const dbList = await dbGetInquiries();
+    if (dbList !== null) {
+      writeInquiriesFile(dbList);
+      return NextResponse.json(
+        { success: true, inquiries: dbList, source: 'database' },
+        { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+      );
+    }
+  } catch (err) {
+    console.warn('DB inquiries get fallback to file:', err);
+  }
+
   const inquiries = ensureInquiriesFile();
-  return NextResponse.json({ success: true, inquiries }, {
-    headers: { 'Cache-Control': 'no-store, max-age=0' },
-  });
+  return NextResponse.json(
+    { success: true, inquiries, source: 'file' },
+    { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+  );
 }
 
 // POST /api/inquiries - Record a new showing/tour inquiry
@@ -76,6 +91,9 @@ export async function POST(req: NextRequest) {
       status: 'new',
     };
 
+    // Save to Database
+    await dbSaveInquiry(newInquiry);
+
     const current = ensureInquiriesFile();
     const updated = [newInquiry, ...current];
     writeInquiriesFile(updated);
@@ -93,6 +111,20 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     const action = searchParams.get('action');
+
+    const sql = getSql();
+    if (sql) {
+      try {
+        await initDb();
+        if (action === 'clear_all') {
+          await sql`DELETE FROM inquiries;`;
+        } else if (id) {
+          await sql`DELETE FROM inquiries WHERE id = ${id};`;
+        }
+      } catch (e) {
+        console.error('Error deleting inquiry in DB:', e);
+      }
+    }
 
     if (action === 'clear_all') {
       writeInquiriesFile([]);
