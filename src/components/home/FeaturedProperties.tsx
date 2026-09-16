@@ -2,26 +2,58 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getStoredProperties } from '@/data/propertyStore';
+import { getStoredProperties, syncWithServer } from '@/data/propertyStore';
 import { Property } from '@/types/property';
 import PropertyCard from '@/components/listings/PropertyCard';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import PropertyCardSkeleton, { LoadingPropertiesBanner } from '@/components/listings/PropertyCardSkeleton';
+import { ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function FeaturedProperties() {
   const [filter, setFilter] = useState<'all' | 'sale' | 'rent'>('all');
-  const [allProperties, setAllProperties] = useState<Property[]>([]);
+  const [allProperties, setAllProperties] = useState<Property[]>(() =>
+    typeof window !== 'undefined' ? getStoredProperties() : []
+  );
+  const [isLoading, setIsLoading] = useState(() =>
+    typeof window === 'undefined' ? true : getStoredProperties().length === 0
+  );
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = () => {
-      setAllProperties(getStoredProperties());
+      const stored = getStoredProperties();
+      if (isMounted) {
+        setAllProperties(stored);
+        if (stored.length > 0) {
+          setIsLoading(false);
+        }
+      }
     };
+
     loadData();
+
+    // Trigger server sync to pull latest database properties
+    syncWithServer()
+      .then((serverProps) => {
+        if (isMounted && Array.isArray(serverProps) && serverProps.length > 0) {
+          setAllProperties(serverProps);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
 
     window.addEventListener('nookfinder_storage_updated', loadData);
     window.addEventListener('storage', loadData);
     window.addEventListener('focus', loadData);
     window.addEventListener('visibilitychange', loadData);
+
     return () => {
+      isMounted = false;
       window.removeEventListener('nookfinder_storage_updated', loadData);
       window.removeEventListener('storage', loadData);
       window.removeEventListener('focus', loadData);
@@ -90,8 +122,21 @@ export default function FeaturedProperties() {
           </div>
         </div>
 
-        {/* Property Grid or Empty Catalog State */}
-        {filteredProperties.length === 0 ? (
+        {/* LOADING ANIMATION STATE */}
+        {isLoading && allProperties.length === 0 ? (
+          <div className="space-y-6">
+            <LoadingPropertiesBanner message="Loading verified affordable properties..." />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+              <PropertyCardSkeleton />
+            </div>
+          </div>
+        ) : filteredProperties.length === 0 ? (
+          /* Empty Catalog State */
           <div className="p-12 text-center bg-slate-50 border border-slate-200 rounded-xl space-y-3">
             <ShieldCheck className="w-10 h-10 text-emerald-700 mx-auto" />
             <h3 className="text-base font-bold text-slate-900 font-display">
@@ -102,6 +147,7 @@ export default function FeaturedProperties() {
             </p>
           </div>
         ) : (
+          /* Render Active Property Cards */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.slice(0, 6).map((property) => (
               <PropertyCard key={property.id} property={property} />
@@ -115,8 +161,17 @@ export default function FeaturedProperties() {
             href={`/listings${filter !== 'all' ? `?type=${filter}` : ''}`}
             className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-md bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-xs"
           >
-            <span>Explore All {allProperties.length} Verified Properties</span>
-            <ArrowRight className="w-4 h-4" />
+            {isLoading && allProperties.length === 0 ? (
+              <>
+                <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
+                <span>Loading All Verified Properties...</span>
+              </>
+            ) : (
+              <>
+                <span>Explore All {allProperties.length} Verified Properties</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </Link>
         </div>
       </div>

@@ -6,16 +6,22 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import FilterBar from '@/components/listings/FilterBar';
 import PropertyCard from '@/components/listings/PropertyCard';
+import PropertyCardSkeleton, { LoadingPropertiesBanner } from '@/components/listings/PropertyCardSkeleton';
 import InteractiveMap from '@/components/listings/InteractiveMap';
 import PageGuide from '@/components/guide/PageGuide';
-import { getStoredProperties } from '@/data/propertyStore';
+import { getStoredProperties, syncWithServer } from '@/data/propertyStore';
 import { FilterState, ListingType, Property } from '@/types/property';
-import { Map, Grid, ShieldCheck } from 'lucide-react';
+import { Map, Grid, ShieldCheck, RefreshCw } from 'lucide-react';
 
 function ListingsContent() {
   const searchParams = useSearchParams();
 
-  const [allProperties, setAllProperties] = useState<Property[]>([]);
+  const [allProperties, setAllProperties] = useState<Property[]>(() =>
+    typeof window !== 'undefined' ? getStoredProperties() : []
+  );
+  const [isLoading, setIsLoading] = useState(() =>
+    typeof window === 'undefined' ? true : getStoredProperties().length === 0
+  );
 
   // Initialize filters based on URL parameters
   const [filters, setFilters] = useState<FilterState>({
@@ -41,18 +47,43 @@ function ListingsContent() {
   const [sortOrder, setSortOrder] = useState<'price-asc' | 'price-desc' | 'newest'>('price-asc');
   const [mobileTab, setMobileTab] = useState<'list' | 'map'>('list');
 
-  // Load properties from reactive store
+  // Load properties from reactive store & sync with server
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = () => {
-      setAllProperties(getStoredProperties());
+      const stored = getStoredProperties();
+      if (isMounted) {
+        setAllProperties(stored);
+        if (stored.length > 0) {
+          setIsLoading(false);
+        }
+      }
     };
+
     loadData();
+
+    syncWithServer()
+      .then((serverProps) => {
+        if (isMounted && Array.isArray(serverProps) && serverProps.length > 0) {
+          setAllProperties(serverProps);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
 
     window.addEventListener('nookfinder_storage_updated', loadData);
     window.addEventListener('storage', loadData);
     window.addEventListener('focus', loadData);
     window.addEventListener('visibilitychange', loadData);
+
     return () => {
+      isMounted = false;
       window.removeEventListener('nookfinder_storage_updated', loadData);
       window.removeEventListener('storage', loadData);
       window.removeEventListener('focus', loadData);
@@ -98,26 +129,56 @@ function ListingsContent() {
       if (
         filters.location !== 'all' &&
         !prop.address.city.toLowerCase().includes(filters.location.toLowerCase()) &&
-        !prop.address.state.toLowerCase().includes(filters.location.toLowerCase())
+        !prop.address.neighborhood?.toLowerCase().includes(filters.location.toLowerCase())
       ) {
         return false;
       }
 
-      if (prop.price > filters.maxPrice) return false;
-
-      if (filters.bedrooms !== 'any') {
-        if (prop.specs.bedrooms < Number(filters.bedrooms)) return false;
+      // Filter by property type
+      if (filters.propertyType !== 'all' && prop.propertyType !== filters.propertyType) {
+        return false;
       }
 
+      // Filter by budget
+      if (prop.price < filters.minPrice || prop.price > filters.maxPrice) {
+        return false;
+      }
+
+      // Filter by bedrooms
+      if (filters.bedrooms !== 'any' && prop.specs.bedrooms < (filters.bedrooms as number)) {
+        return false;
+      }
+
+      // Filter by bathrooms
+      if (filters.bathrooms !== 'any' && prop.specs.bathrooms < (filters.bathrooms as number)) {
+        return false;
+      }
+
+      // Toggles
       if (filters.verifiedOnly && !prop.isVerified) return false;
       if (filters.fhaOnly && !prop.fhaEligible) return false;
+      if (filters.underMarketOnly && !prop.underMarketValue) return false;
+
+      // Search Query Text
+      if (filters.query.trim()) {
+        const q = filters.query.toLowerCase();
+        const matchTitle = prop.title.toLowerCase().includes(q);
+        const matchCity = prop.address.city.toLowerCase().includes(q);
+        const matchState = prop.address.state.toLowerCase().includes(q);
+        const matchZip = prop.address.zipCode.includes(q);
+        const matchDesc = prop.description.toLowerCase().includes(q);
+        if (!matchTitle && !matchCity && !matchState && !matchZip && !matchDesc) {
+          return false;
+        }
+      }
 
       return true;
     })
     .sort((a, b) => {
       if (sortOrder === 'price-asc') return a.price - b.price;
       if (sortOrder === 'price-desc') return b.price - a.price;
-      return new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime();
+      if (sortOrder === 'newest') return new Date(b.listedAt).getTime() - new Date(a.listedAt).getTime();
+      return 0;
     });
 
   const handleResetFilters = () => {
@@ -141,12 +202,12 @@ function ListingsContent() {
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
 
-      {/* Filter Bar Controls */}
+      {/* Filter Control Header */}
       <FilterBar
         filters={filters}
         onChange={setFilters}
         onReset={handleResetFilters}
-        resultCount={filteredProperties.length}
+        resultCount={isLoading && allProperties.length === 0 ? 0 : filteredProperties.length}
       />
 
       {/* Main Split Layout */}
@@ -170,7 +231,7 @@ function ListingsContent() {
             }`}
           >
             <Grid className="w-3.5 h-3.5" />
-            <span>List View ({filteredProperties.length})</span>
+            <span>List View ({isLoading && allProperties.length === 0 ? '...' : filteredProperties.length})</span>
           </button>
           <button
             onClick={() => setMobileTab('map')}
@@ -194,9 +255,18 @@ function ListingsContent() {
             {/* Sort Order Bar */}
             <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 text-xs">
               <span className="text-slate-500 font-medium">
-                Showing{' '}
-                <strong className="text-slate-900">{filteredProperties.length}</strong>{' '}
-                {filters.listingType === 'sale' ? 'homes for sale' : 'verified rentals'}
+                {isLoading && allProperties.length === 0 ? (
+                  <span className="inline-flex items-center gap-1.5 text-emerald-800 font-semibold">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-700" />
+                    <span>Loading verified inventory from database...</span>
+                  </span>
+                ) : (
+                  <>
+                    Showing{' '}
+                    <strong className="text-slate-900">{filteredProperties.length}</strong>{' '}
+                    {filters.listingType === 'sale' ? 'homes for sale' : 'verified rentals'}
+                  </>
+                )}
               </span>
 
               <div className="flex items-center gap-2">
@@ -213,8 +283,16 @@ function ListingsContent() {
               </div>
             </div>
 
-            {/* Empty State */}
-            {filteredProperties.length === 0 && (
+            {/* LOADING STATE SKELETON CARDS */}
+            {isLoading && allProperties.length === 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <PropertyCardSkeleton />
+                <PropertyCardSkeleton />
+                <PropertyCardSkeleton />
+                <PropertyCardSkeleton />
+              </div>
+            ) : filteredProperties.length === 0 ? (
+              /* Empty Filter State */
               <div className="bg-white rounded-lg border border-slate-200 p-12 text-center space-y-3">
                 <ShieldCheck className="w-10 h-10 text-slate-400 mx-auto" />
                 <h3 className="text-base font-bold text-slate-900">No properties matched this filter</h3>
@@ -229,20 +307,20 @@ function ListingsContent() {
                   Reset All Filters
                 </button>
               </div>
+            ) : (
+              /* Active Property Cards Grid */
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {filteredProperties.map((property) => (
+                  <div
+                    key={property.id}
+                    onMouseEnter={() => setSelectedPropertyId(property.id)}
+                    className={selectedPropertyId === property.id ? 'ring-2 ring-emerald-600 rounded-lg' : ''}
+                  >
+                    <PropertyCard property={property} />
+                  </div>
+                ))}
+              </div>
             )}
-
-            {/* Property Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredProperties.map((property) => (
-                <div
-                  key={property.id}
-                  onMouseEnter={() => setSelectedPropertyId(property.id)}
-                  className={selectedPropertyId === property.id ? 'ring-2 ring-emerald-600 rounded-lg' : ''}
-                >
-                  <PropertyCard property={property} />
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Right Column: Sticky Interactive Map (5 cols) */}
@@ -269,8 +347,8 @@ export default function ListingsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 p-12 text-center text-slate-500">
-          Loading Nookfinder listings...
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">
+          Loading verified listings...
         </div>
       }
     >
