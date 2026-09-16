@@ -92,6 +92,21 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+
+    // Support batch reseeding / bulk sync
+    if (body.properties && Array.isArray(body.properties)) {
+      const current = ensureDataFile();
+      const currentMap = new Map(current.map((p) => [p.id, p]));
+      for (const p of body.properties) {
+        if (p && p.id && p.title) {
+          currentMap.set(p.id, normalizeProperty(p));
+        }
+      }
+      const updated = Array.from(currentMap.values());
+      writeDataFile(updated);
+      return NextResponse.json({ success: true, properties: updated });
+    }
+
     const propertyToSave: Property = body.property || body;
 
     if (!propertyToSave || !propertyToSave.title) {
