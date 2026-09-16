@@ -133,52 +133,13 @@ export async function syncWithServer(): Promise<Property[]> {
 
   try {
     isSyncing = true;
-
-    // Load current local cache (memory / localStorage / IndexedDB)
-    let localProps = getStoredProperties();
-    if (localProps.length === 0) {
-      const idbProps = await getAllFromIDB();
-      if (idbProps.length > 0) {
-        localProps = idbProps.map(normalizeProperty);
-        memoryCache = localProps;
-      }
-    }
-
     const res = await fetch('/api/properties', { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.properties)) {
         const serverProps: Property[] = data.properties.map(normalizeProperty);
-
-        // Merge server and local listings by ID (local unpublished listings are preserved and synced up)
-        const mergedMap = new Map<string, Property>();
-
-        // Add server properties
-        serverProps.forEach((p) => mergedMap.set(p.id, p));
-
-        // Keep any local properties and push missing ones to server
-        const missingOnServer: Property[] = [];
-        localProps.forEach((p) => {
-          if (!mergedMap.has(p.id)) {
-            mergedMap.set(p.id, p);
-            missingOnServer.push(p);
-          }
-        });
-
-        // Upload any local listings to server that were missing on server
-        if (missingOnServer.length > 0) {
-          for (const item of missingOnServer) {
-            fetch('/api/properties', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ property: item }),
-            }).catch(() => {});
-          }
-        }
-
-        const merged = Array.from(mergedMap.values());
-        notifyStoreUpdate(merged);
-        return merged;
+        notifyStoreUpdate(serverProps);
+        return serverProps;
       }
     }
   } catch (err) {
@@ -304,6 +265,32 @@ export function saveStoredProperty(property: Property): Property[] {
 // ---------------------------------------------------------------------------
 // Delete Listing Handler
 // ---------------------------------------------------------------------------
+export async function deleteStoredPropertyAsync(id: string): Promise<Property[]> {
+  const current = getStoredProperties();
+  const updated = current.filter((p) => p.id !== id);
+  notifyStoreUpdate(updated);
+
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch(`/api/properties?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.properties)) {
+          const serverList = data.properties.map(normalizeProperty);
+          notifyStoreUpdate(serverList);
+          return serverList;
+        }
+      }
+    } catch (err) {
+      console.error('Error deleting property on server:', err);
+    }
+  }
+
+  return updated;
+}
+
 export function deleteStoredProperty(id: string): Property[] {
   const current = getStoredProperties();
   const updated = current.filter((p) => p.id !== id);

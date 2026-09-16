@@ -11,6 +11,7 @@ import {
   saveStoredProperty,
   saveStoredPropertyAsync,
   deleteStoredProperty,
+  deleteStoredPropertyAsync,
   syncWithServer,
 } from '@/data/propertyStore';
 import {
@@ -624,13 +625,13 @@ function ControlPanelContent() {
   };
 
   // Delete single property with confirmation
-  const handleDelete = (prop: Property) => {
+  const handleDelete = async (prop: Property) => {
     if (
       confirm(
         `Are you sure you want to permanently delete "${prop.title}" (ID: ${prop.id})?`
       )
     ) {
-      const updated = deleteStoredProperty(prop.id);
+      const updated = await deleteStoredPropertyAsync(prop.id);
       setProperties(updated);
       showNotification(`"${prop.title}" was permanently removed.`);
     }
