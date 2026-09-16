@@ -11,6 +11,7 @@ import {
   saveStoredProperty,
   saveStoredPropertyAsync,
   deleteStoredProperty,
+  syncWithServer,
 } from '@/data/propertyStore';
 import {
   ShieldCheck,
@@ -156,8 +157,20 @@ function ControlPanelContent() {
   };
 
   useEffect(() => {
-    const loaded = getStoredProperties();
-    setProperties(loaded);
+    const loadData = () => {
+      const loaded = getStoredProperties();
+      setProperties(loaded);
+    };
+
+    loadData();
+
+    // Trigger server / IDB sync immediately
+    syncWithServer().then((synced) => {
+      if (Array.isArray(synced) && synced.length > 0) {
+        setProperties(synced);
+      }
+    });
+
     fetchInquiries();
 
     // Check for saved draft in localStorage
@@ -177,15 +190,30 @@ function ControlPanelContent() {
       console.warn('Could not read draft from localStorage:', e);
     }
 
-    // If navigated with ?edit=[id], automatically open edit form
+    // Reactive listeners: automatically re-render when storage or background sync finishes
+    window.addEventListener('nookfinder_storage_updated', loadData);
+    window.addEventListener('storage', loadData);
+    window.addEventListener('focus', loadData);
+    window.addEventListener('visibilitychange', loadData);
+
+    return () => {
+      window.removeEventListener('nookfinder_storage_updated', loadData);
+      window.removeEventListener('storage', loadData);
+      window.removeEventListener('focus', loadData);
+      window.removeEventListener('visibilitychange', loadData);
+    };
+  }, []);
+
+  // Open edit form when ?edit=id is provided in URL
+  useEffect(() => {
     const editId = searchParams?.get('edit');
-    if (editId) {
-      const target = loaded.find((p) => p.id === editId);
+    if (editId && properties.length > 0) {
+      const target = properties.find((p) => p.id === editId);
       if (target) {
         editProperty(target);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, properties]);
 
   const showNotification = (msg: string) => {
     setNotification(msg);

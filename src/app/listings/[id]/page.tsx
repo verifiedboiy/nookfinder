@@ -68,6 +68,24 @@ export default function PropertyDetailPage() {
 
   const property = properties.find((p) => p.id === propertyId) || null;
 
+  // Keyboard navigation for photo lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightboxOpen(false);
+      } else if (e.key === 'ArrowRight') {
+        setActivePhotoIdx((prev) => (prev + 1) % (property?.images?.length || 1));
+      } else if (e.key === 'ArrowLeft') {
+        setActivePhotoIdx((prev) => (prev - 1 + (property?.images?.length || 1)) % (property?.images?.length || 1));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, property?.images?.length]);
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">
@@ -243,12 +261,12 @@ export default function PropertyDetailPage() {
           </div>
         </div>
 
-        {/* COMPREHENSIVE MULTI-PHOTO GALLERY (3 to 20 Photos) */}
+        {/* COMPREHENSIVE MULTI-PHOTO GALLERY (3 to 20 Photos - Clean & Proportioned) */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-emerald-700" />
-              <span>Full Photo Gallery ({property.images.length} Verified Photos)</span>
+              <span>Verified Photo Gallery ({property.images.length} Photos)</span>
             </span>
 
             <button
@@ -257,87 +275,257 @@ export default function PropertyDetailPage() {
                 setActivePhotoIdx(0);
                 setLightboxOpen(true);
               }}
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline cursor-pointer"
             >
-              Expand All {property.images.length} Photos in Fullscreen
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>View All {property.images.length} Photos Fullscreen</span>
             </button>
           </div>
 
-          {/* Mosaic Gallery Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            {/* Primary Large Image (spans 2 cols, 2 rows on desktop) */}
-            <div
-              onClick={() => {
-                setActivePhotoIdx(0);
-                setLightboxOpen(true);
-              }}
-              className="md:col-span-2 md:row-span-2 relative aspect-16/11 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 cursor-pointer group"
-            >
-              <Image
-                src={property.images[0]?.url || ''}
-                alt={property.images[0]?.caption || property.title}
-                fill
-                unoptimized={property.images[0]?.url?.startsWith('data:')}
-                className="object-cover group-hover:scale-102 transition-transform duration-300"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
-              <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                {property.images[0]?.caption || 'Primary View'}
-              </span>
-            </div>
-
-            {/* Grid of secondary photos */}
-            {property.images.slice(1, 5).map((img, idx) => (
+          {/* Cleanly Constrained Gallery Container (Max Height bounded so images never blow up) */}
+          <div className="w-full h-[280px] sm:h-[360px] md:h-[440px] rounded-xl overflow-hidden border border-slate-200 bg-slate-950 shadow-xs select-none">
+            {property.images.length === 0 ? (
+              <div className="w-full h-full flex items-center justify-center text-slate-400">
+                <ImageIcon className="w-8 h-8 mr-2 text-slate-500" />
+                <span>No photos available for this listing</span>
+              </div>
+            ) : property.images.length === 1 ? (
+              // 1 Photo: Full bleed hero
               <div
-                key={idx}
                 onClick={() => {
-                  setActivePhotoIdx(idx + 1);
+                  setActivePhotoIdx(0);
                   setLightboxOpen(true);
                 }}
-                className="relative aspect-16/10 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 cursor-pointer group"
+                className="relative w-full h-full cursor-pointer group"
               >
                 <Image
-                  src={img.url}
-                  alt={img.caption || `Photo ${idx + 2}`}
+                  src={property.images[0].url}
+                  alt={property.images[0].caption || property.title}
                   fill
-                  unoptimized={img.url?.startsWith('data:')}
-                  className="object-cover group-hover:scale-103 transition-transform duration-300"
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  unoptimized={property.images[0].url.startsWith('data:')}
+                  className="object-cover group-hover:scale-101 transition-transform duration-300"
+                  sizes="100vw"
+                  priority
                 />
-                <span className="absolute bottom-2 left-2 bg-slate-900/70 text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
-                  {img.caption}
+                <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
+                  {property.images[0].caption || 'Primary View'}
                 </span>
-                {idx === 3 && property.images.length > 5 && (
-                  <div className="absolute inset-0 bg-slate-950/70 text-white font-bold text-sm flex items-center justify-center">
-                    +{property.images.length - 5} More Photos
-                  </div>
-                )}
               </div>
-            ))}
-          </div>
-
-          {/* Horizontal thumbnail ribbon for additional photos beyond 5 */}
-          {property.images.length > 5 && (
-            <div className="flex gap-2 overflow-x-auto pb-2 pt-1">
-              {property.images.slice(5).map((img, idx) => (
+            ) : property.images.length === 2 ? (
+              // 2 Photos: 50 / 50 Split
+              <div className="grid grid-cols-2 gap-2 h-full w-full">
+                {property.images.slice(0, 2).map((img, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => {
+                      setActivePhotoIdx(idx);
+                      setLightboxOpen(true);
+                    }}
+                    className="relative h-full w-full cursor-pointer group overflow-hidden"
+                  >
+                    <Image
+                      src={img.url}
+                      alt={img.caption || `Photo ${idx + 1}`}
+                      fill
+                      unoptimized={img.url.startsWith('data:')}
+                      className="object-cover group-hover:scale-102 transition-transform duration-300"
+                      sizes="50vw"
+                      priority={idx === 0}
+                    />
+                    <span className="absolute bottom-2.5 left-2.5 bg-slate-900/80 backdrop-blur-xs text-white text-[11px] px-2 py-0.5 rounded truncate max-w-[85%]">
+                      {img.caption}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : property.images.length === 3 ? (
+              // 3 Photos: 2/3 Main Hero (Left) + 2 Stacked Tiles (Right)
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 h-full w-full">
                 <div
-                  key={idx}
                   onClick={() => {
-                    setActivePhotoIdx(idx + 5);
+                    setActivePhotoIdx(0);
                     setLightboxOpen(true);
                   }}
-                  className="relative w-28 h-20 rounded border border-slate-200 shrink-0 overflow-hidden cursor-pointer hover:border-emerald-600 transition-colors"
+                  className="md:col-span-2 relative h-full w-full cursor-pointer group overflow-hidden"
+                >
+                  <Image
+                    src={property.images[0].url}
+                    alt={property.images[0].caption || property.title}
+                    fill
+                    unoptimized={property.images[0].url.startsWith('data:')}
+                    className="object-cover group-hover:scale-102 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, 66vw"
+                    priority
+                  />
+                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
+                    {property.images[0].caption || 'Primary View'}
+                  </span>
+                </div>
+
+                <div className="grid grid-rows-2 gap-2 h-full">
+                  {property.images.slice(1, 3).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setActivePhotoIdx(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className="relative h-full w-full cursor-pointer group overflow-hidden"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `Photo ${idx + 2}`}
+                        fill
+                        unoptimized={img.url.startsWith('data:')}
+                        className="object-cover group-hover:scale-103 transition-transform duration-300"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                      />
+                      <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
+                        {img.caption}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : property.images.length === 4 ? (
+              // 4 Photos: 2/3 Main Hero (Left) + 3 Stacked Tiles (Right)
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 h-full w-full">
+                <div
+                  onClick={() => {
+                    setActivePhotoIdx(0);
+                    setLightboxOpen(true);
+                  }}
+                  className="md:col-span-2 relative h-full w-full cursor-pointer group overflow-hidden"
+                >
+                  <Image
+                    src={property.images[0].url}
+                    alt={property.images[0].caption || property.title}
+                    fill
+                    unoptimized={property.images[0].url.startsWith('data:')}
+                    className="object-cover group-hover:scale-102 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, 66vw"
+                    priority
+                  />
+                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
+                    {property.images[0].caption || 'Primary View'}
+                  </span>
+                </div>
+
+                <div className="grid grid-rows-3 gap-2 h-full">
+                  {property.images.slice(1, 4).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setActivePhotoIdx(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className="relative h-full w-full cursor-pointer group overflow-hidden"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `Photo ${idx + 2}`}
+                        fill
+                        unoptimized={img.url.startsWith('data:')}
+                        className="object-cover group-hover:scale-103 transition-transform duration-300"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                      />
+                      <span className="absolute bottom-1.5 left-1.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-1.5 py-0.2 rounded truncate max-w-[85%]">
+                        {img.caption}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // 5+ Photos: Balanced 5-Tile Mosaic (50% Hero + 2x2 Grid of 4)
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-full w-full">
+                <div
+                  onClick={() => {
+                    setActivePhotoIdx(0);
+                    setLightboxOpen(true);
+                  }}
+                  className="relative h-full w-full cursor-pointer group overflow-hidden"
+                >
+                  <Image
+                    src={property.images[0].url}
+                    alt={property.images[0].caption || property.title}
+                    fill
+                    unoptimized={property.images[0].url.startsWith('data:')}
+                    className="object-cover group-hover:scale-102 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                  />
+                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
+                    {property.images[0].caption || 'Primary View'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 grid-rows-2 gap-2 h-full">
+                  {property.images.slice(1, 5).map((img, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setActivePhotoIdx(idx + 1);
+                        setLightboxOpen(true);
+                      }}
+                      className="relative h-full w-full cursor-pointer group overflow-hidden"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `Photo ${idx + 2}`}
+                        fill
+                        unoptimized={img.url.startsWith('data:')}
+                        className="object-cover group-hover:scale-103 transition-transform duration-300"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                      />
+                      <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
+                        {img.caption}
+                      </span>
+
+                      {/* Overly on 5th photo when more exist */}
+                      {idx === 3 && property.images.length > 5 && (
+                        <div className="absolute inset-0 bg-slate-950/75 hover:bg-slate-950/65 backdrop-blur-xs text-white font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-colors">
+                          <ImageIcon className="w-5 h-5 text-emerald-400" />
+                          <span>+{property.images.length - 5} More Photos</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Clean Horizontal Thumbnail Scrubber for all photos (3-20) */}
+          {property.images.length > 1 && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+              {property.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setActivePhotoIdx(idx);
+                    setLightboxOpen(true);
+                  }}
+                  className={`relative w-20 h-14 sm:w-24 sm:h-16 rounded-lg border overflow-hidden shrink-0 cursor-pointer transition-all ${
+                    idx === activePhotoIdx
+                      ? 'border-emerald-600 ring-2 ring-emerald-500/40 opacity-100'
+                      : 'border-slate-200 hover:border-slate-400 opacity-75 hover:opacity-100'
+                  }`}
+                  title={`View photo ${idx + 1}: ${img.caption}`}
                 >
                   <Image
                     src={img.url}
                     alt={img.caption}
                     fill
-                    unoptimized={img.url?.startsWith('data:')}
+                    unoptimized={img.url.startsWith('data:')}
                     className="object-cover"
-                    sizes="112px"
+                    sizes="96px"
                   />
-                </div>
+                  <span className="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white text-[9px] px-1 py-0.2 truncate text-center">
+                    {idx + 1}
+                  </span>
+                </button>
               ))}
             </div>
           )}
@@ -345,30 +533,34 @@ export default function PropertyDetailPage() {
 
         {/* FULLSCREEN LIGHTBOX MODAL */}
         {lightboxOpen && (
-          <div className="fixed inset-0 z-50 bg-slate-950/95 flex flex-col justify-between p-4 sm:p-8 animate-in fade-in duration-200">
+          <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 animate-in fade-in duration-200">
             {/* Top Bar */}
             <div className="flex items-center justify-between text-white border-b border-slate-800 pb-3">
-              <span className="text-sm font-semibold">
-                Photo {activePhotoIdx + 1} of {property.images.length}:{' '}
-                <span className="text-slate-300 font-normal">
+              <div className="flex items-center gap-2.5">
+                <span className="px-2 py-0.5 rounded bg-emerald-900/80 text-emerald-300 text-xs font-mono font-bold">
+                  Photo {activePhotoIdx + 1} of {property.images.length}
+                </span>
+                <span className="text-sm font-semibold text-slate-200 truncate max-w-md">
                   {property.images[activePhotoIdx]?.caption}
                 </span>
-              </span>
+              </div>
 
-              <button
-                type="button"
-                onClick={() => setLightboxOpen(false)}
-                className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white"
-                title="Close Lightbox"
-                aria-label="Close Lightbox"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(false)}
+                  className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white transition-colors cursor-pointer"
+                  title="Close Lightbox (Esc)"
+                  aria-label="Close Lightbox"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Central Active Photo */}
-            <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
-              <div className="relative w-full h-full max-h-[78vh] max-w-5xl">
+            {/* Central Active Photo Viewport */}
+            <div className="relative flex-1 flex items-center justify-center my-3 overflow-hidden">
+              <div className="relative w-full h-full max-h-[72vh] max-w-5xl flex items-center justify-center">
                 <Image
                   src={property.images[activePhotoIdx]?.url || ''}
                   alt={property.images[activePhotoIdx]?.caption || 'Property photo'}
@@ -380,41 +572,52 @@ export default function PropertyDetailPage() {
                 />
               </div>
 
-              {/* Prev / Next buttons */}
-              <button
-                type="button"
-                onClick={prevPhoto}
-                className="absolute left-2 p-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white shadow-lg"
-                title="Previous Photo"
-                aria-label="Previous Photo"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                type="button"
-                onClick={nextPhoto}
-                className="absolute right-2 p-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white shadow-lg"
-                title="Next Photo"
-                aria-label="Next Photo"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
+              {/* Navigation Arrows */}
+              {property.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={prevPhoto}
+                    className="absolute left-2 sm:left-4 p-3 rounded-full bg-slate-900/85 hover:bg-slate-800 text-white shadow-xl transition-transform hover:scale-105 cursor-pointer"
+                    title="Previous Photo (Left Arrow)"
+                    aria-label="Previous Photo"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextPhoto}
+                    className="absolute right-2 sm:right-4 p-3 rounded-full bg-slate-900/85 hover:bg-slate-800 text-white shadow-xl transition-transform hover:scale-105 cursor-pointer"
+                    title="Next Photo (Right Arrow)"
+                    aria-label="Next Photo"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Bottom thumbnail tray */}
-            <div className="flex gap-2 justify-center overflow-x-auto pt-2 border-t border-slate-800">
+            {/* Bottom Thumbnail Tray */}
+            <div className="flex gap-2 justify-center overflow-x-auto pt-2.5 border-t border-slate-800 scrollbar-thin">
               {property.images.map((img, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setActivePhotoIdx(idx)}
-                  className={`relative w-16 h-12 rounded overflow-hidden border shrink-0 transition-all ${
+                  className={`relative w-16 h-12 rounded-lg overflow-hidden border shrink-0 transition-all cursor-pointer ${
                     idx === activePhotoIdx
-                      ? 'border-emerald-500 scale-105 ring-2 ring-emerald-500'
-                      : 'border-slate-700 opacity-60 hover:opacity-100'
+                      ? 'border-emerald-500 scale-105 ring-2 ring-emerald-500 opacity-100'
+                      : 'border-slate-700 opacity-50 hover:opacity-100'
                   }`}
                 >
-                  <Image src={img.url} alt={img.caption} fill className="object-cover" sizes="64px" />
+                  <Image
+                    src={img.url}
+                    alt={img.caption}
+                    fill
+                    unoptimized={img.url.startsWith('data:')}
+                    className="object-cover"
+                    sizes="64px"
+                  />
                 </button>
               ))}
             </div>

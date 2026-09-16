@@ -1,1 +1,73 @@
-[]
+[
+  {
+    "id": "prop-sale-verified-01",
+    "title": "Modern Decatur Starter Residence",
+    "tagline": "Audited affordable residential housing in prime commuter setting.",
+    "description": "Verified listing certified compliant with local fair housing guidelines.",
+    "price": 189000,
+    "listingType": "sale",
+    "propertyType": "house",
+    "status": "available",
+    "isVerified": true,
+    "featured": true,
+    "fhaEligible": true,
+    "downPaymentAssistance": true,
+    "underMarketValue": true,
+    "address": {
+      "street": "742 Ponce De Leon Ave",
+      "city": "Decatur",
+      "state": "GA",
+      "zipCode": "30030",
+      "neighborhood": "Historic District",
+      "coordinates": {
+        "lat": 33.77,
+        "lng": -84.29
+      }
+    },
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "squareFeet": 1350,
+      "parkingSpaces": 1,
+      "yearBuilt": 2022,
+      "hoaMonthly": 0,
+      "propertyTaxAnnual": 1800,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee"
+    ],
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
+        "caption": "Front View & Landscaping",
+        "isPrimary": true
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        "caption": "Open Concept Living Room",
+        "isPrimary": false
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+        "caption": "Chef Kitchen & Dining",
+        "isPrimary": false
+      }
+    ],
+    "agent": {
+      "name": "Marcus Vance",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "phone": "+1 (404) 890-1244",
+      "email": "nookkfinder@gmail.com",
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "rating": 4.9,
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "listedAt": "2026-09-16T06:00:14.872Z"
+  }
+]
