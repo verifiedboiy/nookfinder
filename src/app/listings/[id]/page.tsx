@@ -23,6 +23,8 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   X,
   ImageIcon,
   DollarSign,
@@ -47,6 +49,7 @@ export default function PropertyDetailPage() {
   const [mobilePhotoIdx, setMobilePhotoIdx] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [likesCount, setLikesCount] = useState(86);
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
 
   // Inquiry Form State
   const [inquiryName, setInquiryName] = useState('');
@@ -949,12 +952,51 @@ export default function PropertyDetailPage() {
 
             {/* Narrative Description */}
             <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-xs space-y-3">
-              <h2 className="text-lg font-bold text-slate-900 font-display">
-                Property Overview
-              </h2>
-              <p className="text-sm text-slate-700 leading-relaxed">
-                {property.description}
-              </p>
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h2 className="text-lg font-bold text-slate-900 font-display">
+                  Property Overview
+                </h2>
+                {property.description && (property.description.length > 200 || property.description.includes('\n')) && (
+                  <span className="text-[11px] font-medium text-slate-400">
+                    {isOverviewExpanded ? 'Complete overview' : 'Quick overview'}
+                  </span>
+                )}
+              </div>
+
+              <div className="relative">
+                <p
+                  className={`text-sm text-slate-700 leading-relaxed whitespace-pre-line transition-all duration-200 ${
+                    !isOverviewExpanded && (property.description.length > 200 || property.description.includes('\n'))
+                      ? 'line-clamp-3'
+                      : ''
+                  }`}
+                >
+                  {property.description}
+                </p>
+
+                {/* Bottom subtle gradient overlay when collapsed */}
+                {!isOverviewExpanded && (property.description.length > 200 || property.description.includes('\n')) && (
+                  <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
+                )}
+              </div>
+
+              {property.description && (property.description.length > 200 || property.description.includes('\n')) && (
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition-colors cursor-pointer py-1 group"
+                    aria-expanded={isOverviewExpanded}
+                  >
+                    <span>{isOverviewExpanded ? 'See less' : 'See more'}</span>
+                    {isOverviewExpanded ? (
+                      <ChevronUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
+                    ) : (
+                      <ChevronDown className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Amenities Grid */}
