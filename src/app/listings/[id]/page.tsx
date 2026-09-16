@@ -243,7 +243,7 @@ export default function PropertyDetailPage() {
           </div>
         </div>
 
-        {/* COMPREHENSIVE MULTI-PHOTO GALLERY (3 to 10 Photos) */}
+        {/* COMPREHENSIVE MULTI-PHOTO GALLERY (3 to 20 Photos) */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
@@ -694,7 +694,70 @@ export default function PropertyDetailPage() {
         </div>
       </main>
 
-      <Footer />
+      {/* STICKY BOTTOM AGENT & CONTACT BAR (Always visible while scrolling) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-2xl py-3 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          {/* Left: Agent Info + Price */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 shrink-0 hidden sm:block">
+              <Image
+                src={property.agent.avatarUrl}
+                alt={property.agent.name}
+                fill
+                className="object-cover"
+                sizes="40px"
+              />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-bold text-slate-900 truncate font-display">
+                  {property.agent.name}
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                  <ShieldCheck className="w-3 h-3" /> In-House Specialist
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-500 truncate flex items-center gap-2">
+                <span className="font-semibold text-emerald-800">
+                  ${property.price.toLocaleString()}
+                  {isRent && <span className="font-normal text-slate-500"> / mo</span>}
+                </span>
+                <span className="hidden md:inline text-slate-400">•</span>
+                <span className="hidden md:inline truncate">{property.title}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Direct Contact Actions (Email & Telegram) */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Email Agent */}
+            <a
+              href={`mailto:nookkfinder@gmail.com?subject=Inquiry%20regarding%20Nookfinder%20Listing%20${property.id}`}
+              className="inline-flex items-center justify-center gap-1.5 py-2 px-3 sm:px-4 rounded-lg text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 active:scale-98 transition-all shadow-xs"
+              title="Email Agent (nookkfinder@gmail.com)"
+            >
+              <Mail className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Email <span className="hidden sm:inline">Agent</span></span>
+            </a>
+
+            {/* Telegram Direct Trigger */}
+            <a
+              href="https://t.me/nook_finder"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 py-2 px-3 sm:px-4 rounded-lg text-xs font-bold bg-sky-600 text-white hover:bg-sky-500 active:scale-98 transition-all shadow-xs"
+              title="Chat on Telegram (@nook_finder)"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Telegram<span className="hidden sm:inline"> (@nook_finder)</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div className="pb-16 sm:pb-20">
+        <Footer />
+      </div>
     </div>
   );
 }

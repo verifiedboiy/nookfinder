@@ -190,9 +190,9 @@ function ControlPanelContent() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const remainingSlots = 10 - images.length;
+    const remainingSlots = 20 - images.length;
     if (remainingSlots <= 0) {
-      alert('Maximum 10 photos reached. Please remove a photo before adding more.');
+      alert('Maximum 20 photos reached. Please remove a photo before adding more.');
       return;
     }
 
@@ -209,7 +209,7 @@ function ControlPanelContent() {
             .replace(/^[0-9]+\s*/, '');
 
           setImages((prev) => {
-            if (prev.length >= 10) return prev;
+            if (prev.length >= 20) return prev;
             return [
               ...prev,
               {
@@ -230,8 +230,8 @@ function ControlPanelContent() {
   // Add Photo by URL
   const handleAddImageUrl = () => {
     if (!newImageUrl.trim()) return;
-    if (images.length >= 10) {
-      alert('Maximum 10 photos allowed per listing.');
+    if (images.length >= 20) {
+      alert('Maximum 20 photos allowed per listing.');
       return;
     }
     setImages([
@@ -571,7 +571,7 @@ function ControlPanelContent() {
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Live inventory management, 3–10 gallery photo uploader, and staff dispatch
+              Live inventory management, 3–20 gallery photo uploader, and staff dispatch
             </p>
           </div>
         </div>
@@ -745,7 +745,7 @@ function ControlPanelContent() {
                 <div className="space-y-1">
                   <h3 className="text-base font-bold text-white">No For Sale Listings Yet</h3>
                   <p className="text-xs text-slate-400">
-                    Your For Sale catalog is clean. Click below to add your first verified house with 3–10 photos.
+                    Your For Sale catalog is clean. Click below to add your first verified house with 3–20 photos.
                   </p>
                 </div>
                 <button
@@ -964,7 +964,7 @@ function ControlPanelContent() {
                 <div className="space-y-1">
                   <h3 className="text-base font-bold text-white">No Rental Properties Yet</h3>
                   <p className="text-xs text-slate-400">
-                    Your rental catalog is clean. Click below to add your first affordable rental with 3–10 photos.
+                    Your rental catalog is clean. Click below to add your first affordable rental with 3–20 photos.
                   </p>
                 </div>
                 <button
@@ -1294,7 +1294,7 @@ function ControlPanelContent() {
                   {editingId ? `Editing Listing: ${editingId}` : 'Publish Verified House or Rental'}
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Provide complete property overview, 3–10 gallery photos, verified features, and true monthly cost breakdown.
+                  Provide complete property overview, 3–20 gallery photos, verified features, and true monthly cost breakdown.
                 </p>
               </div>
 
@@ -1863,19 +1863,19 @@ function ControlPanelContent() {
               )}
             </div>
 
-            {/* SECTION 7: Multi-Photo Gallery (Starts Empty, 3-10 Photos from User Gallery) */}
+            {/* SECTION 7: Multi-Photo Gallery (Starts Empty, 3-20 Photos from User Gallery) */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                     <ImageIcon className="w-4 h-4" />
                     <span>
-                      7. Property Photo Gallery ({images.length} of 10 Added • Minimum 3 Required){' '}
+                      7. Property Photo Gallery ({images.length} of 20 Added • Minimum 3 Required){' '}
                       <span className="text-rose-400">*</span>
                     </span>
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Upload 3 to 10 photos from your laptop or phone gallery. When users click &apos;View Verified Details&apos;, all photos will display in the interactive lightbox gallery.
+                    Upload 3 to 20 photos from your laptop or phone gallery. When users click &apos;View Verified Details&apos;, all photos will display in the interactive lightbox gallery.
                   </p>
                 </div>
 
@@ -1912,7 +1912,7 @@ function ControlPanelContent() {
                     <span>Choose Photos from Gallery / Device</span>
                   </button>
                   <p className="text-xs text-slate-400">
-                    Select 3 to 10 photos (JPG, PNG, WEBP). Directly loads from your phone or computer.
+                    Select 3 to 20 photos (JPG, PNG, WEBP). Directly loads from your phone or computer.
                   </p>
                 </div>
               </div>
@@ -1945,7 +1945,7 @@ function ControlPanelContent() {
               {/* Photo Previews Grid */}
               {images.length === 0 ? (
                 <div className="p-8 text-center bg-slate-950/60 rounded-lg border border-slate-800 text-slate-500 text-xs">
-                  No photos added yet. Click &apos;Choose Photos from Gallery / Device&apos; above to add 3 to 10 photos.
+                  No photos added yet. Click &apos;Choose Photos from Gallery / Device&apos; above to add 3 to 20 photos.
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
