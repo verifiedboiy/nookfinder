@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Property } from '@/types/property';
-import { Bed, Bath, Maximize2, ShieldCheck, MapPin, Tag } from 'lucide-react';
+import { Bed, Bath, Maximize2, ShieldCheck, MapPin, Tag, Eye, Heart } from 'lucide-react';
 
 interface PropertyCardProps {
   property: Property;
@@ -97,6 +97,19 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
             <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="truncate">
               {property.address.neighborhood}, {property.address.city}, {property.address.state}
+            </span>
+          </div>
+
+          {/* Social Proof Stats: Views & Likes */}
+          <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-2">
+            <span className="inline-flex items-center gap-1 font-medium text-slate-600">
+              <Eye className="w-3 h-3 text-slate-400" />
+              <span>{(property.views ?? 1280).toLocaleString()} views</span>
+            </span>
+            <span className="text-slate-300">•</span>
+            <span className="inline-flex items-center gap-1 font-medium text-slate-600">
+              <Heart className="w-3 h-3 text-rose-500 fill-rose-500/20" />
+              <span>{(property.likes ?? 64).toLocaleString()} saves</span>
             </span>
           </div>
         </div>

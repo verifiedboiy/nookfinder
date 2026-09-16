@@ -223,7 +223,7 @@ export default function InteractiveMap({
 
         const tileUrl =
           mapType === 'streets'
-            ? `https://a.basemaps.cartocdn.com/rastertiles/voyager/${zoom}/${wrappedX}/${ty}@2x.png`
+            ? `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${ty}.png`
             : `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${zoom}/${ty}/${wrappedX}`;
 
         tiles.push({

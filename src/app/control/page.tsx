@@ -37,6 +37,7 @@ import {
   FileText,
   UserCheck,
   Eye,
+  Heart,
   Mail,
   MessageSquare,
   Send,
@@ -121,6 +122,10 @@ function ControlPanelContent() {
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Form Fields - Views & Likes Engagement
+  const [viewsCount, setViewsCount] = useState('1420');
+  const [likesCount, setLikesCount] = useState('86');
 
   // Draft Persistence State
   const DRAFT_STORAGE_KEY = 'nookfinder_listing_form_draft';
@@ -265,6 +270,8 @@ function ControlPanelContent() {
           selectedAmenities,
           images,
           agentName,
+          viewsCount,
+          likesCount,
           savedAt: new Date().toISOString(),
         };
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draftPayload));
@@ -309,6 +316,8 @@ function ControlPanelContent() {
     selectedAmenities,
     images,
     agentName,
+    viewsCount,
+    likesCount,
   ]);
 
   // Auto-calculate approximate P&I for For Sale
@@ -505,6 +514,8 @@ function ControlPanelContent() {
       'Zero Broker Fee Guarantee',
     ]);
     setAgentName('Marcus Vance');
+    setViewsCount('1420');
+    setLikesCount('86');
     setActiveTab('editor');
   };
 
@@ -552,6 +563,8 @@ function ControlPanelContent() {
     setImages(prop.images || []);
     setSelectedAmenities(prop.amenities || STANDARD_AMENITIES.slice(0, 5));
     setAgentName(prop.agent.name);
+    setViewsCount((prop.views ?? 1420).toString());
+    setLikesCount((prop.likes ?? 86).toString());
     setActiveTab('editor');
   };
 
@@ -594,6 +607,8 @@ function ControlPanelContent() {
     setImages(draft.images || []);
     setSelectedAmenities(draft.selectedAmenities || STANDARD_AMENITIES.slice(0, 5));
     setAgentName(draft.agentName || 'Marcus Vance');
+    setViewsCount(draft.viewsCount || '1420');
+    setLikesCount(draft.likesCount || '86');
 
     setActiveTab('editor');
     showNotification(`Restored unsaved draft: "${draft.title || 'In-Progress Listing'}"`);
@@ -758,6 +773,8 @@ function ControlPanelContent() {
         amenities: selectedAmenities.length > 0 ? selectedAmenities : ['Zero Broker Fee Guarantee'],
         images: normalizedImages,
         agent: agentsMap[agentName] || agentsMap['Marcus Vance'],
+        views: Number(viewsCount) || 1420,
+        likes: Number(likesCount) || 86,
         listedAt: new Date().toISOString(),
       };
 
@@ -1097,6 +1114,9 @@ function ControlPanelContent() {
                                       FHA Grant
                                     </span>
                                   )}
+                                  <span className="text-[10px] text-slate-400 font-mono">
+                                    👁️ {prop.views ?? 1420} • ❤️ {prop.likes ?? 86}
+                                  </span>
                                 </div>
 
                                 {/* Mobile Quick Actions directly under title */}
@@ -1316,6 +1336,9 @@ function ControlPanelContent() {
                                       Under $800
                                     </span>
                                   )}
+                                  <span className="text-[10px] text-slate-400 font-mono">
+                                    👁️ {prop.views ?? 1420} • ❤️ {prop.likes ?? 86}
+                                  </span>
                                 </div>
 
                                 {/* Mobile Quick Actions directly under title */}
@@ -2334,11 +2357,58 @@ function ControlPanelContent() {
               )}
             </div>
 
-            {/* SECTION 8: In-House Nookfinder Staff Specialist */}
+            {/* SECTION 8: Demand & Engagement Metrics (Views & Likes) */}
+            <div className="space-y-4 pt-4 border-t border-slate-800">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <Eye className="w-4 h-4" />
+                <span>8. Demand & Engagement Stats (Views & Saves)</span>
+              </h3>
+              <p className="text-xs text-slate-400">
+                Configure the visible interest numbers displayed to buyers and renters on public property cards and listing pages:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Listing Total Views Count
+                  </label>
+                  <div className="relative">
+                    <Eye className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+                    <input
+                      type="number"
+                      min="0"
+                      value={viewsCount}
+                      onChange={(e) => setViewsCount(e.target.value)}
+                      placeholder="1420"
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded pl-9 pr-3 py-2 text-white font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Listing Likes / Saves Count
+                  </label>
+                  <div className="relative">
+                    <Heart className="w-4 h-4 absolute left-3 top-2.5 text-rose-400" />
+                    <input
+                      type="number"
+                      min="0"
+                      value={likesCount}
+                      onChange={(e) => setLikesCount(e.target.value)}
+                      placeholder="86"
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded pl-9 pr-3 py-2 text-white font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SECTION 9: In-House Nookfinder Staff Specialist */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <UserCheck className="w-4 h-4" />
-                <span>8. Assigned In-House Nookfinder Specialist</span>
+                <span>9. Assigned In-House Nookfinder Specialist</span>
               </h3>
               <p className="text-xs text-slate-400">
                 All leads and visitor inquiries route directly to our verified staff advisors via Telegram and Email:

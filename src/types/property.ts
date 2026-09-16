@@ -63,6 +63,8 @@ export interface Property {
   images: PropertyImage[];
   agent: PropertyAgent;
   listedAt: string;
+  views?: number;
+  likes?: number;
 }
 
 export interface FilterState {
