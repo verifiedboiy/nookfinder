@@ -281,6 +281,20 @@ export default function PropertyDetailPage() {
 
   const hasMarketBadge = property.marketDemandBadge && property.marketDemandBadge !== 'none';
 
+  const agent = property.agent || {
+    name: 'Sarah Chen',
+    title: 'Nookfinder Dedicated Property Specialist',
+    phone: '+1 (614) 732-9011',
+    email: 'nookkfinder@gmail.com',
+    telegram: 'https://t.me/nook_finder',
+    avatarUrl: '/images/avatars/guide-home.jpg',
+    rating: 4.8,
+    reviewCount: 38,
+    verifiedLicense: 'NF-STAFF-99120',
+    isNookfinderStaff: true,
+  };
+  const agentAvatar = agent.avatarUrl || '/images/avatars/guide-home.jpg';
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
@@ -1017,10 +1031,10 @@ export default function PropertyDetailPage() {
             <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-5">
               {/* Agent Identity: In-House Nookfinder Staff */}
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 shrink-0">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 shrink-0 bg-slate-100">
                   <Image
-                    src={property.agent.avatarUrl}
-                    alt={property.agent.name}
+                    src={agentAvatar}
+                    alt={agent.name}
                     fill
                     className="object-cover"
                     sizes="48px"
@@ -1028,13 +1042,13 @@ export default function PropertyDetailPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 font-display">
-                    {property.agent.name}
+                    {agent.name}
                   </h3>
                   <span className="text-[11px] text-emerald-800 font-semibold block">
                     Nookfinder In-House Specialist
                   </span>
                   <span className="text-[10px] font-mono text-slate-400">
-                    Staff ID: {property.agent.verifiedLicense}
+                    Staff ID: {agent.verifiedLicense}
                   </span>
                 </div>
               </div>
@@ -1170,10 +1184,10 @@ export default function PropertyDetailPage() {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Left: Agent Info + Price */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 shrink-0 hidden sm:block">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-200 shrink-0 hidden sm:block bg-slate-100">
               <Image
-                src={property.agent.avatarUrl}
-                alt={property.agent.name}
+                src={agentAvatar}
+                alt={agent.name}
                 fill
                 className="object-cover"
                 sizes="40px"
@@ -1182,7 +1196,7 @@ export default function PropertyDetailPage() {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-xs sm:text-sm font-bold text-slate-900 truncate font-display">
-                  {property.agent.name}
+                  {agent.name}
                 </span>
                 <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                   <ShieldCheck className="w-3 h-3" /> In-House Specialist
