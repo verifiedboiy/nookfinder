@@ -39,7 +39,9 @@ export default function PropertyDetailPage() {
   const params = useParams();
   const propertyId = params?.id as string;
 
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [properties, setProperties] = useState<Property[]>(() =>
+    typeof window !== 'undefined' ? getStoredProperties() : []
+  );
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [mobilePhotoIdx, setMobilePhotoIdx] = useState(0);
@@ -54,7 +56,14 @@ export default function PropertyDetailPage() {
   );
   const [inquirySent, setInquirySent] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const local = getStoredProperties();
+    const decodedTargetId = decodeURIComponent(propertyId || '');
+    return !local.some(
+      (p) => p.id === propertyId || p.id === decodedTargetId || p.id.toLowerCase() === decodedTargetId.toLowerCase()
+    );
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -62,12 +71,14 @@ export default function PropertyDetailPage() {
 
     // 1. Check instant local cache first
     const local = getStoredProperties();
-    const foundLocal = local.find(
-      (p) => p.id === propertyId || p.id === decodedTargetId || p.id.toLowerCase() === decodedTargetId.toLowerCase()
-    );
-    if (foundLocal && isMounted) {
+    if (local.length > 0 && isMounted) {
       setProperties(local);
-      setIsLoading(false);
+      const found = local.find(
+        (p) => p.id === propertyId || p.id === decodedTargetId || p.id.toLowerCase() === decodedTargetId.toLowerCase()
+      );
+      if (found) {
+        setIsLoading(false);
+      }
     }
 
     // 2. Query Neon server API to guarantee the latest cloud database data
@@ -140,6 +151,24 @@ export default function PropertyDetailPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, property?.images?.length]);
 
+  // Saved / Likes state sync
+  useEffect(() => {
+    if (property) {
+      setIsSaved(isPropertySaved(property.id));
+      setLikesCount(property.likes ?? 86);
+    }
+
+    const handleSavedChange = (e: any) => {
+      if (e.detail?.propertyId === property?.id) {
+        setIsSaved(e.detail.isSaved);
+        setLikesCount((prev) => (e.detail.isSaved ? prev + 1 : Math.max(0, prev - 1)));
+      }
+    };
+
+    window.addEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+    return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+  }, [property]);
+
   if (isLoading && !property) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
@@ -184,23 +213,6 @@ export default function PropertyDetailPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (property) {
-      setIsSaved(isPropertySaved(property.id));
-      setLikesCount(property.likes ?? 86);
-    }
-
-    const handleSavedChange = (e: any) => {
-      if (e.detail?.propertyId === property?.id) {
-        setIsSaved(e.detail.isSaved);
-        setLikesCount((prev) => (e.detail.isSaved ? prev + 1 : Math.max(0, prev - 1)));
-      }
-    };
-
-    window.addEventListener('nookfinder_saved_homes_updated', handleSavedChange);
-    return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
-  }, [property]);
 
   const handleSaveToggle = () => {
     if (!property) return;
