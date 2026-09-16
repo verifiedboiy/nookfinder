@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Property, PropertyType, ListingType, PropertyImage } from '@/types/property';
-import { MAJOR_US_STATES } from '@/data/states';
+import { US_STATES, MAJOR_US_STATES } from '@/data/states';
 import {
   getStoredProperties,
   saveStoredProperty,
@@ -120,6 +120,12 @@ function ControlPanelContent() {
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
 
+  // Draft Persistence State
+  const DRAFT_STORAGE_KEY = 'nookfinder_listing_form_draft';
+  const [savedDraft, setSavedDraft] = useState<any | null>(null);
+  const [hasSavedDraft, setHasSavedDraft] = useState(false);
+  const [lastDraftSavedTime, setLastDraftSavedTime] = useState<string | null>(null);
+
   const fetchInquiries = async () => {
     try {
       const res = await fetch('/api/inquiries');
@@ -154,6 +160,23 @@ function ControlPanelContent() {
     setProperties(loaded);
     fetchInquiries();
 
+    // Check for saved draft in localStorage
+    try {
+      const stored = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && (parsed.title || parsed.street || parsed.editingId || (parsed.images && parsed.images.length > 0))) {
+          setSavedDraft(parsed);
+          setHasSavedDraft(true);
+          if (parsed.savedAt) {
+            setLastDraftSavedTime(new Date(parsed.savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not read draft from localStorage:', e);
+    }
+
     // If navigated with ?edit=[id], automatically open edit form
     const editId = searchParams?.get('edit');
     if (editId) {
@@ -168,6 +191,96 @@ function ControlPanelContent() {
     setNotification(msg);
     setTimeout(() => setNotification(null), 4000);
   };
+
+  // Auto-save draft when editor fields change
+  useEffect(() => {
+    const hasModifications =
+      title.trim() ||
+      tagline.trim() ||
+      street.trim() ||
+      description.trim() ||
+      images.length > 0 ||
+      editingId !== null;
+
+    if (!hasModifications) return;
+
+    const timeout = setTimeout(() => {
+      try {
+        const draftPayload = {
+          editingId,
+          title,
+          tagline,
+          description,
+          listingType,
+          propertyType,
+          price,
+          isVerified,
+          fhaEligible,
+          downPaymentAssistance,
+          underMarketValue,
+          street,
+          city,
+          stateCode,
+          zipCode,
+          neighborhood,
+          bedrooms,
+          bathrooms,
+          squareFeet,
+          parkingSpaces,
+          yearBuilt,
+          monthlyPrincipalInterest,
+          hoaMonthly,
+          propertyTaxAnnual,
+          homeInsuranceMonthly,
+          utilitiesMonthly,
+          selectedAmenities,
+          images,
+          agentName,
+          savedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draftPayload));
+        setSavedDraft(draftPayload);
+        setHasSavedDraft(true);
+        setLastDraftSavedTime(
+          new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        );
+      } catch (e) {
+        console.warn('Auto-save error:', e);
+      }
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [
+    editingId,
+    title,
+    tagline,
+    description,
+    listingType,
+    propertyType,
+    price,
+    isVerified,
+    fhaEligible,
+    downPaymentAssistance,
+    underMarketValue,
+    street,
+    city,
+    stateCode,
+    zipCode,
+    neighborhood,
+    bedrooms,
+    bathrooms,
+    squareFeet,
+    parkingSpaces,
+    yearBuilt,
+    monthlyPrincipalInterest,
+    hoaMonthly,
+    propertyTaxAnnual,
+    homeInsuranceMonthly,
+    utilitiesMonthly,
+    selectedAmenities,
+    images,
+    agentName,
+  ]);
 
   // Auto-calculate approximate P&I for For Sale
   useEffect(() => {
@@ -370,6 +483,75 @@ function ControlPanelContent() {
     setActiveTab('editor');
   };
 
+  // Restore Draft into active form
+  const restoreDraft = (draftToLoad?: any) => {
+    const draft = draftToLoad || savedDraft;
+    if (!draft) return;
+
+    setEditingId(draft.editingId || null);
+    setFormError(null);
+    setListingType(draft.listingType || 'sale');
+    setTitle(draft.title || '');
+    setTagline(draft.tagline || '');
+    setDescription(draft.description || '');
+    setPropertyType(draft.propertyType || 'house');
+    setPrice(draft.price || '185000');
+    setIsVerified(draft.isVerified ?? true);
+    setFhaEligible(draft.fhaEligible ?? true);
+    setDownPaymentAssistance(draft.downPaymentAssistance ?? true);
+    setUnderMarketValue(draft.underMarketValue ?? true);
+
+    setStreet(draft.street || '');
+    setCity(draft.city || 'Atlanta');
+    setStateCode(draft.stateCode || 'GA');
+    setZipCode(draft.zipCode || '30312');
+    setNeighborhood(draft.neighborhood || 'Riverside District');
+
+    setBedrooms(draft.bedrooms ?? 3);
+    setBathrooms(draft.bathrooms ?? 2);
+    setSquareFeet(draft.squareFeet ?? 1250);
+    setParkingSpaces(draft.parkingSpaces ?? 1);
+    setYearBuilt(draft.yearBuilt ?? 2021);
+
+    setMonthlyPrincipalInterest(draft.monthlyPrincipalInterest || '980');
+    setHoaMonthly(draft.hoaMonthly ?? 0);
+    setPropertyTaxAnnual(draft.propertyTaxAnnual ?? 1800);
+    setHomeInsuranceMonthly(draft.homeInsuranceMonthly ?? 85);
+    setUtilitiesMonthly(draft.utilitiesMonthly ?? 120);
+
+    setImages(draft.images || []);
+    setSelectedAmenities(draft.selectedAmenities || STANDARD_AMENITIES.slice(0, 5));
+    setAgentName(draft.agentName || 'Marcus Vance');
+
+    setActiveTab('editor');
+    showNotification(`Restored unsaved draft: "${draft.title || 'In-Progress Listing'}"`);
+  };
+
+  // Discard saved draft
+  const discardDraft = () => {
+    if (confirm('Discard your saved draft? Any unsaved edits will be cleared.')) {
+      try {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+      } catch (e) {}
+      setSavedDraft(null);
+      setHasSavedDraft(false);
+      setLastDraftSavedTime(null);
+      showNotification('Saved draft discarded.');
+    }
+  };
+
+  // Start fresh with clean slate
+  const startFreshListing = (type: ListingType = 'sale') => {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch (e) {}
+    setSavedDraft(null);
+    setHasSavedDraft(false);
+    setLastDraftSavedTime(null);
+    startNewListing(type);
+    showNotification('Started fresh listing with a clean form.');
+  };
+
   // Delete single property with confirmation
   const handleDelete = (prop: Property) => {
     if (
@@ -526,6 +708,15 @@ function ControlPanelContent() {
 
     const updatedCatalog = saveStoredProperty(savedProperty);
     setProperties(updatedCatalog);
+
+    // Clear saved draft from localStorage on successful publish
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+      setSavedDraft(null);
+      setHasSavedDraft(false);
+      setLastDraftSavedTime(null);
+    } catch (e) {}
+
     showNotification(
       editingId
         ? `Listing "${savedProperty.title}" successfully updated!`
@@ -615,6 +806,61 @@ function ControlPanelContent() {
         <div className="bg-emerald-700 text-white px-4 py-3 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-inner animate-in fade-in">
           <CheckCircle2 className="w-4 h-4" />
           <span>{notification}</span>
+        </div>
+      )}
+
+      {/* DRAFT RECOVERY / AUTO-SAVE PROMPT BANNER */}
+      {hasSavedDraft && savedDraft && (
+        <div className="bg-amber-950/90 border-b border-amber-600/70 px-4 sm:px-8 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg animate-in fade-in">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-amber-900 border border-amber-500 text-amber-300 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
+              <FileText className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-amber-200">
+                  Unsaved Listing Draft Recovered
+                </span>
+                <span className="px-1.5 py-0.5 text-[10px] rounded bg-amber-900/80 text-amber-300 font-mono">
+                  {lastDraftSavedTime ? `Saved at ${lastDraftSavedTime}` : 'Active draft'}
+                </span>
+              </div>
+              <p className="text-xs text-amber-100/80 mt-0.5">
+                {savedDraft.editingId ? `Editing existing property ${savedDraft.editingId}` : `New ${savedDraft.listingType === 'rent' ? 'Rental' : 'For Sale'} Home`}:{' '}
+                <span className="font-semibold text-white">&quot;{savedDraft.title || 'Untitled'}&quot;</span> ({savedDraft.images?.length || 0} photos, {savedDraft.city || 'No city'}, {savedDraft.stateCode || 'GA'}).
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
+            <button
+              type="button"
+              onClick={() => restoreDraft()}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors shadow-xs cursor-pointer"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>{savedDraft.editingId ? 'Continue Editing' : 'Continue Listing'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => startFreshListing(savedDraft.listingType || 'sale')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-200 text-xs font-semibold border border-amber-800/60 transition-colors cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Start Afresh</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={discardDraft}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded text-xs text-rose-300 hover:text-rose-100 hover:bg-rose-950/60 transition-colors cursor-pointer"
+              title="Discard draft and cancel"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Discard / Cancel</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -1284,12 +1530,20 @@ function ControlPanelContent() {
             onSubmit={handleSaveProperty}
             className="bg-slate-950 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-8 shadow-2xl"
           >
-            {/* Header with Title and Cancel */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            {/* Header with Title, Auto-Save Status, and Cancel */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-3">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-                  {editingId ? 'Modify Active Listing' : 'Create New Residential Listing'}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                    {editingId ? 'Modify Active Listing' : 'Create New Residential Listing'}
+                  </span>
+                  {lastDraftSavedTime && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-700 text-emerald-300 text-[10px] font-mono">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                      Auto-saved ({lastDraftSavedTime})
+                    </span>
+                  )}
+                </div>
                 <h2 className="text-2xl font-bold text-white font-display">
                   {editingId ? `Editing Listing: ${editingId}` : 'Publish Verified House or Rental'}
                 </h2>
@@ -1298,14 +1552,38 @@ function ControlPanelContent() {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setActiveTab(listingType)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-                <span>Cancel & Return</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => startFreshListing(listingType)}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-semibold cursor-pointer border border-slate-700"
+                  title="Clear form and start fresh"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Start Afresh</span>
+                </button>
+
+                {hasSavedDraft && (
+                  <button
+                    type="button"
+                    onClick={discardDraft}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-semibold cursor-pointer border border-rose-800/50"
+                    title="Delete saved draft"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Discard Draft</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(listingType)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer border border-slate-700"
+                >
+                  <X className="w-4 h-4" />
+                  <span>Cancel & Return</span>
+                </button>
+              </div>
             </div>
 
             {/* Validation Error Alert */}
@@ -1528,16 +1806,16 @@ function ControlPanelContent() {
 
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    State (25+ Major Housing Markets) <span className="text-rose-400">*</span>
+                    State <span className="text-rose-400">*</span>
                   </label>
                   <select
                     value={stateCode}
                     onChange={(e) => setStateCode(e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-medium"
                   >
-                    {MAJOR_US_STATES.map((st) => (
+                    {US_STATES.map((st) => (
                       <option key={st.code} value={st.code}>
-                        {st.name} ({st.code}) - {st.primaryCity}
+                        {st.name} ({st.code})
                       </option>
                     ))}
                   </select>
