@@ -11,8 +11,6 @@ import {
   saveStoredProperty,
   saveStoredPropertyAsync,
   deleteStoredProperty,
-  resetStoredProperties,
-  clearAllStoredProperties,
 } from '@/data/propertyStore';
 import {
   ShieldCheck,
@@ -610,32 +608,6 @@ function ControlPanelContent() {
     }
   };
 
-  // Delete ALL listings (Clean slate for custom listings)
-  const handleDeleteAll = () => {
-    if (
-      confirm(
-        '⚠️ Are you sure you want to delete ALL default and current listings?\n\nThis will completely clear your catalog so you can start fresh with only your own houses.'
-      )
-    ) {
-      const updated = clearAllStoredProperties();
-      setProperties(updated);
-      showNotification('All listings have been deleted. You now have a clean slate.');
-    }
-  };
-
-  // Reset to default mock listings
-  const handleResetDefaults = () => {
-    if (
-      confirm(
-        'Reset the entire catalog back to factory default mock listings? Any added custom listings will be overwritten.'
-      )
-    ) {
-      const reset = resetStoredProperties();
-      setProperties(reset);
-      showNotification('Inventory reset to original listings.');
-    }
-  };
-
   // Save handler (Create or Update)
   const handleSaveProperty = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -833,32 +805,11 @@ function ControlPanelContent() {
           <Link
             href="/"
             target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white transition-colors shadow-xs"
           >
-            <Eye className="w-3.5 h-3.5 text-emerald-400" />
+            <Eye className="w-4 h-4" />
             <span>Open Public Site</span>
           </Link>
-
-          {/* Delete All Listings Button */}
-          <button
-            type="button"
-            onClick={handleDeleteAll}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded bg-rose-950 hover:bg-rose-900 text-rose-200 border border-rose-700 transition-colors shadow-xs cursor-pointer"
-            title="Delete all current mock listings to start clean"
-          >
-            <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-            <span>Delete All Default Listings</span>
-          </button>
-
-          {/* Reset Defaults Button */}
-          <button
-            type="button"
-            onClick={handleResetDefaults}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Reset Defaults</span>
-          </button>
         </div>
       </header>
 
