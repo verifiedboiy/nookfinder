@@ -1,8 +1,11 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Property } from '@/types/property';
-import { Bed, Bath, Maximize2, ShieldCheck, MapPin, Tag, Eye, Heart } from 'lucide-react';
+import { Bed, Bath, Maximize2, ShieldCheck, MapPin, Tag, Eye, Heart, Sparkles, TrendingUp } from 'lucide-react';
+import { isPropertySaved, toggleSaveProperty } from '@/lib/savedProperties';
 
 interface PropertyCardProps {
   property: Property;
@@ -13,9 +16,36 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
   const primaryImage = property.images.find((img) => img.isPrimary) || property.images[0];
   const isRent = property.listingType === 'rent';
 
+  const [isSaved, setIsSaved] = useState(false);
+  const [likesCount, setLikesCount] = useState(property.likes ?? 64);
+
+  useEffect(() => {
+    setIsSaved(isPropertySaved(property.id));
+
+    const handleSavedChange = (e: any) => {
+      if (e.detail?.propertyId === property.id) {
+        setIsSaved(e.detail.isSaved);
+        setLikesCount((prev) => (e.detail.isSaved ? prev + 1 : Math.max(0, prev - 1)));
+      }
+    };
+
+    window.addEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+    return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+  }, [property.id]);
+
+  const handleSaveToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newSaved = toggleSaveProperty(property.id);
+    setIsSaved(newSaved);
+    setLikesCount((prev) => (newSaved ? prev + 1 : Math.max(0, prev - 1)));
+  };
+
   const formattedPrice = isRent
     ? `$${property.price.toLocaleString()}/mo`
     : `$${property.price.toLocaleString()}`;
+
+  const hasMarketBadge = property.marketDemandBadge && property.marketDemandBadge !== 'none';
 
   return (
     <div className="group bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs hover:shadow-md hover:border-slate-300 transition-all duration-200 flex flex-col">
@@ -31,7 +61,7 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
         />
 
         {/* Status Badges Overlay */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10 max-w-[80%]">
           <span
             className={`px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded ${
               isRent
@@ -43,12 +73,34 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
           </span>
 
           {property.isVerified && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold tracking-wide rounded bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold tracking-wide rounded bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs">
               <ShieldCheck className="w-3 h-3 text-emerald-700" />
               <span>Verified Listing</span>
             </span>
           )}
+
+          {hasMarketBadge && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold tracking-wide rounded bg-amber-50 text-amber-900 border border-amber-200/90 shadow-2xs">
+              <TrendingUp className="w-3 h-3 text-amber-700" />
+              <span>{property.marketDemandBadge}</span>
+            </span>
+          )}
         </div>
+
+        {/* Interactive Save / Favorite Button */}
+        <button
+          type="button"
+          onClick={handleSaveToggle}
+          className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-md transition-transform active:scale-90 z-20 cursor-pointer shadow-sm ${
+            isSaved
+              ? 'bg-rose-600 text-white hover:bg-rose-700'
+              : 'bg-slate-900/60 text-white hover:bg-slate-900/80 hover:text-rose-400'
+          }`}
+          title={isSaved ? 'Remove from Saved Homes' : 'Save this Home'}
+          aria-label={isSaved ? 'Saved home' : 'Save home'}
+        >
+          <Heart className={`w-4 h-4 ${isSaved ? 'fill-white stroke-white' : ''}`} />
+        </button>
 
         {/* Affordability Tag */}
         <div className="absolute bottom-3 left-3 flex gap-1 z-10">
@@ -100,17 +152,24 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
             </span>
           </div>
 
-          {/* Social Proof Stats: Views & Likes */}
-          <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-2">
+          {/* Social Proof Stats: Views & Interactive Saves */}
+          <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-2">
             <span className="inline-flex items-center gap-1 font-medium text-slate-600">
-              <Eye className="w-3 h-3 text-slate-400" />
+              <Eye className="w-3.5 h-3.5 text-slate-400" />
               <span>{(property.views ?? 1280).toLocaleString()} views</span>
             </span>
             <span className="text-slate-300">•</span>
-            <span className="inline-flex items-center gap-1 font-medium text-slate-600">
-              <Heart className="w-3 h-3 text-rose-500 fill-rose-500/20" />
-              <span>{(property.likes ?? 64).toLocaleString()} saves</span>
-            </span>
+            <button
+              type="button"
+              onClick={handleSaveToggle}
+              className={`inline-flex items-center gap-1 font-medium cursor-pointer transition-colors ${
+                isSaved ? 'text-rose-600 font-bold' : 'text-slate-600 hover:text-rose-600'
+              }`}
+              title={isSaved ? 'Click to unsave' : 'Click to save'}
+            >
+              <Heart className={`w-3.5 h-3.5 ${isSaved ? 'text-rose-600 fill-rose-600' : 'text-slate-400'}`} />
+              <span>{likesCount.toLocaleString()} {isSaved ? 'saved' : 'saves'}</span>
+            </button>
           </div>
         </div>
 

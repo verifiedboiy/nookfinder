@@ -31,7 +31,9 @@ import {
   Heart,
   Trees,
   Layers,
+  TrendingUp,
 } from 'lucide-react';
+import { isPropertySaved, toggleSaveProperty } from '@/lib/savedProperties';
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -41,6 +43,8 @@ export default function PropertyDetailPage() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [mobilePhotoIdx, setMobilePhotoIdx] = useState(0);
+  const [isSaved, setIsSaved] = useState(false);
+  const [likesCount, setLikesCount] = useState(86);
 
   // Inquiry Form State
   const [inquiryName, setInquiryName] = useState('');
@@ -128,6 +132,30 @@ export default function PropertyDetailPage() {
     );
   }
 
+  useEffect(() => {
+    if (property) {
+      setIsSaved(isPropertySaved(property.id));
+      setLikesCount(property.likes ?? 86);
+    }
+
+    const handleSavedChange = (e: any) => {
+      if (e.detail?.propertyId === property?.id) {
+        setIsSaved(e.detail.isSaved);
+        setLikesCount((prev) => (e.detail.isSaved ? prev + 1 : Math.max(0, prev - 1)));
+      }
+    };
+
+    window.addEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+    return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
+  }, [property]);
+
+  const handleSaveToggle = () => {
+    if (!property) return;
+    const newSaved = toggleSaveProperty(property.id);
+    setIsSaved(newSaved);
+    setLikesCount((prev) => (newSaved ? prev + 1 : Math.max(0, prev - 1)));
+  };
+
   const isRent = property.listingType === 'rent';
 
   // Monthly breakdown calculation
@@ -186,6 +214,8 @@ export default function PropertyDetailPage() {
     setActivePhotoIdx((prev) => (prev - 1 + property.images.length) % property.images.length);
   };
 
+  const hasMarketBadge = property.marketDemandBadge && property.marketDemandBadge !== 'none';
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
@@ -206,8 +236,19 @@ export default function PropertyDetailPage() {
               Listing ID: <span className="font-mono text-slate-700">{property.id}</span>
             </span>
             <button
+              onClick={handleSaveToggle}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer border shadow-2xs ${
+                isSaved
+                  ? 'bg-rose-50 border-rose-200 text-rose-700'
+                  : 'bg-white border-slate-200 text-slate-700 hover:text-rose-600 hover:border-slate-300'
+              }`}
+            >
+              <Heart className={`w-3.5 h-3.5 ${isSaved ? 'text-rose-600 fill-rose-600' : 'text-slate-500'}`} />
+              <span>{isSaved ? 'Saved' : 'Save'}</span>
+            </button>
+            <button
               onClick={() => alert('Listing link copied to clipboard.')}
-              className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900"
+              className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5" /> Share
             </button>
@@ -234,8 +275,15 @@ export default function PropertyDetailPage() {
               )}
 
               {property.fhaEligible && !isRent && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-semibold rounded bg-slate-100 text-slate-800">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 text-slate-800">
                   FHA Loan Eligible
+                </span>
+              )}
+
+              {hasMarketBadge && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 text-amber-900 border border-amber-200 shadow-2xs">
+                  <TrendingUp className="w-3.5 h-3.5 text-amber-700" />
+                  <span>{property.marketDemandBadge}</span>
                 </span>
               )}
             </div>
@@ -252,21 +300,33 @@ export default function PropertyDetailPage() {
               </span>
             </div>
 
-            {/* Social Proof & Market Demand Badge */}
+            {/* Social Proof & Interactive Saves Counter */}
             <div className="pt-2 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs">
                 <Eye className="w-3.5 h-3.5 text-slate-500" />
                 <span>{(property.views ?? 1420).toLocaleString()} Views</span>
               </span>
 
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs">
-                <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
-                <span>{(property.likes ?? 86).toLocaleString()} Saves</span>
-              </span>
+              <button
+                type="button"
+                onClick={handleSaveToggle}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-semibold shadow-2xs transition-colors cursor-pointer ${
+                  isSaved
+                    ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold'
+                    : 'bg-slate-100 border-slate-200 text-slate-700 hover:text-rose-600'
+                }`}
+                title={isSaved ? 'Click to unsave' : 'Click to save'}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isSaved ? 'text-rose-600 fill-rose-600' : 'text-slate-400'}`} />
+                <span>{likesCount.toLocaleString()} {isSaved ? 'Saved' : 'Saves'}</span>
+              </button>
 
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 border border-emerald-200/80 text-[11px] font-bold text-emerald-800">
-                🔥 High Buyer Interest
-              </span>
+              {hasMarketBadge && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-900 shadow-2xs">
+                  <TrendingUp className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Market Demand: {property.marketDemandBadge}</span>
+                </span>
+              )}
             </div>
           </div>
 

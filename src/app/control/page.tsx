@@ -42,6 +42,7 @@ import {
   MessageSquare,
   Send,
   Trees,
+  TrendingUp,
 } from 'lucide-react';
 
 const STANDARD_AMENITIES = [
@@ -125,6 +126,10 @@ function ControlPanelContent() {
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Form Fields - Demand & Status Badges
+  const [marketDemandBadge, setMarketDemandBadge] = useState<string>('none');
+  const [customDemandBadge, setCustomDemandBadge] = useState<string>('');
 
   // Form Fields - Views & Likes Engagement
   const [viewsCount, setViewsCount] = useState('1420');
@@ -275,6 +280,8 @@ function ControlPanelContent() {
           selectedAmenities,
           images,
           agentName,
+          marketDemandBadge,
+          customDemandBadge,
           viewsCount,
           likesCount,
           savedAt: new Date().toISOString(),
@@ -323,6 +330,8 @@ function ControlPanelContent() {
     selectedAmenities,
     images,
     agentName,
+    marketDemandBadge,
+    customDemandBadge,
     viewsCount,
     likesCount,
   ]);
@@ -523,6 +532,8 @@ function ControlPanelContent() {
       'Zero Broker Fee Guarantee',
     ]);
     setAgentName('Marcus Vance');
+    setMarketDemandBadge('none');
+    setCustomDemandBadge('');
     setViewsCount('1420');
     setLikesCount('86');
     setActiveTab('editor');
@@ -586,6 +597,27 @@ function ControlPanelContent() {
     setImages(prop.images || []);
     setSelectedAmenities(prop.amenities || STANDARD_AMENITIES.slice(0, 5));
     setAgentName(prop.agent.name);
+
+    const standardBadges = [
+      'High Buyer Interest',
+      'High Demand Rental',
+      'Hot Home',
+      'Price Drop',
+      'Newly Renovated',
+      'Prime Location',
+      'Rare Opportunity',
+    ];
+    if (!prop.marketDemandBadge || prop.marketDemandBadge === 'none') {
+      setMarketDemandBadge('none');
+      setCustomDemandBadge('');
+    } else if (standardBadges.includes(prop.marketDemandBadge)) {
+      setMarketDemandBadge(prop.marketDemandBadge);
+      setCustomDemandBadge('');
+    } else {
+      setMarketDemandBadge('custom');
+      setCustomDemandBadge(prop.marketDemandBadge);
+    }
+
     setViewsCount((prop.views ?? 1420).toString());
     setLikesCount((prop.likes ?? 86).toString());
     setActiveTab('editor');
@@ -632,6 +664,8 @@ function ControlPanelContent() {
     setImages(draft.images || []);
     setSelectedAmenities(draft.selectedAmenities || STANDARD_AMENITIES.slice(0, 5));
     setAgentName(draft.agentName || 'Marcus Vance');
+    setMarketDemandBadge(draft.marketDemandBadge || 'none');
+    setCustomDemandBadge(draft.customDemandBadge || '');
     setViewsCount(draft.viewsCount || '1420');
     setLikesCount(draft.likesCount || '86');
 
@@ -802,6 +836,12 @@ function ControlPanelContent() {
         agent: agentsMap[agentName] || agentsMap['Marcus Vance'],
         views: Number(viewsCount) || 1420,
         likes: Number(likesCount) || 86,
+        marketDemandBadge:
+          marketDemandBadge === 'custom'
+            ? customDemandBadge.trim() || undefined
+            : marketDemandBadge !== 'none'
+            ? marketDemandBadge
+            : undefined,
         listedAt: new Date().toISOString(),
       };
 
@@ -1141,8 +1181,20 @@ function ControlPanelContent() {
                                       FHA Grant
                                     </span>
                                   )}
-                                  <span className="text-[10px] text-slate-400 font-mono">
-                                    👁️ {prop.views ?? 1420} • ❤️ {prop.likes ?? 86}
+                                  <span className="text-[10px] text-slate-400 font-mono inline-flex items-center gap-2">
+                                    <span className="inline-flex items-center gap-0.5">
+                                      <Eye className="w-3 h-3 text-slate-500" />
+                                      <span>{prop.views ?? 1420}</span>
+                                    </span>
+                                    <span className="inline-flex items-center gap-0.5">
+                                      <Heart className="w-3 h-3 text-rose-400" />
+                                      <span>{prop.likes ?? 86}</span>
+                                    </span>
+                                    {prop.marketDemandBadge && prop.marketDemandBadge !== 'none' && (
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[9px] font-semibold">
+                                        {prop.marketDemandBadge}
+                                      </span>
+                                    )}
                                   </span>
                                 </div>
 
@@ -1366,8 +1418,20 @@ function ControlPanelContent() {
                                       Under $800
                                     </span>
                                   )}
-                                  <span className="text-[10px] text-slate-400 font-mono">
-                                    👁️ {prop.views ?? 1420} • ❤️ {prop.likes ?? 86}
+                                  <span className="text-[10px] text-slate-400 font-mono inline-flex items-center gap-2">
+                                    <span className="inline-flex items-center gap-0.5">
+                                      <Eye className="w-3 h-3 text-slate-500" />
+                                      <span>{prop.views ?? 1420}</span>
+                                    </span>
+                                    <span className="inline-flex items-center gap-0.5">
+                                      <Heart className="w-3 h-3 text-rose-400" />
+                                      <span>{prop.likes ?? 86}</span>
+                                    </span>
+                                    {prop.marketDemandBadge && prop.marketDemandBadge !== 'none' && (
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[9px] font-semibold">
+                                        {prop.marketDemandBadge}
+                                      </span>
+                                    )}
                                   </span>
                                 </div>
 
@@ -2458,17 +2522,40 @@ function ControlPanelContent() {
               )}
             </div>
 
-            {/* SECTION 8: Demand & Engagement Metrics (Views & Likes) */}
+            {/* SECTION 8: Market Demand Badge & Engagement Metrics */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <Eye className="w-4 h-4" />
-                <span>8. Demand & Engagement Stats (Views & Saves)</span>
+                <TrendingUp className="w-4 h-4" />
+                <span>8. Market Demand Badge & Engagement Stats</span>
               </h3>
               <p className="text-xs text-slate-400">
-                Configure the visible interest numbers displayed to buyers and renters on public property cards and listing pages:
+                Choose an optional institutional market demand badge and set initial visible interest metrics for public listings:
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Market Demand Badge Selector */}
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Market Demand Badge
+                  </label>
+                  <select
+                    value={marketDemandBadge}
+                    onChange={(e) => setMarketDemandBadge(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-medium"
+                  >
+                    <option value="none">None (Standard Listing - No Badge)</option>
+                    <option value="High Buyer Interest">High Buyer Interest</option>
+                    <option value="High Demand Rental">High Demand Rental</option>
+                    <option value="Hot Home">Hot Home (Fast Moving)</option>
+                    <option value="Price Drop">Price Drop / Discounted</option>
+                    <option value="Newly Renovated">Newly Renovated</option>
+                    <option value="Prime Location">Prime Commuter Location</option>
+                    <option value="Rare Opportunity">Rare Opportunity</option>
+                    <option value="custom">Custom Badge Text...</option>
+                  </select>
+                </div>
+
+                {/* Listing Total Views Count */}
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
                     Listing Total Views Count
@@ -2486,6 +2573,7 @@ function ControlPanelContent() {
                   </div>
                 </div>
 
+                {/* Listing Likes / Saves Count */}
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
                     Listing Likes / Saves Count
@@ -2503,6 +2591,25 @@ function ControlPanelContent() {
                   </div>
                 </div>
               </div>
+
+              {/* Custom Badge Text Input (Only if custom is chosen) */}
+              {marketDemandBadge === 'custom' && (
+                <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1.5 animate-in fade-in">
+                  <label className="text-xs font-semibold text-amber-300 block">
+                    Custom Market Badge Text:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Builder Special • Quick Close Eligible"
+                    value={customDemandBadge}
+                    onChange={(e) => setCustomDemandBadge(e.target.value)}
+                    className="w-full text-xs bg-slate-900 border border-amber-600/60 rounded px-3 py-2 text-white font-medium"
+                  />
+                  <span className="text-[10px] text-slate-400 block">
+                    This custom tag will display as an institutional pill badge on the property card and detail page (zero emojis).
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* SECTION 9: In-House Nookfinder Staff Specialist */}

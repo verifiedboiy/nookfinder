@@ -67,6 +67,7 @@ export interface Property {
   listedAt: string;
   views?: number;
   likes?: number;
+  marketDemandBadge?: string;
 }
 
 export interface FilterState {
