@@ -9,6 +9,7 @@ import { US_STATES, MAJOR_US_STATES } from '@/data/states';
 import {
   getStoredProperties,
   saveStoredProperty,
+  saveStoredPropertyAsync,
   deleteStoredProperty,
   resetStoredProperties,
   clearAllStoredProperties,
@@ -119,6 +120,7 @@ function ControlPanelContent() {
 
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
+  const [isPublishing, setIsPublishing] = useState(false);
 
   // Draft Persistence State
   const DRAFT_STORAGE_KEY = 'nookfinder_listing_form_draft';
@@ -298,8 +300,55 @@ function ControlPanelContent() {
     }
   }, [price, listingType]);
 
-  // Gallery File Picker Handler
-  const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // High-performance client-side image compressor (prevents localStorage quota errors & lag)
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        const rawUrl = loadEvent.target?.result as string;
+        if (!rawUrl) return resolve('');
+
+        const img = document.createElement('img');
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1280;
+          const MAX_HEIGHT = 960;
+          let width = img.width || 800;
+          let height = img.height || 600;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressed = canvas.toDataURL('image/jpeg', 0.8);
+            resolve(compressed);
+          } else {
+            resolve(rawUrl);
+          }
+        };
+        img.onerror = () => resolve(rawUrl);
+        img.src = rawUrl;
+      };
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Gallery File Picker Handler (with automated HD compression)
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -311,31 +360,27 @@ function ControlPanelContent() {
 
     const filesToLoad = Array.from(files).slice(0, remainingSlots);
 
-    filesToLoad.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        const dataUrl = loadEvent.target?.result as string;
-        if (dataUrl) {
-          const autoCaption = file.name
-            .replace(/\.[^/.]+$/, '')
-            .replace(/[-_]/g, ' ')
-            .replace(/^[0-9]+\s*/, '');
+    for (const file of filesToLoad) {
+      const compressedDataUrl = await compressImageFile(file);
+      if (compressedDataUrl) {
+        const autoCaption = file.name
+          .replace(/\.[^/.]+$/, '')
+          .replace(/[-_]/g, ' ')
+          .replace(/^[0-9]+\s*/, '');
 
-          setImages((prev) => {
-            if (prev.length >= 20) return prev;
-            return [
-              ...prev,
-              {
-                url: dataUrl,
-                caption: autoCaption || `Gallery photo ${prev.length + 1}`,
-                isPrimary: prev.length === 0,
-              },
-            ];
-          });
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+        setImages((prev) => {
+          if (prev.length >= 20) return prev;
+          return [
+            ...prev,
+            {
+              url: compressedDataUrl,
+              caption: autoCaption || `Gallery photo ${prev.length + 1}`,
+              isPrimary: prev.length === 0,
+            },
+          ];
+        });
+      }
+    }
 
     e.target.value = '';
   };
@@ -592,138 +637,154 @@ function ControlPanelContent() {
   };
 
   // Save handler (Create or Update)
-  const handleSaveProperty = (e: React.FormEvent) => {
+  const handleSaveProperty = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
     // Strict validation
     if (!title.trim()) {
-      setFormError('Please enter a property headline / title.');
+      const msg = 'Please enter a property headline / title.';
+      setFormError(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!street.trim() || !city.trim() || !zipCode.trim()) {
-      setFormError('Please complete the full address (Street, City, and Zip Code).');
+      const msg = 'Please complete the full address (Street, City, and Zip Code).';
+      setFormError(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!price || Number(price) <= 0) {
-      setFormError('Please specify a valid price.');
+      const msg = 'Please specify a valid price.';
+      setFormError(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (images.length < 3) {
-      setFormError(
-        `You currently have ${images.length} photo(s). At least 3 photos are required from your gallery so users can view the verified details.`
-      );
+      const msg = `You currently have ${images.length} photo(s). At least 3 photos are required from your gallery so users can view the verified details.`;
+      setFormError(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    const agentsMap: Record<string, any> = {
-      'Marcus Vance': {
-        name: 'Marcus Vance',
-        title: 'Nookfinder Dedicated Property Specialist',
-        phone: '+1 (404) 890-1244',
-        email: 'nookkfinder@gmail.com',
-        telegram: 'https://t.me/nook_finder',
-        avatarUrl:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
-        rating: 4.9,
-        reviewCount: 42,
-        verifiedLicense: 'NF-STAFF-40918',
-        isNookfinderStaff: true,
-      },
-      'Sarah Chen': {
-        name: 'Sarah Chen',
-        title: 'Nookfinder Dedicated Property Specialist',
-        phone: '+1 (614) 732-9011',
-        email: 'nookkfinder@gmail.com',
-        telegram: 'https://t.me/nook_finder',
-        avatarUrl:
-          'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80',
-        rating: 4.8,
-        reviewCount: 38,
-        verifiedLicense: 'NF-STAFF-99120',
-        isNookfinderStaff: true,
-      },
-      'David Reynolds': {
-        name: 'David Reynolds',
-        title: 'Nookfinder Dedicated Property Specialist',
-        phone: '+1 (317) 412-8871',
-        email: 'nookkfinder@gmail.com',
-        telegram: 'https://t.me/nook_finder',
-        avatarUrl:
-          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
-        rating: 5.0,
-        reviewCount: 64,
-        verifiedLicense: 'NF-STAFF-10293',
-        isNookfinderStaff: true,
-      },
-    };
+    setIsPublishing(true);
 
-    const normalizedImages = images.map((img, idx) => ({
-      ...img,
-      isPrimary: images.some((i) => i.isPrimary) ? img.isPrimary : idx === 0,
-    }));
-
-    const savedProperty: Property = {
-      id: editingId || `prop-${listingType}-${Date.now().toString().slice(-4)}`,
-      title: title.trim(),
-      tagline: tagline.trim() || 'Audited affordable residential housing in prime commuter setting.',
-      description:
-        description.trim() ||
-        'Verified listing certified compliant with local fair housing guidelines and independent ownership audit.',
-      price: Number(price) || 0,
-      listingType,
-      propertyType,
-      status: 'available',
-      isVerified,
-      featured: true,
-      fhaEligible: listingType === 'sale' ? fhaEligible : false,
-      downPaymentAssistance: listingType === 'sale' ? downPaymentAssistance : false,
-      underMarketValue,
-      address: {
-        street: street.trim(),
-        city: city.trim(),
-        state: stateCode,
-        zipCode: zipCode.trim(),
-        neighborhood: neighborhood.trim() || 'Central Metro',
-        coordinates: {
-          lat: 33.749 + (Math.random() * 0.08 - 0.04),
-          lng: -84.388 + (Math.random() * 0.08 - 0.04),
-        },
-      },
-      specs: {
-        bedrooms,
-        bathrooms,
-        squareFeet,
-        parkingSpaces,
-        yearBuilt,
-        hoaMonthly,
-        propertyTaxAnnual: listingType === 'sale' ? propertyTaxAnnual : 0,
-        estimatedUtilitiesMonthly: utilitiesMonthly,
-      },
-      amenities: selectedAmenities.length > 0 ? selectedAmenities : ['Zero Broker Fee Guarantee'],
-      images: normalizedImages,
-      agent: agentsMap[agentName] || agentsMap['Marcus Vance'],
-      listedAt: new Date().toISOString(),
-    };
-
-    const updatedCatalog = saveStoredProperty(savedProperty);
-    setProperties(updatedCatalog);
-
-    // Clear saved draft from localStorage on successful publish
     try {
-      localStorage.removeItem(DRAFT_STORAGE_KEY);
-      setSavedDraft(null);
-      setHasSavedDraft(false);
-      setLastDraftSavedTime(null);
-    } catch (e) {}
+      const agentsMap: Record<string, any> = {
+        'Marcus Vance': {
+          name: 'Marcus Vance',
+          title: 'Nookfinder Dedicated Property Specialist',
+          phone: '+1 (404) 890-1244',
+          email: 'nookkfinder@gmail.com',
+          telegram: 'https://t.me/nook_finder',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+          rating: 4.9,
+          reviewCount: 42,
+          verifiedLicense: 'NF-STAFF-40918',
+          isNookfinderStaff: true,
+        },
+        'Sarah Chen': {
+          name: 'Sarah Chen',
+          title: 'Nookfinder Dedicated Property Specialist',
+          phone: '+1 (614) 732-9011',
+          email: 'nookkfinder@gmail.com',
+          telegram: 'https://t.me/nook_finder',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80',
+          rating: 4.8,
+          reviewCount: 38,
+          verifiedLicense: 'NF-STAFF-99120',
+          isNookfinderStaff: true,
+        },
+        'David Reynolds': {
+          name: 'David Reynolds',
+          title: 'Nookfinder Dedicated Property Specialist',
+          phone: '+1 (317) 412-8871',
+          email: 'nookkfinder@gmail.com',
+          telegram: 'https://t.me/nook_finder',
+          avatarUrl:
+            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
+          rating: 5.0,
+          reviewCount: 64,
+          verifiedLicense: 'NF-STAFF-10293',
+          isNookfinderStaff: true,
+        },
+      };
 
-    showNotification(
-      editingId
-        ? `Listing "${savedProperty.title}" successfully updated!`
-        : `New listing "${savedProperty.title}" published live!`
-    );
+      const normalizedImages = images.map((img, idx) => ({
+        ...img,
+        isPrimary: images.some((i) => i.isPrimary) ? img.isPrimary : idx === 0,
+      }));
 
-    setActiveTab(listingType);
+      const savedProperty: Property = {
+        id: editingId || `prop-${listingType}-${Date.now().toString().slice(-4)}`,
+        title: title.trim(),
+        tagline: tagline.trim() || 'Audited affordable residential housing in prime commuter setting.',
+        description:
+          description.trim() ||
+          'Verified listing certified compliant with local fair housing guidelines and independent ownership audit.',
+        price: Number(price) || 0,
+        listingType,
+        propertyType,
+        status: 'available',
+        isVerified,
+        featured: true,
+        fhaEligible: listingType === 'sale' ? fhaEligible : false,
+        downPaymentAssistance: listingType === 'sale' ? downPaymentAssistance : false,
+        underMarketValue,
+        address: {
+          street: street.trim(),
+          city: city.trim(),
+          state: stateCode,
+          zipCode: zipCode.trim(),
+          neighborhood: neighborhood.trim() || 'Central Metro',
+          coordinates: {
+            lat: 33.749 + (Math.random() * 0.08 - 0.04),
+            lng: -84.388 + (Math.random() * 0.08 - 0.04),
+          },
+        },
+        specs: {
+          bedrooms,
+          bathrooms,
+          squareFeet,
+          parkingSpaces,
+          yearBuilt,
+          hoaMonthly,
+          propertyTaxAnnual: listingType === 'sale' ? propertyTaxAnnual : 0,
+          estimatedUtilitiesMonthly: utilitiesMonthly,
+        },
+        amenities: selectedAmenities.length > 0 ? selectedAmenities : ['Zero Broker Fee Guarantee'],
+        images: normalizedImages,
+        agent: agentsMap[agentName] || agentsMap['Marcus Vance'],
+        listedAt: new Date().toISOString(),
+      };
+
+      const updatedCatalog = await saveStoredPropertyAsync(savedProperty);
+      setProperties(updatedCatalog);
+
+      // Clear saved draft from localStorage on successful publish
+      try {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        setSavedDraft(null);
+        setHasSavedDraft(false);
+        setLastDraftSavedTime(null);
+      } catch (e) {}
+
+      showNotification(
+        editingId
+          ? `Listing "${savedProperty.title}" successfully updated!`
+          : `New listing "${savedProperty.title}" published live!`
+      );
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setActiveTab(listingType);
+    } catch (err: any) {
+      console.error('Error in handleSaveProperty:', err);
+      setFormError(`Failed to save listing: ${err.message || 'Please check form inputs.'}`);
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const saleProperties = properties.filter((p) => p.listingType === 'sale');
@@ -2351,23 +2412,46 @@ function ControlPanelContent() {
               </div>
             </div>
 
-            {/* Bottom Form Actions */}
-            <div className="flex items-center justify-between pt-6 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => setActiveTab(listingType)}
-                className="px-4 py-2.5 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
-              >
-                Cancel & Return
-              </button>
+            {/* Bottom Form Actions & Inline Error */}
+            <div className="space-y-4 pt-6 border-t border-slate-800">
+              {formError && (
+                <div className="p-3.5 rounded-lg bg-rose-950 border border-rose-600 text-rose-200 text-xs font-bold flex items-center gap-2 animate-in fade-in">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <span>{formError}</span>
+                </div>
+              )}
 
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-lg cursor-pointer"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>{editingId ? 'Save & Update Listing' : 'Publish to Live Catalog'}</span>
-              </button>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(listingType)}
+                  className="px-4 py-2.5 text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
+                >
+                  Cancel & Return
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isPublishing}
+                  className={`inline-flex items-center gap-2 px-8 py-3 rounded-lg text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-lg cursor-pointer ${
+                    isPublishing
+                      ? 'bg-emerald-800 opacity-70 cursor-not-allowed'
+                      : 'bg-emerald-700 hover:bg-emerald-600'
+                  }`}
+                >
+                  {isPublishing ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Publishing to Catalog...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>{editingId ? 'Save & Update Listing' : 'Publish to Live Catalog'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </form>
         )}

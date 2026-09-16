@@ -90,15 +90,68 @@ export function getStoredProperties(): Property[] {
 function notifyStoreUpdate(updated: Property[]) {
   if (typeof window !== 'undefined') {
     const normalized = updated.map(normalizeProperty);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    } catch (storageErr) {
+      console.warn('localStorage quota exceeded, storing in memory cache and syncing to server:', storageErr);
+      try {
+        // Fallback: save lighter catalog with compacted photos to avoid quota crash
+        const lighter = normalized.map((p) => ({
+          ...p,
+          images: (p.images || []).slice(0, 3),
+        }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(lighter));
+      } catch (e2) {
+        console.warn('Fallback storage also full; relying on server storage.');
+      }
+    }
     window.dispatchEvent(new Event('nookfinder_storage_updated'));
-    window.dispatchEvent(
-      new StorageEvent('storage', {
-        key: STORAGE_KEY,
-        newValue: JSON.stringify(normalized),
-      })
-    );
+    try {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: STORAGE_KEY,
+          newValue: JSON.stringify(normalized),
+        })
+      );
+    } catch (e) {}
   }
+}
+
+export async function saveStoredPropertyAsync(property: Property): Promise<Property[]> {
+  const normalizedProp = normalizeProperty(property);
+  const current = getStoredProperties();
+  const existingIdx = current.findIndex((p) => p.id === normalizedProp.id);
+
+  let updated: Property[];
+  if (existingIdx >= 0) {
+    updated = [...current];
+    updated[existingIdx] = normalizedProp;
+  } else {
+    updated = [normalizedProp, ...current];
+  }
+
+  notifyStoreUpdate(updated);
+
+  // Push to server API
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/properties', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ property: normalizedProp }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.properties)) {
+          return data.properties.map(normalizeProperty);
+        }
+      }
+    } catch (err) {
+      console.warn('Server push non-blocking error:', err);
+    }
+  }
+
+  return updated;
 }
 
 export function saveStoredProperty(property: Property): Property[] {
