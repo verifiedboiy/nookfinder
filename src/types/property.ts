@@ -35,7 +35,9 @@ export interface PropertyAddress {
 export interface PropertySpecs {
   bedrooms: number;
   bathrooms: number;
-  squareFeet: number;
+  squareFeet: number; // Interior Finished Living Area (sq ft)
+  lotSizeSqFt?: number; // Total Lot / Land Parcel Size (sq ft)
+  lotSizeAcres?: number; // Total Lot / Land Size in Acres (e.g. 0.25)
   parkingSpaces: number;
   yearBuilt: number;
   hoaMonthly: number;

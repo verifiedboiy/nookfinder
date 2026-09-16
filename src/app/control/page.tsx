@@ -41,6 +41,7 @@ import {
   Mail,
   MessageSquare,
   Send,
+  Trees,
 } from 'lucide-react';
 
 const STANDARD_AMENITIES = [
@@ -93,7 +94,9 @@ function ControlPanelContent() {
   // Form Fields - Specs & Overview
   const [bedrooms, setBedrooms] = useState(3);
   const [bathrooms, setBathrooms] = useState(2);
-  const [squareFeet, setSquareFeet] = useState(1250);
+  const [squareFeet, setSquareFeet] = useState(1250); // Interior Living Area (sq ft)
+  const [lotSizeSqFt, setLotSizeSqFt] = useState<string>('6500'); // Total Lot / Land Size (sq ft)
+  const [lotSizeAcres, setLotSizeAcres] = useState<string>('0.15'); // Lot in Acres
   const [parkingSpaces, setParkingSpaces] = useState(1);
   const [yearBuilt, setYearBuilt] = useState(2021);
 
@@ -260,6 +263,8 @@ function ControlPanelContent() {
           bedrooms,
           bathrooms,
           squareFeet,
+          lotSizeSqFt,
+          lotSizeAcres,
           parkingSpaces,
           yearBuilt,
           monthlyPrincipalInterest,
@@ -306,6 +311,8 @@ function ControlPanelContent() {
     bedrooms,
     bathrooms,
     squareFeet,
+    lotSizeSqFt,
+    lotSizeAcres,
     parkingSpaces,
     yearBuilt,
     monthlyPrincipalInterest,
@@ -496,6 +503,8 @@ function ControlPanelContent() {
     setBedrooms(type === 'sale' ? 3 : 1);
     setBathrooms(type === 'sale' ? 2 : 1);
     setSquareFeet(type === 'sale' ? 1400 : 650);
+    setLotSizeSqFt(type === 'sale' ? '7500' : '0');
+    setLotSizeAcres(type === 'sale' ? '0.17' : '0');
     setParkingSpaces(1);
     setYearBuilt(2021);
 
@@ -543,6 +552,20 @@ function ControlPanelContent() {
     setBedrooms(prop.specs.bedrooms);
     setBathrooms(prop.specs.bathrooms);
     setSquareFeet(prop.specs.squareFeet);
+    setLotSizeSqFt(
+      prop.specs.lotSizeSqFt
+        ? prop.specs.lotSizeSqFt.toString()
+        : prop.specs.lotSizeAcres
+        ? Math.round(Number(prop.specs.lotSizeAcres) * 43560).toString()
+        : '6500'
+    );
+    setLotSizeAcres(
+      prop.specs.lotSizeAcres
+        ? prop.specs.lotSizeAcres.toString()
+        : prop.specs.lotSizeSqFt
+        ? (prop.specs.lotSizeSqFt / 43560).toFixed(2)
+        : '0.15'
+    );
     setParkingSpaces(prop.specs.parkingSpaces || 1);
     setYearBuilt(prop.specs.yearBuilt);
 
@@ -595,6 +618,8 @@ function ControlPanelContent() {
     setBedrooms(draft.bedrooms ?? 3);
     setBathrooms(draft.bathrooms ?? 2);
     setSquareFeet(draft.squareFeet ?? 1250);
+    setLotSizeSqFt(draft.lotSizeSqFt || '6500');
+    setLotSizeAcres(draft.lotSizeAcres || '0.15');
     setParkingSpaces(draft.parkingSpaces ?? 1);
     setYearBuilt(draft.yearBuilt ?? 2021);
 
@@ -764,6 +789,8 @@ function ControlPanelContent() {
           bedrooms,
           bathrooms,
           squareFeet,
+          lotSizeSqFt: Number(lotSizeSqFt) || (Number(lotSizeAcres) ? Math.round(Number(lotSizeAcres) * 43560) : 0),
+          lotSizeAcres: Number(lotSizeAcres) || (Number(lotSizeSqFt) ? Number((Number(lotSizeSqFt) / 43560).toFixed(2)) : 0),
           parkingSpaces,
           yearBuilt,
           hoaMonthly,
@@ -1201,8 +1228,11 @@ function ControlPanelContent() {
                             <span className="font-medium text-white block">
                               {prop.specs.bedrooms} bed • {prop.specs.bathrooms} bath
                             </span>
-                            <span className="text-[11px] text-slate-400 block">
-                              {prop.specs.squareFeet} sq ft • Built {prop.specs.yearBuilt}
+                            <span className="text-[11px] text-emerald-400 font-medium block">
+                              Living: {prop.specs.squareFeet?.toLocaleString()} sq ft
+                            </span>
+                            <span className="text-[10px] text-slate-400 block">
+                              Lot: {prop.specs.lotSizeAcres ? `${prop.specs.lotSizeAcres} ac` : prop.specs.lotSizeSqFt ? `${prop.specs.lotSizeSqFt?.toLocaleString()} sq ft` : '0.15 ac'} • Built {prop.specs.yearBuilt}
                             </span>
                           </td>
 
@@ -1423,9 +1453,14 @@ function ControlPanelContent() {
                             <span className="font-medium text-white block">
                               {prop.specs.bedrooms} bed • {prop.specs.bathrooms} bath
                             </span>
-                            <span className="text-[11px] text-slate-400 block">
-                              {prop.specs.squareFeet} sq ft
+                            <span className="text-[11px] text-sky-400 font-medium block">
+                              Living: {prop.specs.squareFeet?.toLocaleString()} sq ft
                             </span>
+                            {(prop.specs.lotSizeAcres || prop.specs.lotSizeSqFt) && (
+                              <span className="text-[10px] text-slate-400 block">
+                                Lot: {prop.specs.lotSizeAcres ? `${prop.specs.lotSizeAcres} ac` : `${prop.specs.lotSizeSqFt?.toLocaleString()} sq ft`}
+                              </span>
+                            )}
                           </td>
 
                           {/* Col 6: Photos */}
@@ -1901,13 +1936,17 @@ function ControlPanelContent() {
               </div>
             </div>
 
-            {/* SECTION 4: Architectural Specs & Dimensions */}
+            {/* SECTION 4: Interior Living Space vs. Land / Lot Size */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <Layers className="w-4 h-4" />
-                <span>4. Architectural Dimensions & Metrics</span>
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <Layers className="w-4 h-4" />
+                  <span>4. Home Interior Living Space vs. Total Land / Lot Size</span>
+                </h3>
+                <span className="text-[10px] text-slate-400 font-mono">1 Acre = 43,560 sq ft</span>
+              </div>
 
+              {/* Row 1: Interior Rooms & Livable Finished Space */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-1">
@@ -1940,8 +1979,8 @@ function ControlPanelContent() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Square Footage (sq ft) <span className="text-rose-400">*</span>
+                  <label className="text-xs font-semibold text-emerald-400 block mb-1">
+                    Interior Living (sq ft) <span className="text-rose-400">*</span>
                   </label>
                   <input
                     type="number"
@@ -1949,8 +1988,10 @@ function ControlPanelContent() {
                     min="100"
                     value={squareFeet}
                     onChange={(e) => setSquareFeet(Number(e.target.value))}
-                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    className="w-full text-xs bg-slate-900 border border-emerald-600/80 rounded px-3 py-2 text-white font-mono font-bold"
+                    placeholder="e.g. 2400"
                   />
+                  <span className="text-[10px] text-slate-400 mt-0.5 block">Heated/cooled interior</span>
                 </div>
 
                 <div>
@@ -1977,6 +2018,62 @@ function ControlPanelContent() {
                     onChange={(e) => setYearBuilt(Number(e.target.value))}
                     className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
                   />
+                </div>
+              </div>
+
+              {/* Row 2: Land Parcel / Total Lot Size (The Land the House Sits On) */}
+              <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <Trees className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Total Land Parcel / Lot Size (Total Ground the House Sits On)</span>
+                  </span>
+                  <span className="text-[10px] text-emerald-400 font-semibold">Automatic Unit Sync</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Total Lot Size in Sq Ft
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="e.g. 7500"
+                      value={lotSizeSqFt}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setLotSizeSqFt(val);
+                        const num = Number(val);
+                        if (num > 0) {
+                          setLotSizeAcres((num / 43560).toFixed(2));
+                        }
+                      }}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">Total deeded ground footprint</span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">
+                      Lot Size in Acres (ac)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 0.25"
+                      value={lotSizeAcres}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setLotSizeAcres(val);
+                        const num = Number(val);
+                        if (!isNaN(num) && num > 0) {
+                          setLotSizeSqFt(Math.round(num * 43560).toString());
+                        }
+                      }}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
+                    />
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">e.g. 0.25 Acres (~10,890 sq ft)</span>
+                  </div>
                 </div>
               </div>
             </div>

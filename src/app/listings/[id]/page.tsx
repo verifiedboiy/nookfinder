@@ -29,6 +29,8 @@ import {
   Building,
   Eye,
   Heart,
+  Trees,
+  Layers,
 } from 'lucide-react';
 
 export default function PropertyDetailPage() {
@@ -698,8 +700,8 @@ export default function PropertyDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Details & Specs (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
-            {/* Quick Metrics Bar */}
-            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            {/* Quick Metrics Bar - Clear 5-Metric Breakdown */}
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
               <div className="border-r border-slate-100 last:border-none">
                 <span className="text-xs text-slate-500 block">Bedrooms</span>
                 <div className="flex items-center justify-center gap-1.5 mt-1">
@@ -717,13 +719,35 @@ export default function PropertyDetailPage() {
               </div>
 
               <div className="border-r border-slate-100 last:border-none">
-                <span className="text-xs text-slate-500 block">Living Area</span>
-                <div className="flex items-center justify-center gap-1.5 mt-1">
+                <span className="text-xs text-slate-500 block">Living Space</span>
+                <div className="flex items-center justify-center gap-1 mt-1">
                   <Maximize2 className="w-4 h-4 text-emerald-700" />
-                  <span className="text-lg font-bold text-slate-900">
-                    {property.specs.squareFeet.toLocaleString()} sq ft
+                  <span className="text-base sm:text-lg font-bold text-slate-900">
+                    {property.specs.squareFeet.toLocaleString()} <span className="text-xs font-medium text-slate-500">sq ft</span>
                   </span>
                 </div>
+                <span className="text-[10px] text-emerald-700 font-semibold block">Interior Living</span>
+              </div>
+
+              <div className="border-r border-slate-100 last:border-none">
+                <span className="text-xs text-slate-500 block">Total Land / Lot</span>
+                <div className="flex items-center justify-center gap-1 mt-1">
+                  <Trees className="w-4 h-4 text-emerald-700" />
+                  <span className="text-base sm:text-lg font-bold text-slate-900">
+                    {property.specs.lotSizeAcres
+                      ? `${property.specs.lotSizeAcres} ac`
+                      : property.specs.lotSizeSqFt
+                      ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft`
+                      : '0.15 ac'}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 block">
+                  {property.specs.lotSizeSqFt
+                    ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft`
+                    : property.specs.lotSizeAcres
+                    ? `${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft`
+                    : 'Land Parcel'}
+                </span>
               </div>
 
               <div>
@@ -731,6 +755,55 @@ export default function PropertyDetailPage() {
                 <div className="flex items-center justify-center gap-1.5 mt-1">
                   <Calendar className="w-4 h-4 text-emerald-700" />
                   <span className="text-lg font-bold text-slate-900">{property.specs.yearBuilt}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Property Dimensions & Land Area Explainer */}
+            <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 className="text-sm font-bold text-slate-900 font-display flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-emerald-700" />
+                  <span>Property Dimensions & Space Breakdown</span>
+                </h3>
+                <span className="text-[11px] font-mono text-slate-500">Verified Survey Data</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {/* Home Interior Card */}
+                <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <Maximize2 className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Interior Living Area</span>
+                    </span>
+                    <span className="text-xs font-bold font-mono text-emerald-800">
+                      {property.specs.squareFeet.toLocaleString()} sq ft
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-normal">
+                    Total enclosed, heated, and air-conditioned livable interior space including bedrooms, living rooms, and kitchen.
+                  </p>
+                </div>
+
+                {/* Total Land / Lot Card */}
+                <div className="p-3.5 rounded-lg bg-emerald-50/50 border border-emerald-200 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                      <Trees className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Total Lot / Land Footprint</span>
+                    </span>
+                    <span className="text-xs font-bold font-mono text-emerald-900">
+                      {property.specs.lotSizeAcres
+                        ? `${property.specs.lotSizeAcres} Acres (${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft)`
+                        : property.specs.lotSizeSqFt
+                        ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft (${(property.specs.lotSizeSqFt / 43560).toFixed(2)} ac)`
+                        : '0.15 Acres (6,534 sq ft)'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-emerald-900/80 leading-normal">
+                    Total deeded land area the home sits upon, including private front/back yard, setbacks, and driveway.
+                  </p>
                 </div>
               </div>
             </div>

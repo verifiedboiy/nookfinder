@@ -128,12 +128,24 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
             <span className="text-slate-500">bath</span>
           </div>
 
-          <div className="flex items-center gap-1.5" title="Living Area">
+          <div className="flex items-center gap-1.5" title="Interior Living Space">
             <Maximize2 className="w-4 h-4 text-slate-400" strokeWidth={1.5} />
             <span className="font-semibold">{property.specs.squareFeet.toLocaleString()}</span>
-            <span className="text-slate-500">sq ft</span>
+            <span className="text-slate-500">sq ft living</span>
           </div>
         </div>
+
+        {/* Lot / Land Size Indicator (if configured) */}
+        {(property.specs.lotSizeAcres || property.specs.lotSizeSqFt) && (
+          <div className="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded border border-slate-100">
+            <span className="text-slate-600 font-medium">Total Land / Lot Size:</span>
+            <span className="font-bold text-slate-800">
+              {property.specs.lotSizeAcres
+                ? `${property.specs.lotSizeAcres} ac lot`
+                : `${property.specs.lotSizeSqFt?.toLocaleString()} sq ft lot`}
+            </span>
+          </div>
+        )}
 
         {/* View Details Link Action */}
         <div className="pt-2">
