@@ -3,7 +3,7 @@
 import { Property } from '@/types/property';
 import { MOCK_PROPERTIES } from './mockProperties';
 
-const STORAGE_KEY = 'nookfinder_inventory_v2';
+const STORAGE_KEY = 'nookfinder_inventory_v3';
 const OFFICIAL_EMAIL = 'nookkfinder@gmail.com';
 const OFFICIAL_TELEGRAM = 'https://t.me/nook_finder';
 
@@ -47,7 +47,9 @@ export async function syncWithServer(): Promise<Property[]> {
       const data = await res.json();
       if (data.success && Array.isArray(data.properties)) {
         const serverProps = data.properties.map(normalizeProperty);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverProps));
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(serverProps));
+        } catch (e) {}
         window.dispatchEvent(new Event('nookfinder_storage_updated'));
         return serverProps;
       }
@@ -62,28 +64,26 @@ export async function syncWithServer(): Promise<Property[]> {
 
 export function getStoredProperties(): Property[] {
   if (typeof window === 'undefined') {
-    return MOCK_PROPERTIES.map(normalizeProperty);
+    return [];
   }
 
   // Trigger background server sync
   if (!isSyncing) {
     setTimeout(() => {
       syncWithServer();
-    }, 100);
+    }, 50);
   }
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw === null) {
-      const normalized = MOCK_PROPERTIES.map(normalizeProperty);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
-      return normalized;
+      return [];
     }
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     return parsed.map(normalizeProperty);
   } catch {
-    return MOCK_PROPERTIES.map(normalizeProperty);
+    return [];
   }
 }
 

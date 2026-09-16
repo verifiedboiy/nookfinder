@@ -30,8 +30,8 @@ export default function FeaturedProperties() {
   }, []);
 
   const filteredProperties = allProperties.filter((prop) => {
-    if (filter === 'all') return prop.featured;
-    return prop.featured && prop.listingType === filter;
+    if (filter === 'all') return true;
+    return prop.listingType === filter;
   });
 
   return (
@@ -63,7 +63,7 @@ export default function FeaturedProperties() {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              All Featured
+              All Listings
             </button>
             <button
               type="button"
@@ -74,7 +74,7 @@ export default function FeaturedProperties() {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              For Sale ($140k+)
+              For Sale
             </button>
             <button
               type="button"
@@ -85,17 +85,29 @@ export default function FeaturedProperties() {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              For Rent (Under $800+)
+              For Rent
             </button>
           </div>
         </div>
 
-        {/* Property Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProperties.slice(0, 6).map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
-        </div>
+        {/* Property Grid or Empty Catalog State */}
+        {filteredProperties.length === 0 ? (
+          <div className="p-12 text-center bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+            <ShieldCheck className="w-10 h-10 text-emerald-700 mx-auto" />
+            <h3 className="text-base font-bold text-slate-900 font-display">
+              Live Verified Catalog
+            </h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">
+              Our specialists are actively listing verified homes and rentals. Check back shortly or view our complete catalog.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProperties.slice(0, 6).map((property) => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
+        )}
 
         {/* View All CTA Footer */}
         <div className="mt-12 text-center">

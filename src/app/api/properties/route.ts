@@ -41,7 +41,7 @@ function ensureDataFile(): Property[] {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     if (!fs.existsSync(DATA_FILE)) {
-      const initial = MOCK_PROPERTIES.map(normalizeProperty);
+      const initial: Property[] = [];
       fs.writeFileSync(DATA_FILE, JSON.stringify(initial, null, 2), 'utf-8');
       return initial;
     }
@@ -51,7 +51,7 @@ function ensureDataFile(): Property[] {
     return parsed.map(normalizeProperty);
   } catch (error) {
     console.error('Error accessing properties data file:', error);
-    return MOCK_PROPERTIES.map(normalizeProperty);
+    return [];
   }
 }
 
