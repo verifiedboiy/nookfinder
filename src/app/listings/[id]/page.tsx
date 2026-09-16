@@ -54,28 +54,73 @@ export default function PropertyDetailPage() {
   );
   const [inquirySent, setInquirySent] = useState(false);
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = () => {
-      setProperties(getStoredProperties());
-      setIsLoaded(true);
-    };
-    loadData();
+    let isMounted = true;
+    const decodedTargetId = decodeURIComponent(propertyId || '');
 
-    window.addEventListener('nookfinder_storage_updated', loadData);
-    window.addEventListener('storage', loadData);
-    window.addEventListener('focus', loadData);
-    window.addEventListener('visibilitychange', loadData);
+    // 1. Check instant local cache first
+    const local = getStoredProperties();
+    const foundLocal = local.find(
+      (p) => p.id === propertyId || p.id === decodedTargetId || p.id.toLowerCase() === decodedTargetId.toLowerCase()
+    );
+    if (foundLocal && isMounted) {
+      setProperties(local);
+      setIsLoading(false);
+    }
+
+    // 2. Query Neon server API to guarantee the latest cloud database data
+    const fetchLatest = async () => {
+      try {
+        const res = await fetch('/api/properties', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.properties) && isMounted) {
+            setProperties(data.properties);
+          }
+        }
+      } catch (err) {
+        console.warn('Error fetching property from server:', err);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchLatest();
+
+    const handleUpdate = () => {
+      const updated = getStoredProperties();
+      if (updated.length > 0 && isMounted) {
+        setProperties(updated);
+        setIsLoading(false);
+      }
+    };
+
+    window.addEventListener('nookfinder_storage_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    window.addEventListener('focus', handleUpdate);
+    window.addEventListener('visibilitychange', handleUpdate);
+
     return () => {
-      window.removeEventListener('nookfinder_storage_updated', loadData);
-      window.removeEventListener('storage', loadData);
-      window.removeEventListener('focus', loadData);
-      window.removeEventListener('visibilitychange', loadData);
+      isMounted = false;
+      window.removeEventListener('nookfinder_storage_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+      window.removeEventListener('focus', handleUpdate);
+      window.removeEventListener('visibilitychange', handleUpdate);
     };
-  }, []);
+  }, [propertyId]);
 
-  const property = properties.find((p) => p.id === propertyId) || null;
+  const decodedId = decodeURIComponent(propertyId || '');
+  const property =
+    properties.find(
+      (p) =>
+        p.id === propertyId ||
+        p.id === decodedId ||
+        p.id.toLowerCase() === decodedId.toLowerCase()
+    ) || null;
 
   // Keyboard navigation for photo lightbox
   useEffect(() => {
@@ -95,10 +140,18 @@ export default function PropertyDetailPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, property?.images?.length]);
 
-  if (!isLoaded) {
+  if (isLoading && !property) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500">
-        Loading verified property details...
+      <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+        <Navbar />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full space-y-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-slate-200 rounded w-1/4"></div>
+            <div className="h-24 bg-slate-200 rounded-lg"></div>
+            <div className="h-96 bg-slate-200 rounded-xl"></div>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -112,10 +165,10 @@ export default function PropertyDetailPage() {
             <Building className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900 font-display">
-            Listing No Longer Available
+            Property Not Found
           </h1>
           <p className="text-sm text-slate-600 max-w-md mx-auto">
-            This property listing has been removed or is off the market. Explore our active verified inventory to find other homes.
+            We couldn&apos;t find this verified listing. It may have been updated or moved. Browse our active verified inventory to explore available properties.
           </p>
           <div className="pt-4">
             <Link
@@ -123,7 +176,7 @@ export default function PropertyDetailPage() {
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Active Listings</span>
+              <span>Browse Active Verified Homes</span>
             </Link>
           </div>
         </main>
