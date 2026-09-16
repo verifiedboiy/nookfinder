@@ -135,14 +135,14 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
           </div>
         </div>
 
-        {/* Lot / Land Size Indicator (if configured) */}
-        {(property.specs.lotSizeAcres || property.specs.lotSizeSqFt) && (
+        {/* Lot / Land Size Indicator (Total land the house sits on) */}
+        {(property.specs.lotSizeSqFt || property.specs.lotSizeAcres) && (
           <div className="flex items-center justify-between text-[11px] text-slate-500 bg-slate-50 px-2.5 py-1 rounded border border-slate-100">
             <span className="text-slate-600 font-medium">Total Land / Lot Size:</span>
             <span className="font-bold text-slate-800">
-              {property.specs.lotSizeAcres
-                ? `${property.specs.lotSizeAcres} ac lot`
-                : `${property.specs.lotSizeSqFt?.toLocaleString()} sq ft lot`}
+              {property.specs.lotSizeSqFt
+                ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft (${(property.specs.lotSizeAcres || (property.specs.lotSizeSqFt / 43560).toFixed(2))} ac)`
+                : `${property.specs.lotSizeAcres} ac (${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft)`}
             </span>
           </div>
         )}

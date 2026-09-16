@@ -2039,19 +2039,21 @@ function ControlPanelContent() {
                     <input
                       type="number"
                       min="0"
-                      placeholder="e.g. 7500"
+                      placeholder="e.g. 4856"
                       value={lotSizeSqFt}
                       onChange={(e) => {
                         const val = e.target.value;
                         setLotSizeSqFt(val);
                         const num = Number(val);
-                        if (num > 0) {
+                        if (val && !isNaN(num) && num > 0) {
                           setLotSizeAcres((num / 43560).toFixed(2));
+                        } else if (val === '') {
+                          setLotSizeAcres('');
                         }
                       }}
                       className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
                     />
-                    <span className="text-[10px] text-slate-400 mt-0.5 block">Total deeded ground footprint</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">Total deeded ground footprint (e.g. 4,856 sq ft)</span>
                   </div>
 
                   <div>
@@ -2060,19 +2062,21 @@ function ControlPanelContent() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. 0.25"
+                      placeholder="e.g. 0.11"
                       value={lotSizeAcres}
                       onChange={(e) => {
                         const val = e.target.value;
                         setLotSizeAcres(val);
                         const num = Number(val);
-                        if (!isNaN(num) && num > 0) {
+                        if (val && !isNaN(num) && num > 0) {
                           setLotSizeSqFt(Math.round(num * 43560).toString());
+                        } else if (val === '') {
+                          setLotSizeSqFt('');
                         }
                       }}
                       className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
                     />
-                    <span className="text-[10px] text-slate-400 mt-0.5 block">e.g. 0.25 Acres (~10,890 sq ft)</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">e.g. 0.11 Acres (~4,856 sq ft)</span>
                   </div>
                 </div>
               </div>

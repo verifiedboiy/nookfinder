@@ -734,19 +734,19 @@ export default function PropertyDetailPage() {
                 <div className="flex items-center justify-center gap-1 mt-1">
                   <Trees className="w-4 h-4 text-emerald-700" />
                   <span className="text-base sm:text-lg font-bold text-slate-900">
-                    {property.specs.lotSizeAcres
-                      ? `${property.specs.lotSizeAcres} ac`
-                      : property.specs.lotSizeSqFt
+                    {property.specs.lotSizeSqFt
                       ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft`
-                      : '0.15 ac'}
+                      : property.specs.lotSizeAcres
+                      ? `${property.specs.lotSizeAcres} ac`
+                      : '4,856 sq ft'}
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-500 block">
-                  {property.specs.lotSizeSqFt
-                    ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft`
-                    : property.specs.lotSizeAcres
-                    ? `${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft`
-                    : 'Land Parcel'}
+                <span className="text-[10px] text-emerald-800 font-semibold block">
+                  {property.specs.lotSizeAcres
+                    ? `${property.specs.lotSizeAcres} Acres`
+                    : property.specs.lotSizeSqFt
+                    ? `${(property.specs.lotSizeSqFt / 43560).toFixed(2)} Acres`
+                    : '0.11 Acres'}
                 </span>
               </div>
 
@@ -782,7 +782,7 @@ export default function PropertyDetailPage() {
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-600 leading-normal">
-                    Total enclosed, heated, and air-conditioned livable interior space including bedrooms, living rooms, and kitchen.
+                    The home&apos;s interior living area — enclosed, heated, and air-conditioned livable space.
                   </p>
                 </div>
 
@@ -794,15 +794,15 @@ export default function PropertyDetailPage() {
                       <span>Total Lot / Land Footprint</span>
                     </span>
                     <span className="text-xs font-bold font-mono text-emerald-900">
-                      {property.specs.lotSizeAcres
-                        ? `${property.specs.lotSizeAcres} Acres (${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft)`
-                        : property.specs.lotSizeSqFt
-                        ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft (${(property.specs.lotSizeSqFt / 43560).toFixed(2)} ac)`
-                        : '0.15 Acres (6,534 sq ft)'}
+                      {property.specs.lotSizeSqFt
+                        ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft (${(property.specs.lotSizeAcres || (property.specs.lotSizeSqFt / 43560).toFixed(2))} Acres)`
+                        : property.specs.lotSizeAcres
+                        ? `${Math.round(Number(property.specs.lotSizeAcres) * 43560).toLocaleString()} sq ft (${property.specs.lotSizeAcres} Acres)`
+                        : '4,856 sq ft (0.11 Acres)'}
                     </span>
                   </div>
                   <p className="text-[11px] text-emerald-900/80 leading-normal">
-                    Total deeded land area the home sits upon, including private front/back yard, setbacks, and driveway.
+                    The total lot size — the complete deeded land property that the house sits on.
                   </p>
                 </div>
               </div>
