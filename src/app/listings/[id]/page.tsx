@@ -261,8 +261,8 @@ export default function PropertyDetailPage() {
           </div>
         </div>
 
-        {/* COMPREHENSIVE MULTI-PHOTO GALLERY (3 to 20 Photos - Clean & Proportioned) */}
-        <div className="space-y-3">
+        {/* FIXED 4-PICTURE MOBILE-STYLE GALLERY */}
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-emerald-700" />
@@ -278,257 +278,64 @@ export default function PropertyDetailPage() {
               className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline cursor-pointer"
             >
               <Maximize2 className="w-3.5 h-3.5" />
-              <span>View All {property.images.length} Photos Fullscreen</span>
+              <span>View All {property.images.length} Photos</span>
             </button>
           </div>
 
-          {/* Cleanly Constrained Gallery Container (Max Height bounded so images never blow up) */}
-          <div className="w-full h-[280px] sm:h-[360px] md:h-[440px] rounded-xl overflow-hidden border border-slate-200 bg-slate-950 shadow-xs select-none">
-            {property.images.length === 0 ? (
-              <div className="w-full h-full flex items-center justify-center text-slate-400">
-                <ImageIcon className="w-8 h-8 mr-2 text-slate-500" />
-                <span>No photos available for this listing</span>
-              </div>
-            ) : property.images.length === 1 ? (
-              // 1 Photo: Full bleed hero
-              <div
-                onClick={() => {
-                  setActivePhotoIdx(0);
-                  setLightboxOpen(true);
-                }}
-                className="relative w-full h-full cursor-pointer group"
-              >
-                <Image
-                  src={property.images[0].url}
-                  alt={property.images[0].caption || property.title}
-                  fill
-                  unoptimized={property.images[0].url.startsWith('data:')}
-                  className="object-cover group-hover:scale-101 transition-transform duration-300"
-                  sizes="100vw"
-                  priority
-                />
-                <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                  {property.images[0].caption || 'Primary View'}
-                </span>
-              </div>
-            ) : property.images.length === 2 ? (
-              // 2 Photos: 50 / 50 Split
-              <div className="grid grid-cols-2 gap-2 h-full w-full">
-                {property.images.slice(0, 2).map((img, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      setActivePhotoIdx(idx);
-                      setLightboxOpen(true);
-                    }}
-                    className="relative h-full w-full cursor-pointer group overflow-hidden"
-                  >
-                    <Image
-                      src={img.url}
-                      alt={img.caption || `Photo ${idx + 1}`}
-                      fill
-                      unoptimized={img.url.startsWith('data:')}
-                      className="object-cover group-hover:scale-102 transition-transform duration-300"
-                      sizes="50vw"
-                      priority={idx === 0}
-                    />
-                    <span className="absolute bottom-2.5 left-2.5 bg-slate-900/80 backdrop-blur-xs text-white text-[11px] px-2 py-0.5 rounded truncate max-w-[85%]">
-                      {img.caption}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : property.images.length === 3 ? (
-              // 3 Photos: 2/3 Main Hero (Left) + 2 Stacked Tiles (Right)
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 h-full w-full">
+          {/* Fixed 4-Picture Grid (2x2 on mobile, 4 columns on desktop) */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 w-full">
+            {[0, 1, 2, 3].map((slotIdx) => {
+              const img =
+                property.images[slotIdx] ||
+                property.images[slotIdx % property.images.length] ||
+                property.images[0];
+              const isLastSlot = slotIdx === 3;
+              const hasMorePhotos = property.images.length > 4;
+
+              if (!img) return null;
+
+              return (
                 <div
+                  key={slotIdx}
                   onClick={() => {
-                    setActivePhotoIdx(0);
+                    setActivePhotoIdx(slotIdx < property.images.length ? slotIdx : 0);
                     setLightboxOpen(true);
                   }}
-                  className="md:col-span-2 relative h-full w-full cursor-pointer group overflow-hidden"
-                >
-                  <Image
-                    src={property.images[0].url}
-                    alt={property.images[0].caption || property.title}
-                    fill
-                    unoptimized={property.images[0].url.startsWith('data:')}
-                    className="object-cover group-hover:scale-102 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, 66vw"
-                    priority
-                  />
-                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                    {property.images[0].caption || 'Primary View'}
-                  </span>
-                </div>
-
-                <div className="grid grid-rows-2 gap-2 h-full">
-                  {property.images.slice(1, 3).map((img, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        setActivePhotoIdx(idx + 1);
-                        setLightboxOpen(true);
-                      }}
-                      className="relative h-full w-full cursor-pointer group overflow-hidden"
-                    >
-                      <Image
-                        src={img.url}
-                        alt={img.caption || `Photo ${idx + 2}`}
-                        fill
-                        unoptimized={img.url.startsWith('data:')}
-                        className="object-cover group-hover:scale-103 transition-transform duration-300"
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                      />
-                      <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
-                        {img.caption}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : property.images.length === 4 ? (
-              // 4 Photos: 2/3 Main Hero (Left) + 3 Stacked Tiles (Right)
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 h-full w-full">
-                <div
-                  onClick={() => {
-                    setActivePhotoIdx(0);
-                    setLightboxOpen(true);
-                  }}
-                  className="md:col-span-2 relative h-full w-full cursor-pointer group overflow-hidden"
-                >
-                  <Image
-                    src={property.images[0].url}
-                    alt={property.images[0].caption || property.title}
-                    fill
-                    unoptimized={property.images[0].url.startsWith('data:')}
-                    className="object-cover group-hover:scale-102 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, 66vw"
-                    priority
-                  />
-                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                    {property.images[0].caption || 'Primary View'}
-                  </span>
-                </div>
-
-                <div className="grid grid-rows-3 gap-2 h-full">
-                  {property.images.slice(1, 4).map((img, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        setActivePhotoIdx(idx + 1);
-                        setLightboxOpen(true);
-                      }}
-                      className="relative h-full w-full cursor-pointer group overflow-hidden"
-                    >
-                      <Image
-                        src={img.url}
-                        alt={img.caption || `Photo ${idx + 2}`}
-                        fill
-                        unoptimized={img.url.startsWith('data:')}
-                        className="object-cover group-hover:scale-103 transition-transform duration-300"
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                      />
-                      <span className="absolute bottom-1.5 left-1.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-1.5 py-0.2 rounded truncate max-w-[85%]">
-                        {img.caption}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              // 5+ Photos: Balanced 5-Tile Mosaic (50% Hero + 2x2 Grid of 4)
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 h-full w-full">
-                <div
-                  onClick={() => {
-                    setActivePhotoIdx(0);
-                    setLightboxOpen(true);
-                  }}
-                  className="relative h-full w-full cursor-pointer group overflow-hidden"
-                >
-                  <Image
-                    src={property.images[0].url}
-                    alt={property.images[0].caption || property.title}
-                    fill
-                    unoptimized={property.images[0].url.startsWith('data:')}
-                    className="object-cover group-hover:scale-102 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
-                  />
-                  <span className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-xs px-2.5 py-1 rounded">
-                    {property.images[0].caption || 'Primary View'}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 grid-rows-2 gap-2 h-full">
-                  {property.images.slice(1, 5).map((img, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        setActivePhotoIdx(idx + 1);
-                        setLightboxOpen(true);
-                      }}
-                      className="relative h-full w-full cursor-pointer group overflow-hidden"
-                    >
-                      <Image
-                        src={img.url}
-                        alt={img.caption || `Photo ${idx + 2}`}
-                        fill
-                        unoptimized={img.url.startsWith('data:')}
-                        className="object-cover group-hover:scale-103 transition-transform duration-300"
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                      />
-                      <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
-                        {img.caption}
-                      </span>
-
-                      {/* Overly on 5th photo when more exist */}
-                      {idx === 3 && property.images.length > 5 && (
-                        <div className="absolute inset-0 bg-slate-950/75 hover:bg-slate-950/65 backdrop-blur-xs text-white font-bold text-xs sm:text-sm flex flex-col items-center justify-center gap-1 transition-colors">
-                          <ImageIcon className="w-5 h-5 text-emerald-400" />
-                          <span>+{property.images.length - 5} More Photos</span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Clean Horizontal Thumbnail Scrubber for all photos (3-20) */}
-          {property.images.length > 1 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
-              {property.images.map((img, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => {
-                    setActivePhotoIdx(idx);
-                    setLightboxOpen(true);
-                  }}
-                  className={`relative w-20 h-14 sm:w-24 sm:h-16 rounded-lg border overflow-hidden shrink-0 cursor-pointer transition-all ${
-                    idx === activePhotoIdx
-                      ? 'border-emerald-600 ring-2 ring-emerald-500/40 opacity-100'
-                      : 'border-slate-200 hover:border-slate-400 opacity-75 hover:opacity-100'
-                  }`}
-                  title={`View photo ${idx + 1}: ${img.caption}`}
+                  className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-900 cursor-pointer group shadow-xs select-none"
                 >
                   <Image
                     src={img.url}
-                    alt={img.caption}
+                    alt={img.caption || `Photo ${slotIdx + 1}`}
                     fill
-                    unoptimized={img.url.startsWith('data:')}
-                    className="object-cover"
-                    sizes="96px"
+                    unoptimized={img.url?.startsWith('data:')}
+                    className="object-cover group-hover:scale-104 transition-transform duration-300"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    priority={slotIdx === 0}
                   />
-                  <span className="absolute bottom-0 inset-x-0 bg-slate-900/80 text-white text-[9px] px-1 py-0.2 truncate text-center">
-                    {idx + 1}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
+
+                  {/* Caption badge for slots 1, 2, 3 */}
+                  {!isLastSlot && (
+                    <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-[11px] px-2 py-0.5 rounded truncate max-w-[85%] z-10">
+                      {img.caption || `Photo ${slotIdx + 1}`}
+                    </span>
+                  )}
+
+                  {/* 4th Slot: View All Pictures Overlay */}
+                  {isLastSlot && (
+                    <div className="absolute inset-0 bg-slate-950/75 hover:bg-slate-950/65 backdrop-blur-xs text-white font-bold flex flex-col items-center justify-center gap-1 transition-colors p-2 text-center z-20">
+                      <ImageIcon className="w-5 h-5 text-emerald-400" />
+                      <span className="text-xs sm:text-sm">
+                        {hasMorePhotos ? `+${property.images.length - 3} More` : 'View All'}
+                      </span>
+                      <span className="text-[10px] sm:text-xs text-emerald-300 underline font-medium">
+                        View all {property.images.length} photos
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* FULLSCREEN LIGHTBOX MODAL */}
