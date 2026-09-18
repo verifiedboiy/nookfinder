@@ -132,10 +132,15 @@ export default function HeroSearch() {
                   className="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800 focus:outline-hidden focus:border-emerald-600"
                 >
                   <option value="all">Any Category</option>
-                  <option value="house">Single Family House</option>
+                  <option value="house">Houses (Single-Family)</option>
+                  <option value="multi-family">Multi-Family</option>
+                  <option value="condo">Condos / Co-ops</option>
+                  <option value="land">Lots / Land</option>
+                  <option value="apartment">Apartments</option>
+                  <option value="manufactured">Manufactured</option>
                   <option value="townhouse">Townhouse</option>
-                  <option value="condo">Starter Condo</option>
-                  <option value="studio">Minimalist Studio</option>
+                  <option value="duplex">Duplex</option>
+                  <option value="studio">Studio</option>
                 </select>
               </div>
 

@@ -966,8 +966,8 @@ export default function PropertyDetailPage() {
               <div className="relative">
                 <p
                   className={`text-sm text-slate-700 leading-relaxed whitespace-pre-line transition-all duration-200 ${
-                    !isOverviewExpanded && (property.description.length > 200 || property.description.includes('\n'))
-                      ? 'line-clamp-3'
+                    !isOverviewExpanded && (property.description.length > 380 || property.description.split('\n').length > 6)
+                      ? 'line-clamp-6'
                       : ''
                   }`}
                 >
@@ -975,12 +975,12 @@ export default function PropertyDetailPage() {
                 </p>
 
                 {/* Bottom subtle gradient overlay when collapsed */}
-                {!isOverviewExpanded && (property.description.length > 200 || property.description.includes('\n')) && (
+                {!isOverviewExpanded && (property.description.length > 380 || property.description.split('\n').length > 6) && (
                   <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
                 )}
               </div>
 
-              {property.description && (property.description.length > 200 || property.description.includes('\n')) && (
+              {property.description && (property.description.length > 380 || property.description.split('\n').length > 6) && (
                 <div className="pt-1">
                   <button
                     type="button"

@@ -1,4 +1,13 @@
-export type PropertyType = 'house' | 'apartment' | 'townhouse' | 'condo' | 'duplex' | 'studio';
+export type PropertyType =
+  | 'house'
+  | 'multi-family'
+  | 'condo'
+  | 'land'
+  | 'apartment'
+  | 'manufactured'
+  | 'townhouse'
+  | 'duplex'
+  | 'studio';
 export type ListingType = 'sale' | 'rent';
 
 export interface PropertyImage {

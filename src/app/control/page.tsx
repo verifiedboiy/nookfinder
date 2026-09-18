@@ -1776,10 +1776,13 @@ function ControlPanelContent() {
                     onChange={(e) => setPropertyType(e.target.value as PropertyType)}
                     className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2.5 text-white"
                   >
-                    <option value="house">Single Family Home</option>
+                    <option value="house">Houses (Single-Family)</option>
+                    <option value="multi-family">Multi-Family</option>
+                    <option value="condo">Condos / Co-ops</option>
+                    <option value="land">Lots / Land</option>
+                    <option value="apartment">Apartments</option>
+                    <option value="manufactured">Manufactured</option>
                     <option value="townhouse">Townhouse</option>
-                    <option value="condo">Starter Condo</option>
-                    <option value="apartment">Garden Apartment</option>
                     <option value="duplex">Duplex Residence</option>
                     <option value="studio">Minimalist Studio</option>
                   </select>
