@@ -6,7 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import FilterBar from '@/components/listings/FilterBar';
 import PropertyCard from '@/components/listings/PropertyCard';
-import PropertyCardSkeleton, { LoadingPropertiesBanner } from '@/components/listings/PropertyCardSkeleton';
+import PropertyCardSkeleton from '@/components/listings/PropertyCardSkeleton';
 import InteractiveMap from '@/components/listings/InteractiveMap';
 import PageGuide from '@/components/guide/PageGuide';
 import { getStoredProperties, syncWithServer } from '@/data/propertyStore';
@@ -255,18 +255,9 @@ function ListingsContent() {
             {/* Sort Order Bar */}
             <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 text-xs">
               <span className="text-slate-500 font-medium">
-                {isLoading && allProperties.length === 0 ? (
-                  <span className="inline-flex items-center gap-1.5 text-emerald-800 font-semibold">
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-700" />
-                    <span>Loading verified inventory from database...</span>
-                  </span>
-                ) : (
-                  <>
-                    Showing{' '}
-                    <strong className="text-slate-900">{filteredProperties.length}</strong>{' '}
-                    {filters.listingType === 'sale' ? 'homes for sale' : 'verified rentals'}
-                  </>
-                )}
+                Showing{' '}
+                <strong className="text-slate-900">{filteredProperties.length}</strong>{' '}
+                {filters.listingType === 'sale' ? 'homes for sale' : 'verified rentals'}
               </span>
 
               <div className="flex items-center gap-2">

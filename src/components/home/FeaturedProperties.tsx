@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getStoredProperties, syncWithServer } from '@/data/propertyStore';
 import { Property } from '@/types/property';
 import PropertyCard from '@/components/listings/PropertyCard';
-import PropertyCardSkeleton, { LoadingPropertiesBanner } from '@/components/listings/PropertyCardSkeleton';
+import PropertyCardSkeleton from '@/components/listings/PropertyCardSkeleton';
 import { ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function FeaturedProperties() {
@@ -124,16 +124,13 @@ export default function FeaturedProperties() {
 
         {/* LOADING ANIMATION STATE */}
         {isLoading && allProperties.length === 0 ? (
-          <div className="space-y-6">
-            <LoadingPropertiesBanner message="Loading verified affordable properties..." />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <PropertyCardSkeleton />
-              <PropertyCardSkeleton />
-              <PropertyCardSkeleton />
-              <PropertyCardSkeleton />
-              <PropertyCardSkeleton />
-              <PropertyCardSkeleton />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
+            <PropertyCardSkeleton />
           </div>
         ) : filteredProperties.length === 0 ? (
           /* Empty Catalog State */
@@ -161,17 +158,8 @@ export default function FeaturedProperties() {
             href={`/listings${filter !== 'all' ? `?type=${filter}` : ''}`}
             className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-md bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-xs"
           >
-            {isLoading && allProperties.length === 0 ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
-                <span>Loading All Verified Properties...</span>
-              </>
-            ) : (
-              <>
-                <span>Explore All {allProperties.length} Verified Properties</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            <span>Explore All {allProperties.length > 0 ? allProperties.length : ''} Verified Properties</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

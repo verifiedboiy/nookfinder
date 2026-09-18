@@ -11,6 +11,17 @@ import {
   dbClearAllProperties,
 } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+  'Surrogate-Control': 'no-store',
+};
+
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DATA_FILE = path.join(DATA_DIR, 'properties.json');
 
@@ -86,7 +97,7 @@ export async function GET() {
       writeDataFile(dbProps);
       return NextResponse.json(
         { success: true, properties: dbProps, source: 'database' },
-        { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+        { headers: NO_CACHE_HEADERS }
       );
     }
   } catch (err) {
@@ -96,7 +107,7 @@ export async function GET() {
   const properties = ensureDataFile();
   return NextResponse.json(
     { success: true, properties, source: 'file' },
-    { headers: { 'Cache-Control': 'no-store, max-age=0' } }
+    { headers: NO_CACHE_HEADERS }
   );
 }
 

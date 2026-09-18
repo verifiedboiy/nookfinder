@@ -2,15 +2,14 @@
 
 import { Property } from '@/types/property';
 
-const STORAGE_KEY = 'nookfinder_inventory_v3';
-const DELETED_KEY = 'nookfinder_deleted_ids_v2';
-const IDB_NAME = 'NookfinderDB';
+const STORAGE_KEY = 'nookfinder_inventory_v4';
+const IDB_NAME = 'NookfinderDB_v4';
 const IDB_STORE = 'properties';
 const OFFICIAL_EMAIL = 'nookkfinder@gmail.com';
 const OFFICIAL_TELEGRAM = 'https://t.me/nook_finder';
 
 let memoryCache: Property[] | null = null;
-let isSyncing = false;
+let activeSyncPromise: Promise<Property[]> | null = null;
 
 function normalizeProperty(p: Property): Property {
   if (!p) return p;
@@ -39,40 +38,7 @@ function normalizeProperty(p: Property): Property {
 }
 
 // ---------------------------------------------------------------------------
-// Tombstone Tracking (Prevents resurrecting deleted items while protecting user posts)
-// ---------------------------------------------------------------------------
-function getDeletedIds(): Set<string> {
-  if (typeof window === 'undefined') return new Set();
-  try {
-    const raw = localStorage.getItem(DELETED_KEY);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function markAsDeleted(id: string): void {
-  if (typeof window === 'undefined') return;
-  try {
-    const ids = getDeletedIds();
-    ids.add(id);
-    localStorage.setItem(DELETED_KEY, JSON.stringify(Array.from(ids)));
-  } catch {}
-}
-
-function unmarkAsDeleted(id: string): void {
-  if (typeof window === 'undefined') return;
-  try {
-    const ids = getDeletedIds();
-    if (ids.has(id)) {
-      ids.delete(id);
-      localStorage.setItem(DELETED_KEY, JSON.stringify(Array.from(ids)));
-    }
-  } catch {}
-}
-
-// ---------------------------------------------------------------------------
-// IndexedDB Layer (Persistent local client vault)
+// IndexedDB Persistence Layer
 // ---------------------------------------------------------------------------
 function getDB(): Promise<IDBDatabase | null> {
   if (typeof window === 'undefined' || !window.indexedDB) return Promise.resolve(null);
@@ -127,29 +93,25 @@ async function getAllFromIDB(): Promise<Property[]> {
 }
 
 // ---------------------------------------------------------------------------
-// Unified Broadcast & Cache Write
+// Unified Broadcast & Local Cache Write
 // ---------------------------------------------------------------------------
 function notifyStoreUpdate(updated: Property[]) {
   if (typeof window === 'undefined') return;
 
-  const deletedIds = getDeletedIds();
-  const normalized = updated
-    .filter((p) => !deletedIds.has(p.id))
-    .map(normalizeProperty);
-
+  const normalized = (updated || []).map(normalizeProperty);
   memoryCache = normalized;
 
-  // 1. Safe localStorage write
+  // 1. Write to localStorage
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
   } catch (storageErr) {
-    console.warn('localStorage quota exceeded; fallback to IndexedDB:', storageErr);
+    console.warn('localStorage write warning:', storageErr);
   }
 
-  // 2. Persistent IndexedDB write
+  // 2. Write to IndexedDB
   saveAllToIDB(normalized).catch(() => {});
 
-  // 3. Trigger events for reactive UI across components and tabs
+  // 3. Dispatch reactive events
   window.dispatchEvent(new Event('nookfinder_storage_updated'));
   try {
     window.dispatchEvent(
@@ -162,114 +124,82 @@ function notifyStoreUpdate(updated: Property[]) {
 }
 
 // ---------------------------------------------------------------------------
-// Smart Server Synchronization & Auto-Reseed (Option 1)
+// Live Server Synchronization (Zero-Lag, Always Authoritative)
 // ---------------------------------------------------------------------------
-export async function syncWithServer(): Promise<Property[]> {
-  if (typeof window === 'undefined' || isSyncing) {
-    return getStoredProperties();
+export async function syncWithServer(forceFresh = false): Promise<Property[]> {
+  if (typeof window === 'undefined') {
+    return [];
   }
 
-  try {
-    isSyncing = true;
-    const deletedIds = getDeletedIds();
+  // Reuse in-flight fetch promise if already syncing
+  if (activeSyncPromise && !forceFresh) {
+    return activeSyncPromise;
+  }
 
-    // 1. Retrieve local vault listings from IndexedDB & localStorage
-    const localIdbProps = await getAllFromIDB();
-    let localVault: Property[] = localIdbProps.length > 0 ? localIdbProps : (memoryCache || []);
-    if (localVault.length === 0) {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) localVault = JSON.parse(raw);
-      } catch {}
-    }
-    const validLocalVault = (localVault || []).filter((p) => p && p.id && !deletedIds.has(p.id));
+  activeSyncPromise = (async () => {
+    try {
+      // Timestamp bypasses intermediate CDN and browser disk cache
+      const cacheBuster = Date.now();
+      const res = await fetch(`/api/properties?_t=${cacheBuster}`, {
+        cache: 'no-store',
+        headers: {
+          'Pragma': 'no-cache',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      });
 
-    // 2. Fetch server listings
-    const res = await fetch('/api/properties', { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && Array.isArray(data.properties)) {
-        const serverProps: Property[] = data.properties
-          .filter((p: Property) => p && p.id && !deletedIds.has(p.id))
-          .map(normalizeProperty);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.properties)) {
+          const serverProps: Property[] = data.properties
+            .filter((p: Property) => p && p.id)
+            .map(normalizeProperty);
 
-        // Map server properties by ID
-        const serverMap = new Map(serverProps.map((p) => [p.id, p]));
-
-        // Check if any local properties are missing from the server (e.g. fresh Render deploy)
-        const missingOnServer = validLocalVault.filter((p) => !serverMap.has(p.id));
-
-        if (missingOnServer.length > 0) {
-          // Auto-reseed missing properties to the new server container in background
-          fetch('/api/properties', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ properties: missingOnServer }),
-          }).catch((err) => console.warn('Auto-reseed sync non-blocking error:', err));
-
-          // Combine server + local listings so no user listings ever disappear
-          const mergedList = [...serverProps, ...missingOnServer];
-          notifyStoreUpdate(mergedList);
-          return mergedList;
-        } else {
-          // Server has all listings or is up to date
           notifyStoreUpdate(serverProps);
           return serverProps;
         }
       }
+    } catch (err) {
+      console.warn('Server sync skipped (offline or network error):', err);
+    } finally {
+      activeSyncPromise = null;
     }
-  } catch (err) {
-    console.warn('Server sync skipped (network offline):', err);
-  } finally {
-    isSyncing = false;
-  }
 
-  return getStoredProperties();
+    return getStoredProperties();
+  })();
+
+  return activeSyncPromise;
 }
 
 // ---------------------------------------------------------------------------
-// Synchronous Retrieval (Instant render for UI components)
+// Synchronous Retrieval (Instant UI render)
 // ---------------------------------------------------------------------------
 export function getStoredProperties(): Property[] {
   if (typeof window === 'undefined') {
     return [];
   }
 
-  const deletedIds = getDeletedIds();
-
-  // Return memory cache if available
-  if (memoryCache !== null) {
-    return memoryCache.filter((p) => !deletedIds.has(p.id));
+  // 1. Memory cache
+  if (memoryCache !== null && memoryCache.length > 0) {
+    return memoryCache;
   }
 
-  // Read localStorage
+  // 2. LocalStorage
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        const valid = parsed.filter((p: Property) => p && p.id && !deletedIds.has(p.id));
-        memoryCache = valid.map(normalizeProperty);
-        if (!isSyncing) {
-          setTimeout(syncWithServer, 50);
-        }
+        memoryCache = parsed.map(normalizeProperty);
+        // Silently trigger background refresh
+        setTimeout(() => syncWithServer(), 10);
         return memoryCache;
       }
     }
   } catch (e) {}
 
-  // Check IndexedDB asynchronously if memoryCache and localStorage are empty
-  if (!isSyncing) {
-    getAllFromIDB().then((idbProps) => {
-      const valid = idbProps.filter((p) => p && p.id && !deletedIds.has(p.id));
-      if (valid.length > 0 && (!memoryCache || memoryCache.length === 0)) {
-        memoryCache = valid.map(normalizeProperty);
-        window.dispatchEvent(new Event('nookfinder_storage_updated'));
-      }
-      syncWithServer();
-    });
-  }
-
+  // 3. Fallback to trigger initial sync
+  setTimeout(() => syncWithServer(), 10);
   return [];
 }
 
@@ -277,7 +207,6 @@ export function getStoredProperties(): Property[] {
 // Save / Update Listing Handler
 // ---------------------------------------------------------------------------
 export async function saveStoredPropertyAsync(property: Property): Promise<Property[]> {
-  unmarkAsDeleted(property.id);
   const normalizedProp = normalizeProperty(property);
   const current = getStoredProperties();
   const existingIdx = current.findIndex((p) => p.id === normalizedProp.id);
@@ -303,16 +232,15 @@ export async function saveStoredPropertyAsync(property: Property): Promise<Prope
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.properties)) {
-          const deletedIds = getDeletedIds();
           const serverList = data.properties
-            .filter((p: Property) => p && p.id && !deletedIds.has(p.id))
+            .filter((p: Property) => p && p.id)
             .map(normalizeProperty);
           notifyStoreUpdate(serverList);
           return serverList;
         }
       }
     } catch (err) {
-      console.warn('Server push non-blocking error:', err);
+      console.warn('Server push error:', err);
     }
   }
 
@@ -320,7 +248,6 @@ export async function saveStoredPropertyAsync(property: Property): Promise<Prope
 }
 
 export function saveStoredProperty(property: Property): Property[] {
-  unmarkAsDeleted(property.id);
   const normalizedProp = normalizeProperty(property);
   const current = getStoredProperties();
   const existingIdx = current.findIndex((p) => p.id === normalizedProp.id);
@@ -350,7 +277,6 @@ export function saveStoredProperty(property: Property): Property[] {
 // Delete Listing Handler
 // ---------------------------------------------------------------------------
 export async function deleteStoredPropertyAsync(id: string): Promise<Property[]> {
-  markAsDeleted(id);
   const current = getStoredProperties();
   const updated = current.filter((p) => p.id !== id);
   notifyStoreUpdate(updated);
@@ -363,9 +289,8 @@ export async function deleteStoredPropertyAsync(id: string): Promise<Property[]>
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.properties)) {
-          const deletedIds = getDeletedIds();
           const serverList = data.properties
-            .filter((p: Property) => p && p.id && !deletedIds.has(p.id))
+            .filter((p: Property) => p && p.id)
             .map(normalizeProperty);
           notifyStoreUpdate(serverList);
           return serverList;
@@ -380,7 +305,6 @@ export async function deleteStoredPropertyAsync(id: string): Promise<Property[]>
 }
 
 export function deleteStoredProperty(id: string): Property[] {
-  markAsDeleted(id);
   const current = getStoredProperties();
   const updated = current.filter((p) => p.id !== id);
   notifyStoreUpdate(updated);

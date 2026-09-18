@@ -8,3 +8,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        value: eamqdjfo
+      - key: CLOUDINARY_API_KEY
+        value: "882323531432825"
+      - key: CLOUDINARY_API_SECRET
+        sync: false

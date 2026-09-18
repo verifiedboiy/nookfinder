@@ -43,6 +43,7 @@ import {
   Send,
   Trees,
   TrendingUp,
+  Loader2,
 } from 'lucide-react';
 
 const STANDARD_AMENITIES = [
@@ -122,6 +123,8 @@ function ControlPanelContent() {
   const [images, setImages] = useState<PropertyImage[]>([]);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImageCaption, setNewImageCaption] = useState('');
+  const [isUploadingGallery, setIsUploadingGallery] = useState(false);
+  const [uploadProgressText, setUploadProgressText] = useState('');
 
   // Form Fields - Staff Specialist
   const [agentName, setAgentName] = useState('Marcus Vance');
@@ -352,54 +355,7 @@ function ControlPanelContent() {
     }
   }, [price, listingType]);
 
-  // High-performance client-side image compressor (prevents localStorage quota errors & lag)
-  const compressImageFile = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        const rawUrl = loadEvent.target?.result as string;
-        if (!rawUrl) return resolve('');
-
-        const img = document.createElement('img');
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1280;
-          const MAX_HEIGHT = 960;
-          let width = img.width || 800;
-          let height = img.height || 600;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height = Math.round((height * MAX_WIDTH) / width);
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width = Math.round((width * MAX_HEIGHT) / height);
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            const compressed = canvas.toDataURL('image/jpeg', 0.8);
-            resolve(compressed);
-          } else {
-            resolve(rawUrl);
-          }
-        };
-        img.onerror = () => resolve(rawUrl);
-        img.src = rawUrl;
-      };
-      reader.onerror = () => resolve('');
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // Gallery File Picker Handler (with automated HD compression)
+  // Gallery File Picker Handler (Uploads directly to Cloudinary CDN)
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -411,30 +367,62 @@ function ControlPanelContent() {
     }
 
     const filesToLoad = Array.from(files).slice(0, remainingSlots);
+    setIsUploadingGallery(true);
+    let uploadedCount = 0;
 
-    for (const file of filesToLoad) {
-      const compressedDataUrl = await compressImageFile(file);
-      if (compressedDataUrl) {
-        const autoCaption = file.name
-          .replace(/\.[^/.]+$/, '')
-          .replace(/[-_]/g, ' ')
-          .replace(/^[0-9]+\s*/, '');
+    for (let i = 0; i < filesToLoad.length; i++) {
+      const file = filesToLoad[i];
+      setUploadProgressText(`Uploading ${i + 1} of ${filesToLoad.length} photos to Cloud CDN...`);
 
-        setImages((prev) => {
-          if (prev.length >= 20) return prev;
-          return [
-            ...prev,
-            {
-              url: compressedDataUrl,
-              caption: autoCaption || `Gallery photo ${prev.length + 1}`,
-              isPrimary: prev.length === 0,
-            },
-          ];
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
         });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.url) {
+            uploadedCount++;
+            const autoCaption = file.name
+              .replace(/\.[^/.]+$/, '')
+              .replace(/[-_]/g, ' ')
+              .replace(/^[0-9]+\s*/, '');
+
+            setImages((prev) => {
+              if (prev.length >= 20) return prev;
+              return [
+                ...prev,
+                {
+                  url: data.url,
+                  caption: autoCaption || `Gallery photo ${prev.length + 1}`,
+                  isPrimary: prev.length === 0,
+                },
+              ];
+            });
+          } else {
+            console.error('Upload failed for file:', file.name, data.error);
+          }
+        } else {
+          console.error('Server error uploading file:', file.name);
+        }
+      } catch (uploadErr) {
+        console.error('Error uploading photo:', uploadErr);
       }
     }
 
+    setIsUploadingGallery(false);
+    setUploadProgressText('');
     e.target.value = '';
+
+    if (uploadedCount > 0) {
+      showNotification(`Successfully uploaded ${uploadedCount} photo(s) to Cloud CDN!`);
+    } else {
+      alert('Failed to upload photos. Please check your internet connection or try again.');
+    }
   };
 
   // Add Photo by URL
@@ -2402,24 +2390,45 @@ function ControlPanelContent() {
                   multiple
                   accept="image/*"
                   onChange={handleGalleryUpload}
+                  disabled={isUploadingGallery}
                   className="hidden"
                 />
 
                 <div className="w-12 h-12 rounded-full bg-emerald-950 border border-emerald-700 flex items-center justify-center mx-auto text-emerald-400">
-                  <Upload className="w-6 h-6" />
+                  {isUploadingGallery ? (
+                    <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
+                  ) : (
+                    <Upload className="w-6 h-6" />
+                  )}
                 </div>
 
                 <div className="space-y-1">
                   <button
                     type="button"
+                    disabled={isUploadingGallery}
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md cursor-pointer"
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md ${
+                      isUploadingGallery
+                        ? 'bg-slate-700 cursor-not-allowed text-slate-300'
+                        : 'bg-emerald-700 hover:bg-emerald-600 cursor-pointer'
+                    }`}
                   >
-                    <Upload className="w-4 h-4" />
-                    <span>Choose Photos from Gallery / Device</span>
+                    {isUploadingGallery ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>{uploadProgressText || 'Uploading to Cloud CDN...'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4" />
+                        <span>Choose Photos from Gallery / Device</span>
+                      </>
+                    )}
                   </button>
                   <p className="text-xs text-slate-400">
-                    Select 3 to 20 photos (JPG, PNG, WEBP). Directly loads from your phone or computer.
+                    {isUploadingGallery
+                      ? uploadProgressText
+                      : 'Select 3 to 20 photos (JPG, PNG, WEBP). Directly uploads to Cloudinary CDN.'}
                   </p>
                 </div>
               </div>
