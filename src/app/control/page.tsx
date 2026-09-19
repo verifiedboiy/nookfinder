@@ -360,9 +360,9 @@ function ControlPanelContent() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const remainingSlots = 20 - images.length;
+    const remainingSlots = 50 - images.length;
     if (remainingSlots <= 0) {
-      alert('Maximum 20 photos reached. Please remove a photo before adding more.');
+      alert('Maximum 50 photos reached. Please remove a photo before adding more.');
       return;
     }
 
@@ -428,8 +428,8 @@ function ControlPanelContent() {
   // Add Photo by URL
   const handleAddImageUrl = () => {
     if (!newImageUrl.trim()) return;
-    if (images.length >= 20) {
-      alert('Maximum 20 photos allowed per listing.');
+    if (images.length >= 50) {
+      alert('Maximum 50 photos allowed per listing.');
       return;
     }
     setImages([
@@ -723,8 +723,8 @@ function ControlPanelContent() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    if (images.length < 3) {
-      const msg = `You currently have ${images.length} photo(s). At least 3 photos are required from your gallery so users can view the verified details.`;
+    if (images.length < 1) {
+      const msg = `Please upload at least 1 photo for your property gallery so users can view the verified details.`;
       setFormError(msg);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -896,7 +896,7 @@ function ControlPanelContent() {
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Live inventory management, 3–20 gallery photo uploader, and staff dispatch
+              Live inventory management, 1–50 gallery photo uploader, and staff dispatch
             </p>
           </div>
         </div>
@@ -1104,7 +1104,7 @@ function ControlPanelContent() {
                 <div className="space-y-1">
                   <h3 className="text-base font-bold text-white">No For Sale Listings Yet</h3>
                   <p className="text-xs text-slate-400">
-                    Your For Sale catalog is clean. Click below to add your first verified house with 3–20 photos.
+                    Your For Sale catalog is clean. Click below to add your first verified house with 1–50 photos.
                   </p>
                 </div>
                 <button
@@ -1280,7 +1280,7 @@ function ControlPanelContent() {
                           <td className="p-4">
                             <span
                               className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold ${
-                                prop.images.length >= 3
+                                prop.images.length >= 1
                                   ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
                                   : 'bg-amber-950 text-amber-300 border border-amber-800'
                               }`}
@@ -1341,7 +1341,7 @@ function ControlPanelContent() {
                 <div className="space-y-1">
                   <h3 className="text-base font-bold text-white">No Rental Properties Yet</h3>
                   <p className="text-xs text-slate-400">
-                    Your rental catalog is clean. Click below to add your first affordable rental with 3–20 photos.
+                    Your rental catalog is clean. Click below to add your first affordable rental with 1–50 photos.
                   </p>
                 </div>
                 <button
@@ -1519,7 +1519,7 @@ function ControlPanelContent() {
                           <td className="p-4">
                             <span
                               className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold ${
-                                prop.images.length >= 3
+                                prop.images.length >= 1
                                   ? 'bg-sky-950 text-sky-300 border border-sky-800'
                                   : 'bg-amber-950 text-amber-300 border border-amber-800'
                               }`}
@@ -1699,7 +1699,7 @@ function ControlPanelContent() {
                   {editingId ? `Editing Listing: ${editingId}` : 'Publish Verified House or Rental'}
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Provide complete property overview, 3–20 gallery photos, verified features, and true monthly cost breakdown.
+                  Provide complete property overview, 1–50 gallery photos, verified features, and true monthly cost breakdown.
                 </p>
               </div>
 
@@ -2361,26 +2361,26 @@ function ControlPanelContent() {
               )}
             </div>
 
-            {/* SECTION 7: Multi-Photo Gallery (Starts Empty, 3-20 Photos from User Gallery) */}
+            {/* SECTION 7: Multi-Photo Gallery (Starts Empty, 1-50 Photos from User Gallery) */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                     <ImageIcon className="w-4 h-4" />
                     <span>
-                      7. Property Photo Gallery ({images.length} of 20 Added • Minimum 3 Required){' '}
+                      7. Property Photo Gallery ({images.length} of 50 Added • Minimum 1 Required){' '}
                       <span className="text-rose-400">*</span>
                     </span>
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Upload 3 to 20 photos from your laptop or phone gallery. When users click &apos;View Verified Details&apos;, all photos will display in the interactive lightbox gallery.
+                    Upload 1 to 50 photos from your laptop or phone gallery. When users click &apos;View Verified Details&apos;, all photos will display in the interactive lightbox gallery.
                   </p>
                 </div>
 
-                {images.length < 3 && (
+                {images.length < 1 && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-amber-950/80 border border-amber-600 text-amber-300 text-xs font-bold">
                     <AlertCircle className="w-4 h-4 text-amber-400" />
-                    <span>{3 - images.length} more photo(s) required to publish</span>
+                    <span>At least 1 photo required to publish</span>
                   </span>
                 )}
               </div>
@@ -2431,7 +2431,7 @@ function ControlPanelContent() {
                   <p className="text-xs text-slate-400">
                     {isUploadingGallery
                       ? uploadProgressText
-                      : 'Select 3 to 20 photos (JPG, PNG, WEBP). Directly uploads to Cloudinary CDN.'}
+                      : 'Select 1 to 50 photos (JPG, PNG, WEBP). Directly uploads to Cloudinary CDN.'}
                   </p>
                 </div>
               </div>
@@ -2464,7 +2464,7 @@ function ControlPanelContent() {
               {/* Photo Previews Grid */}
               {images.length === 0 ? (
                 <div className="p-8 text-center bg-slate-950/60 rounded-lg border border-slate-800 text-slate-500 text-xs">
-                  No photos added yet. Click &apos;Choose Photos from Gallery / Device&apos; above to add 3 to 20 photos.
+                  No photos added yet. Click &apos;Choose Photos from Gallery / Device&apos; above to add 1 to 50 photos.
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
