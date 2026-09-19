@@ -475,7 +475,7 @@ function ControlPanelContent() {
               .replace(/^[0-9]+\s*/, '');
 
             setImages((prev) => {
-              if (prev.length >= 20) return prev;
+              if (prev.length >= 50) return prev;
               return [
                 ...prev,
                 {
