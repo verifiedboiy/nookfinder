@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Property } from '@/types/property';
 import { Bed, Bath, Maximize2, ShieldCheck, MapPin, Tag, Eye, Heart, Sparkles, TrendingUp } from 'lucide-react';
 import { isPropertySaved, toggleSaveProperty } from '@/lib/savedProperties';
@@ -13,11 +14,18 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property, compact = false }: PropertyCardProps) {
+  const router = useRouter();
   const primaryImage = property.images.find((img) => img.isPrimary) || property.images[0];
   const isRent = property.listingType === 'rent';
 
   const [isSaved, setIsSaved] = useState(false);
   const [likesCount, setLikesCount] = useState(property.likes ?? 64);
+
+  const handlePrefetch = useCallback(() => {
+    try {
+      router.prefetch(`/listings/${property.id}`);
+    } catch {}
+  }, [router, property.id]);
 
   useEffect(() => {
     setIsSaved(isPropertySaved(property.id));
@@ -48,17 +56,28 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
   const hasMarketBadge = property.marketDemandBadge && property.marketDemandBadge !== 'none';
 
   return (
-    <div className="group bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs hover:shadow-md hover:border-slate-300 transition-all duration-200 flex flex-col">
+    <div
+      onMouseEnter={handlePrefetch}
+      onTouchStart={handlePrefetch}
+      className="group bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs hover:shadow-md hover:border-slate-300 transition-all duration-200 flex flex-col"
+    >
       {/* 60% Card Visual Ratio Image Container */}
       <div className="relative aspect-16/10 w-full overflow-hidden bg-slate-100">
-        <Image
-          src={primaryImage?.url || ''}
-          alt={primaryImage?.caption || property.title}
-          fill
-          unoptimized={primaryImage?.url?.startsWith('data:')}
-          className="object-cover group-hover:scale-103 transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        <Link
+          href={`/listings/${property.id}`}
+          prefetch={true}
+          className="block w-full h-full relative cursor-pointer"
+          aria-label={`View ${property.title}`}
+        >
+          <Image
+            src={primaryImage?.url || ''}
+            alt={primaryImage?.caption || property.title}
+            fill
+            unoptimized={primaryImage?.url?.startsWith('data:')}
+            className="object-cover group-hover:scale-103 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </Link>
 
         {/* Status Badges Overlay */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10 max-w-[80%]">
@@ -139,7 +158,7 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
 
           {/* Title & Tagline */}
           <h3 className="text-base font-semibold text-slate-900 line-clamp-1 mt-1 font-display group-hover:text-emerald-700 transition-colors">
-            <Link href={`/listings/${property.id}`} className="hover:underline">
+            <Link href={`/listings/${property.id}`} prefetch={true} className="hover:underline">
               {property.title}
             </Link>
           </h3>
@@ -210,6 +229,7 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
         <div className="pt-2">
           <Link
             href={`/listings/${property.id}`}
+            prefetch={true}
             className="block w-full text-center py-2 px-3 text-xs font-semibold rounded bg-slate-100 text-slate-800 hover:bg-emerald-700 hover:text-white transition-colors"
           >
             View Verified Details

@@ -12,8 +12,22 @@ import {
 } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-export const fetchCache = 'force-no-store';
+
+// Fast In-Memory Cache for 0ms sub-millisecond repeated queries
+let serverPropertiesCache: Property[] | null = null;
+let serverCacheTimestamp = 0;
+const CACHE_TTL_MS = 25000; // 25s server cache TTL
+
+export function invalidateServerCache() {
+  serverPropertiesCache = null;
+  serverCacheTimestamp = 0;
+}
+
+const FAST_CACHE_HEADERS = {
+  'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=59',
+  'CDN-Cache-Control': 'public, s-maxage=15, stale-while-revalidate=60',
+  'Vary': 'Accept-Encoding',
+};
 
 const NO_CACHE_HEADERS = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
@@ -89,15 +103,29 @@ function writeDataFile(properties: Property[]): boolean {
 }
 
 // GET /api/properties - Retrieve all properties from Neon Postgres or file backup
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const forceFresh = searchParams.get('fresh') === 'true' || searchParams.has('_t');
+
+    // Return instant memory cache if available and fresh (0ms latency)
+    if (!forceFresh && serverPropertiesCache && (Date.now() - serverCacheTimestamp < CACHE_TTL_MS)) {
+      return NextResponse.json(
+        { success: true, properties: serverPropertiesCache, source: 'memory-cache' },
+        { headers: FAST_CACHE_HEADERS }
+      );
+    }
+
     const dbProps = await dbGetProperties();
     if (dbProps !== null) {
+      // Update memory cache
+      serverPropertiesCache = dbProps;
+      serverCacheTimestamp = Date.now();
       // Sync to local backup in background
       writeDataFile(dbProps);
       return NextResponse.json(
         { success: true, properties: dbProps, source: 'database' },
-        { headers: NO_CACHE_HEADERS }
+        { headers: FAST_CACHE_HEADERS }
       );
     }
   } catch (err) {
@@ -105,9 +133,11 @@ export async function GET() {
   }
 
   const properties = ensureDataFile();
+  serverPropertiesCache = properties;
+  serverCacheTimestamp = Date.now();
   return NextResponse.json(
     { success: true, properties, source: 'file' },
-    { headers: NO_CACHE_HEADERS }
+    { headers: FAST_CACHE_HEADERS }
   );
 }
 
@@ -116,6 +146,9 @@ export async function POST(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const action = searchParams.get('action');
+
+    // Invalidate cache immediately on every write
+    invalidateServerCache();
 
     if (action === 'reset') {
       const resetListings = MOCK_PROPERTIES.map(normalizeProperty);
@@ -191,6 +224,9 @@ export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     const action = searchParams.get('action');
+
+    // Invalidate cache immediately on delete
+    invalidateServerCache();
 
     if (action === 'clear_all') {
       await dbClearAllProperties();

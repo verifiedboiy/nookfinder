@@ -86,12 +86,21 @@ function ControlPanelContent() {
   const [downPaymentAssistance, setDownPaymentAssistance] = useState(true);
   const [underMarketValue, setUnderMarketValue] = useState(true);
 
-  // Form Fields - Location
+  // Form Fields - Location & Precise Geocoding
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('Atlanta');
   const [stateCode, setStateCode] = useState('GA');
   const [zipCode, setZipCode] = useState('30312');
   const [neighborhood, setNeighborhood] = useState('Riverside District');
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Address Auto-Fill states
+  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
+  const [isGeocodedVerified, setIsGeocodedVerified] = useState(false);
+  const addressDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const addressWrapperRef = useRef<HTMLDivElement | null>(null);
 
   // Form Fields - Specs & Overview
   const [bedrooms, setBedrooms] = useState(3);
@@ -237,6 +246,77 @@ function ControlPanelContent() {
     setTimeout(() => setNotification(null), 4000);
   };
 
+  // Close address suggestion dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (addressWrapperRef.current && !addressWrapperRef.current.contains(e.target as Node)) {
+        setShowAddressDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Handle Street input change with live US address geocoding autocomplete
+  const handleStreetChange = (val: string) => {
+    setStreet(val);
+    setIsGeocodedVerified(false);
+
+    if (addressDebounceRef.current) {
+      clearTimeout(addressDebounceRef.current);
+    }
+
+    if (!val || val.trim().length < 3) {
+      setAddressSuggestions([]);
+      setShowAddressDropdown(false);
+      setIsLoadingAddress(false);
+      return;
+    }
+
+    setIsLoadingAddress(true);
+    addressDebounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/geocode/autocomplete?q=${encodeURIComponent(val.trim())}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.suggestions)) {
+            setAddressSuggestions(data.suggestions);
+            setShowAddressDropdown(data.suggestions.length > 0);
+          } else {
+            setAddressSuggestions([]);
+            setShowAddressDropdown(false);
+          }
+        }
+      } catch (err) {
+        console.warn('Geocoding autocomplete fetch error:', err);
+      } finally {
+        setIsLoadingAddress(false);
+      }
+    }, 280);
+  };
+
+  // Handle selecting an address suggestion to auto-fill all geographic fields & coordinates
+  const handleSelectAddressSuggestion = (item: any) => {
+    if (addressDebounceRef.current) {
+      clearTimeout(addressDebounceRef.current);
+    }
+    setStreet(item.street || '');
+    if (item.city) setCity(item.city);
+    if (item.state) setStateCode(item.state);
+    if (item.zipCode) setZipCode(item.zipCode);
+    if (item.neighborhood) {
+      setNeighborhood(item.neighborhood);
+    } else if (item.city) {
+      setNeighborhood(`${item.city} District`);
+    }
+    if (item.lat && item.lng) {
+      setCoordinates({ lat: item.lat, lng: item.lng });
+      setIsGeocodedVerified(true);
+    }
+    setShowAddressDropdown(false);
+    setAddressSuggestions([]);
+  };
+
   // Auto-save draft when editor fields change
   useEffect(() => {
     const hasModifications =
@@ -268,6 +348,7 @@ function ControlPanelContent() {
           stateCode,
           zipCode,
           neighborhood,
+          coordinates,
           bedrooms,
           bathrooms,
           squareFeet,
@@ -318,6 +399,7 @@ function ControlPanelContent() {
     stateCode,
     zipCode,
     neighborhood,
+    coordinates,
     bedrooms,
     bathrooms,
     squareFeet,
@@ -496,6 +578,10 @@ function ControlPanelContent() {
     setStateCode('GA');
     setZipCode('30312');
     setNeighborhood('Riverside District');
+    setCoordinates(null);
+    setIsGeocodedVerified(false);
+    setAddressSuggestions([]);
+    setShowAddressDropdown(false);
 
     setBedrooms(type === 'sale' ? 3 : 1);
     setBathrooms(type === 'sale' ? 2 : 1);
@@ -547,6 +633,15 @@ function ControlPanelContent() {
     setStateCode(prop.address.state);
     setZipCode(prop.address.zipCode);
     setNeighborhood(prop.address.neighborhood);
+    if (prop.address.coordinates) {
+      setCoordinates(prop.address.coordinates);
+      setIsGeocodedVerified(true);
+    } else {
+      setCoordinates(null);
+      setIsGeocodedVerified(false);
+    }
+    setAddressSuggestions([]);
+    setShowAddressDropdown(false);
 
     setBedrooms(prop.specs.bedrooms);
     setBathrooms(prop.specs.bathrooms);
@@ -634,6 +729,15 @@ function ControlPanelContent() {
     setStateCode(draft.stateCode || 'GA');
     setZipCode(draft.zipCode || '30312');
     setNeighborhood(draft.neighborhood || 'Riverside District');
+    if (draft.coordinates) {
+      setCoordinates(draft.coordinates);
+      setIsGeocodedVerified(true);
+    } else {
+      setCoordinates(null);
+      setIsGeocodedVerified(false);
+    }
+    setAddressSuggestions([]);
+    setShowAddressDropdown(false);
 
     setBedrooms(draft.bedrooms ?? 3);
     setBathrooms(draft.bathrooms ?? 2);
@@ -802,7 +906,7 @@ function ControlPanelContent() {
           state: stateCode,
           zipCode: zipCode.trim(),
           neighborhood: neighborhood.trim() || 'Central Metro',
-          coordinates: {
+          coordinates: coordinates || {
             lat: 33.749 + (Math.random() * 0.08 - 0.04),
             lng: -84.388 + (Math.random() * 0.08 - 0.04),
           },
@@ -1909,24 +2013,83 @@ function ControlPanelContent() {
 
             {/* SECTION 3: Geographic Location & 25+ States */}
             <div className="space-y-4 pt-4 border-t border-slate-800">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <MapPin className="w-4 h-4" />
-                <span>3. Geographic Location (25+ Major US States)</span>
-              </h3>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4" />
+                    <span>3. Geographic Location (25+ Major US States)</span>
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Type your street address to automatically auto-fill the neighborhood, city, state, zip code, and real GPS map pin.
+                  </p>
+                </div>
+
+                {isGeocodedVerified && coordinates && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/80 border border-emerald-600/70 text-emerald-300 text-xs font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>GPS Map Pin Locked ({coordinates.lat.toFixed(4)}, {coordinates.lng.toFixed(4)})</span>
+                  </span>
+                )}
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
-                    Street Address <span className="text-rose-400">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 142 Oak Creek Trail"
-                    value={street}
-                    onChange={(e) => setStreet(e.target.value)}
-                    className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white"
-                  />
+                <div className="sm:col-span-2 relative" ref={addressWrapperRef}>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-semibold text-slate-300">
+                      Street Address <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[10px] text-emerald-400 font-medium">
+                      Smart Auto-Fill Enabled
+                    </span>
+                  </div>
+
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 142 Oak Creek Trail (Type to search US addresses)..."
+                      value={street}
+                      onChange={(e) => handleStreetChange(e.target.value)}
+                      onFocus={() => {
+                        if (addressSuggestions.length > 0) setShowAddressDropdown(true);
+                      }}
+                      className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 pr-8 text-white focus:border-emerald-500 focus:outline-none"
+                    />
+                    {isLoadingAddress && (
+                      <Loader2 className="w-4 h-4 text-emerald-400 animate-spin absolute right-2.5 top-2.5" />
+                    )}
+                  </div>
+
+                  {/* Real-time Autocomplete Dropdown */}
+                  {showAddressDropdown && addressSuggestions.length > 0 && (
+                    <div className="absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-emerald-600/70 rounded-lg shadow-2xl overflow-hidden z-40 max-h-64 overflow-y-auto divide-y divide-slate-800">
+                      <div className="px-3 py-1.5 bg-slate-950/90 text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center justify-between">
+                        <span>Click Verified Address to Auto-Fill</span>
+                        <span>{addressSuggestions.length} found</span>
+                      </div>
+                      {addressSuggestions.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleSelectAddressSuggestion(item)}
+                          className="w-full text-left px-3 py-2.5 hover:bg-emerald-950/60 text-white transition-colors cursor-pointer group flex items-start gap-2.5"
+                        >
+                          <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-slate-100 group-hover:text-emerald-300 truncate">
+                              {item.street}
+                            </p>
+                            <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                              {[item.neighborhood, item.city, item.state, item.zipCode].filter(Boolean).join(', ')}
+                            </p>
+                          </div>
+                          <span className="text-[10px] bg-slate-800 group-hover:bg-emerald-800 text-slate-300 group-hover:text-white px-2 py-0.5 rounded font-mono shrink-0">
+                            Auto-Fill
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -2056,9 +2219,12 @@ function ControlPanelContent() {
                   <input
                     type="number"
                     min="0"
-                    max="6"
-                    value={parkingSpaces}
-                    onChange={(e) => setParkingSpaces(Number(e.target.value))}
+                    value={parkingSpaces === 0 ? '' : parkingSpaces}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setParkingSpaces(val === '' ? 0 : Math.max(0, parseInt(val, 10) || 0));
+                    }}
+                    placeholder="e.g. 2, 8, 20"
                     className="w-full text-xs bg-slate-900 border border-slate-700 rounded px-3 py-2 text-white font-mono"
                   />
                 </div>

@@ -7,11 +7,22 @@ import Footer from '@/components/layout/Footer';
 import FilterBar from '@/components/listings/FilterBar';
 import PropertyCard from '@/components/listings/PropertyCard';
 import PropertyCardSkeleton from '@/components/listings/PropertyCardSkeleton';
-import InteractiveMap from '@/components/listings/InteractiveMap';
+import dynamic from 'next/dynamic';
 import PageGuide from '@/components/guide/PageGuide';
 import { getStoredProperties, syncWithServer } from '@/data/propertyStore';
 import { FilterState, ListingType, Property } from '@/types/property';
 import { Map, Grid, ShieldCheck, RefreshCw } from 'lucide-react';
+
+const InteractiveMap = dynamic(() => import('@/components/listings/InteractiveMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[650px] bg-slate-900 rounded-xl border border-slate-800 flex flex-col items-center justify-center p-6 text-slate-400">
+      <div className="w-10 h-10 rounded-full border-2 border-emerald-500/30 border-t-emerald-500 animate-spin mb-3" />
+      <span className="text-xs font-semibold text-slate-300">Initializing Interactive Map...</span>
+      <span className="text-[11px] text-slate-500 mt-1">Plotting verified properties across 25+ states</span>
+    </div>
+  ),
+});
 
 function ListingsContent() {
   const searchParams = useSearchParams();

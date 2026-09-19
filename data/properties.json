@@ -1,5 +1,1991 @@
 [
   {
+    "id": "prop-sale-0521",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 278,
+    "price": 80605,
+    "specs": {
+      "bedrooms": 7,
+      "bathrooms": 5,
+      "yearBuilt": 2026,
+      "hoaMonthly": 0,
+      "squareFeet": 3257,
+      "lotSizeSqFt": 8537,
+      "lotSizeAcres": 0.2,
+      "parkingSpaces": 3,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Brand-New 7-Bedroom Dallas Showpiece with Space for Everyone",
+    "views": 6328,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783550/nookfinder/properties/zkmqtfgrlgdzacmljpda.jpg",
+        "caption": "IMG 1022",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783553/nookfinder/properties/q1a7wg65e4wc2gm1arcb.jpg",
+        "caption": "IMG 1023",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783555/nookfinder/properties/y6n48ut4ekc61bu3d27w.jpg",
+        "caption": "IMG 1024",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783557/nookfinder/properties/bxnwryrdjkbk5pldbfbi.jpg",
+        "caption": "IMG 1025",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783559/nookfinder/properties/dcux7oegeosqgrof0eg7.jpg",
+        "caption": "IMG 1026",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783560/nookfinder/properties/foya6siypxulbgjtnom9.jpg",
+        "caption": "IMG 1027",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783562/nookfinder/properties/dkeisftc6hzyyoymzyul.jpg",
+        "caption": "IMG 1028",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783564/nookfinder/properties/gwleilv4tihjxakbpoyz.jpg",
+        "caption": "IMG 1029",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783566/nookfinder/properties/gfvotbstwxfgluujifk7.jpg",
+        "caption": "IMG 1030",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783568/nookfinder/properties/uxrbgbg9dr7sb6tmeffd.jpg",
+        "caption": "IMG 1031",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783570/nookfinder/properties/jvjrlrdligrwwzwlpysp.jpg",
+        "caption": "IMG 1032",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783572/nookfinder/properties/wti7grangqre0ttg5zu4.jpg",
+        "caption": "IMG 1033",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783575/nookfinder/properties/mkrsjgpcqoiokfvispix.jpg",
+        "caption": "IMG 1034",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783577/nookfinder/properties/uiirl1fpsmbpjxhoz8lo.jpg",
+        "caption": "IMG 1035",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783579/nookfinder/properties/jpn5mpixekvpgzz2raze.jpg",
+        "caption": "IMG 1036",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783581/nookfinder/properties/px4u9armvmviduikxiy2.jpg",
+        "caption": "IMG 1037",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783583/nookfinder/properties/opsvozemyt1fkjg8ylwf.jpg",
+        "caption": "IMG 1038",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783586/nookfinder/properties/ocah97golcakcr3vntt7.jpg",
+        "caption": "IMG 1039",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783589/nookfinder/properties/ynltrrnnpyohbucw1rvx.jpg",
+        "caption": "IMG 1040",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783591/nookfinder/properties/syjlthbo5m4or4jcfbez.jpg",
+        "caption": "IMG 1021",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Dallas",
+      "state": "TX",
+      "street": "2316 Gooch St, Dallas, TX 75241",
+      "zipCode": "75241",
+      "coordinates": {
+        "lat": 33.77462360122517,
+        "lng": -84.39999241807763
+      },
+      "neighborhood": "Highland Hills"
+    },
+    "tagline": "Big on bedrooms, bold on value, built for modern living",
+    "featured": true,
+    "listedAt": "2026-09-19T02:06:50.521Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Brand new 3-story build with 7 bedrooms, 4.5 baths, an office and a game room in 3,257 sq ft.\nAll the cabinetry in this house came out of the builder's own shop. The kitchen is rift-cut oak with a quartz island, farmhouse sink, and lighting under and inside the cabinets. A red oak staircase with lit treads runs up all three floors.\nThe second floor has its own living room with a tiled fireplace wall and a wine bar. The primary bedroom opens onto a covered balcony with glass railing and a stained wood ceiling, and the walk-in closet has full built-ins and a center island. Navy tile and brass fixtures in the secondary baths.\nTurf and paver landscaping out front, glass garage doors, and accent lighting around the whole exterior.\nSome photos are virtually staged",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-9194",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 109,
+    "price": 61000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "yearBuilt": 2020,
+      "hoaMonthly": 0,
+      "squareFeet": 2332,
+      "lotSizeSqFt": 43560,
+      "lotSizeAcres": 1,
+      "parkingSpaces": 6,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Acreage Living with a 7-Car Garage and Custom Workshop",
+    "views": 477,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783154/nookfinder/properties/h3mrok4k4vnicw2r0onf.jpg",
+        "caption": "IMG 0983",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783157/nookfinder/properties/w04a7dt3vjkgbo8obk2i.jpg",
+        "caption": "IMG 0984",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783161/nookfinder/properties/uwtljfvnyznuaisnqvdg.jpg",
+        "caption": "IMG 0985",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783163/nookfinder/properties/hpmni0vldszhuy7ivll4.jpg",
+        "caption": "IMG 0986",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783165/nookfinder/properties/x2cdsqwb9nbvd0nqnxez.jpg",
+        "caption": "IMG 0987",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783167/nookfinder/properties/ukpidgovigflvb2llff3.jpg",
+        "caption": "IMG 0988",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783169/nookfinder/properties/pon8fcohkjvpuh14xylx.jpg",
+        "caption": "IMG 0989",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783171/nookfinder/properties/blminivqbnktyb3qeza6.jpg",
+        "caption": "IMG 0990",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783172/nookfinder/properties/cxpduf4evp9fuicihrkg.jpg",
+        "caption": "IMG 0991",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783174/nookfinder/properties/jv6kiv6exbqib0uitalz.jpg",
+        "caption": "IMG 0992",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783176/nookfinder/properties/oy7ebztdsbizrgzsbcqz.jpg",
+        "caption": "IMG 0993",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783178/nookfinder/properties/zxlzfktvk1v4dykdqpjj.jpg",
+        "caption": "IMG 0994",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783180/nookfinder/properties/yn0hduli96xbztfk3jmu.jpg",
+        "caption": "IMG 0995",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783182/nookfinder/properties/qd4yx9xquqjvbcrmv2pb.jpg",
+        "caption": "IMG 0996",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783183/nookfinder/properties/uasfxfkbwon4yyuicina.jpg",
+        "caption": "IMG 0997",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783185/nookfinder/properties/zowdrpzxv3tswugi3o5f.jpg",
+        "caption": "IMG 0998",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783187/nookfinder/properties/jnb65micumsqd0rrryak.jpg",
+        "caption": "IMG 0982",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783189/nookfinder/properties/srvd8wxb019qpybktimq.jpg",
+        "caption": "IMG 0999",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Reno",
+      "state": "TX",
+      "street": "709 Hidden Branch Ln, Azle, TX 76020",
+      "zipCode": "76020",
+      "coordinates": {
+        "lat": 33.741958398328116,
+        "lng": -84.35559672693259
+      },
+      "neighborhood": "Scenic Wood Estates"
+    },
+    "tagline": "Built for Space, Storage, and Serious Flexibility",
+    "featured": true,
+    "listedAt": "2026-09-19T02:00:59.194Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Custom craftsmanship, exceptional functionality and room to pursue the things you love set this distinctive one-acre property apart. Inside, the home immediately makes an impression with soaring beamed cathedral ceilings, a gorgeous fireplace and custom wood-look tile flooring. A spacious study overlooks the front entry.\nThe dramatic kitchen is thoughtfully designed for both daily living and entertaining, with double ovens, a five-burner gas cooktop and convenient slide-out cabinetry for exceptional storage and accessibility. Abundant storage throughout adds to the home's thoughtful design. The private primary suite is a standout with a designer wood tray ceiling, a beautifully designed ensuite with separate vanities, oversized custom shower. Primary bedroom has a convenient door leading directly to the covered patio.\nStep outside into tremendous privacy and versatility.\nThe covered patio, with its soaring wood-accented ceiling and outdoor fireplace, creates a beautiful space for enjoying nature, quiet evenings and outdoor living.\nThe backyard is fully fenced. A premium workshop gives you immediate workspace, storage or room for hobbies, this 20x40 fully insulated shop is a tremendous bonus - featuring 10-foot ceilings, an 8-foot roll-up door, 220V power and a 10x40 covered porch and covered area for parking.\nFrench doors add style and a back door leads separate fenced yard. This offers incredible flexibility and best of all - it's already completed and ready for you to move right in!\nAn oversized three-car garage with generator wiring and additional storage rounds out a property that delivers something increasingly difficult to find: a beautifully finished custom home paired with exceptional garage, shop and outdoor space.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-3054",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 10,
+    "price": 83676,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "yearBuilt": 1936,
+      "hoaMonthly": 0,
+      "squareFeet": 1400,
+      "lotSizeSqFt": 40946,
+      "lotSizeAcres": 0.94,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Tucked-Away Colonial on Nearly an Acre in Florida, NY",
+    "views": 836,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724104/nookfinder/properties/epxeyddziyozqs9sgsko.jpg",
+        "caption": "IMG 0945",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724105/nookfinder/properties/sb0lxlqw441ihvysefbr.jpg",
+        "caption": "IMG 0946",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724107/nookfinder/properties/pdctmq4qddjkhmb1zg1s.jpg",
+        "caption": "IMG 0947",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724109/nookfinder/properties/mqbdjg6iuwozezlxgfnu.jpg",
+        "caption": "IMG 0948",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724110/nookfinder/properties/ebaa2klmffvoasle6lny.jpg",
+        "caption": "IMG 0949",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724112/nookfinder/properties/jrw1akenjkb5n68w7bds.jpg",
+        "caption": "IMG 0950",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724113/nookfinder/properties/skymbo0rwgaqsdut1dxe.jpg",
+        "caption": "IMG 0951",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724115/nookfinder/properties/nlrwcixj8qph2g6uyzf3.jpg",
+        "caption": "IMG 0952",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724117/nookfinder/properties/umcoqdfunizrrjjflbu1.jpg",
+        "caption": "IMG 0953",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724118/nookfinder/properties/rbdf6rv08igzievy94cj.jpg",
+        "caption": "IMG 0954",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724120/nookfinder/properties/ggyimdjguzhsoy0a6muv.jpg",
+        "caption": "IMG 0955",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724121/nookfinder/properties/ocpujcrbfrk2mwolo9c9.jpg",
+        "caption": "IMG 0956",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724122/nookfinder/properties/o5fhjsnfpg7jettrp2fc.jpg",
+        "caption": "IMG 0957",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724125/nookfinder/properties/pu4i75ufqdkch0hxpemx.jpg",
+        "caption": "IMG 0958",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724127/nookfinder/properties/pblgxffjxqhfj11m71da.jpg",
+        "caption": "IMG 0959",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724129/nookfinder/properties/udcsdvzg383gvihik33w.jpg",
+        "caption": "IMG 0960",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724132/nookfinder/properties/datqvwi0dd3dvzbieuib.jpg",
+        "caption": "IMG 0961",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789724134/nookfinder/properties/wy1glyxkybs0x9dga5rm.jpg",
+        "caption": "IMG 0962",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Florida",
+      "state": "NY",
+      "street": "328 Big Island Road, Florida, NY 10921",
+      "zipCode": "10921",
+      "coordinates": {
+        "lat": 33.74897229912022,
+        "lng": -84.37262899345794
+      },
+      "neighborhood": "Florida"
+    },
+    "tagline": "Privacy, Yard Space, and Everyday Charm",
+    "featured": true,
+    "listedAt": "2026-09-18T09:35:53.054Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee"
+    ],
+    "isVerified": true,
+    "description": "Set on 0.94 acres and tucked back from the road, this well-maintained home offers a private setting surrounded by mature trees, open lawn, and plenty of outdoor space to enjoy. A patio area, koi pond, and landscape lighting add charm to the backyard and create an inviting setting for relaxing or entertaining.\nInside, original wood details and hardwood floors bring warmth and character throughout the home.\nThe main level features a comfortable family room with a wood-burning fireplace, a formal dining room, and a separate living room that provides additional space to gather. The kitchen offers granite countertops, stainless steel appliances, and an abundance of cabinetry for storage and everyday functionality. Also on the main level is a full bathroom along with a convenient mudroom and laundry area, adding practicality to the layout. Upstairs are three bedrooms, including a generously sized primary bedroom with a spacious ensuite bathroom featuring a whirlpool tub. The additional bedrooms provide flexibility for guests, a home office, or other needs.\nOutside, the large two-story garage accommodates two vehicles while offering additional space above for storage, hobbies, or future possibilities. With nearly an acre of property, a private backyard, original details throughout, and convenient access to NYC and major commuter routes, this home offers a comfortable blend of space, character, and location.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-4214",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 231,
+    "price": 76005,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "yearBuilt": 1976,
+      "hoaMonthly": 0,
+      "squareFeet": 2345,
+      "lotSizeSqFt": 13504,
+      "lotSizeAcres": 0.31,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Private Orchard Park Retreat with Dual Primary Suites",
+    "views": 638,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723735/nookfinder/properties/yxflrloueaqrjkcj2luc.jpg",
+        "caption": "IMG 0921",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723739/nookfinder/properties/zrag9orzb0ug9wwov2yl.jpg",
+        "caption": "IMG 0922",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723742/nookfinder/properties/vhlihf6isr7jvufj7ng1.jpg",
+        "caption": "IMG 0923",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723744/nookfinder/properties/sgqnjei3zq5ycyiylrzh.jpg",
+        "caption": "IMG 0925",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723746/nookfinder/properties/xflqpurim6b5jkqmfa4m.jpg",
+        "caption": "IMG 0926",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723749/nookfinder/properties/dofhyvqgxpeq8msfakbk.jpg",
+        "caption": "IMG 0927",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723751/nookfinder/properties/pe7wlnrbdc02pzhcccgj.jpg",
+        "caption": "IMG 0928",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723753/nookfinder/properties/ey6y5dtfxqmkl3bkuy5b.jpg",
+        "caption": "IMG 0929",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723755/nookfinder/properties/nmc5mmxdgoj1gchhwx5r.jpg",
+        "caption": "IMG 0930",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723757/nookfinder/properties/m5auvyvfrhdlbifkzfjy.jpg",
+        "caption": "IMG 0931",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723759/nookfinder/properties/zqosmqqbb4qchxbov1z2.jpg",
+        "caption": "IMG 0932",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723761/nookfinder/properties/u1fy3l968y5n1xzfrf45.jpg",
+        "caption": "IMG 0933",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723763/nookfinder/properties/lj5dt4b8z7qwnkjj9mpp.jpg",
+        "caption": "IMG 0934",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723765/nookfinder/properties/tlcjdospgtavula2brdf.jpg",
+        "caption": "IMG 0936",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723768/nookfinder/properties/flpaukybqbniejpl1tr2.jpg",
+        "caption": "IMG 0937",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723770/nookfinder/properties/zbkbrxlljdqhchy5s8ag.jpg",
+        "caption": "IMG 0938",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723773/nookfinder/properties/scrqtwbpex2qi0xckq3z.jpg",
+        "caption": "IMG 0939",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723775/nookfinder/properties/wrfoa2pezbshjtacdbso.jpg",
+        "caption": "IMG 0920",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723777/nookfinder/properties/i0qgatawlkr0fpvb0k64.jpg",
+        "caption": "IMG 0924",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723780/nookfinder/properties/fg98c1es5hw3sxy8tlcw.jpg",
+        "caption": "IMG 0941",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Orchard Park",
+      "state": "NY",
+      "street": "6104 Berkley Dr, Orchard Park, NY 14127",
+      "zipCode": "14127",
+      "coordinates": {
+        "lat": 33.72361651274341,
+        "lng": -84.41975672820391
+      },
+      "neighborhood": "Ellicott"
+    },
+    "tagline": "Room to Spread Out, Close to Everything",
+    "featured": true,
+    "listedAt": "2026-09-18T09:29:54.214Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee"
+    ],
+    "isVerified": true,
+    "description": "Not only is this an amazing location, but you've also got two primary suites and one seriously great house.\nAnd talk about convenient... you're just minutes from so many places. Need to catch a flight? The airport is close. Heading downtown? Easy. Want to squeeze in a round of golf? No problem. Feel like relaxing by the lake? You can do that too.\nAnd let's talk about the really important stuff...\nWhat happens when you run out of limes for your poolside margaritas?!?\nGood news - you're close to shopping, restaurants, and everything else you might need.\nNo matter what you're into, come see how this home gives you that tucked-away, private feeling while still keeping you incredibly connected to everything.\nGreat house. Great location. Two primary suites. And yes... easy access to emergency margarita supplies.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-8240",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 4,
+    "price": 95000,
+    "specs": {
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "yearBuilt": 1931,
+      "hoaMonthly": 0,
+      "squareFeet": 1400,
+      "lotSizeSqFt": 8276,
+      "lotSizeAcres": 0.19,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Bright Jamaica Multi-Family Home with Spacious Interiors",
+    "views": 32,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723211/nookfinder/properties/wggw36n1y37lgobyrfdr.jpg",
+        "caption": "IMG 0901",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723213/nookfinder/properties/jpyuikxjsbndct8gajzu.jpg",
+        "caption": "IMG 0902",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723214/nookfinder/properties/m10hfs3wvjfz4ojkibyk.jpg",
+        "caption": "IMG 0903",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723216/nookfinder/properties/nrjns4ira76pi58vsa5d.jpg",
+        "caption": "IMG 0904",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723217/nookfinder/properties/tcryjlsugxsqywdbg1ye.jpg",
+        "caption": "IMG 0905",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723219/nookfinder/properties/tbl4ul3muxr5njkjvlvk.jpg",
+        "caption": "IMG 0906",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723220/nookfinder/properties/gldcgbogybzcb8ndtndl.jpg",
+        "caption": "IMG 0907",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723221/nookfinder/properties/uyfob4peutkqsk2prwjj.jpg",
+        "caption": "IMG 0908",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723222/nookfinder/properties/dyirqwgxxerhjpo8uxlu.jpg",
+        "caption": "IMG 0909",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723224/nookfinder/properties/nt2s2id1bvrtgnzd5g7t.jpg",
+        "caption": "IMG 0910",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723225/nookfinder/properties/m8qwv846alswczajgx45.jpg",
+        "caption": "IMG 0911",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723226/nookfinder/properties/skq1ucsvgp7bnabr05es.jpg",
+        "caption": "IMG 0912",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723227/nookfinder/properties/gtbbngcrnuxteghet2ba.jpg",
+        "caption": "IMG 0913",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723229/nookfinder/properties/v0ej25hnt7az2t12k4va.jpg",
+        "caption": "IMG 0914",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723231/nookfinder/properties/ebnrxwddm04dalq5iomq.jpg",
+        "caption": "IMG 0915",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723233/nookfinder/properties/lwe8weiztuu5qdtpujd5.jpg",
+        "caption": "IMG 0916",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789723235/nookfinder/properties/g8ljunlu06webtwyuvdl.jpg",
+        "caption": "IMG 0917",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Jamaica",
+      "state": "NY",
+      "street": "157-14 110th Ave, Jamaica, NY 11433",
+      "zipCode": "11433",
+      "coordinates": {
+        "lat": 33.719456543344,
+        "lng": -84.39876278374537
+      },
+      "neighborhood": "South Jamaica"
+    },
+    "tagline": "Natural Light, Flexible Space, Everyday Comfort",
+    "featured": true,
+    "listedAt": "2026-09-18T09:20:58.240Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee"
+    ],
+    "isVerified": true,
+    "description": "Welcome to 157-14 110th Avenue, Jamaica, NY 11433, a beautifully renovated home that combines modern updates with everyday convenience in the heart of Southeast Queens. This move-in-ready residence features two spacious bedrooms and two full bathrooms, offering a comfortable and functional layout for a variety of lifestyles. The home features a desirable ground-level walk-out story with its own direct outdoor access, providing added privacy, natural light, and endless possibilities for use. Ideal as a recreational room, home office, guest area, or fitness space, this versatile lower level offers a comfortable and private extension of the home's living area. Recent renovations provide a fresh, contemporary feel throughout the home, while the driveway adds the rare convenience of off-street parking.  Ideally situated in a vibrant and well-connected neighborhood, enjoy nearby parks and playgrounds.\nExplore the retail and entertainment options of Downtown Jamaica, or take advantage of the area's diverse selection of local restaurants and businesses.\nCommuters will appreciate the exceptional transportation access, with nearby bus routes including the Q4, Q5, Q84, Q85, Q111, Q113, and Q114. The nearby Jamaica transportation hub provides access to the E, J, and Z subway lines, the Long Island Rail Road (LIRR), and AirTrain JFK, offering convenient connections to Manhattan, Brooklyn, Long Island, and John F. Kennedy International Airport.\nCombining modern renovations, practical amenities, and outstanding accessibility, this home presents an excellent opportunity to enjoy all that Jamaica has to offer.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-1527",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 17,
+    "price": 87000,
+    "specs": {
+      "bedrooms": 6,
+      "bathrooms": 2,
+      "yearBuilt": 1920,
+      "hoaMonthly": 0,
+      "squareFeet": 2808,
+      "lotSizeSqFt": 12197,
+      "lotSizeAcres": 0.28,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Two Homes, One Unique Albany Opportunity",
+    "views": 794,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722839/nookfinder/properties/yibao6vtf0zalxkuudqu.jpg",
+        "caption": "IMG 0879",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722840/nookfinder/properties/f6yizxkcp2xbqp1fhdpa.jpg",
+        "caption": "IMG 0880",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722842/nookfinder/properties/nfrxjaonec8umzdjm9ef.jpg",
+        "caption": "IMG 0881",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722843/nookfinder/properties/v8hsqe2mftxydcyobd1b.jpg",
+        "caption": "IMG 0882",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722845/nookfinder/properties/ymh3wuzmxc5s91db1l7x.jpg",
+        "caption": "IMG 0883",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722846/nookfinder/properties/dur2uzibajpyenx3rd9s.jpg",
+        "caption": "IMG 0884",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722848/nookfinder/properties/nchidic3uojjhnpiirpp.jpg",
+        "caption": "IMG 0885",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722849/nookfinder/properties/nxhpr95btvk6d2dmo3oq.jpg",
+        "caption": "IMG 0886",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722851/nookfinder/properties/gctzajv0tjcytiyzuafo.jpg",
+        "caption": "IMG 0887",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722853/nookfinder/properties/g4uauvdhcendzjpznwrq.jpg",
+        "caption": "IMG 0888",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722855/nookfinder/properties/chyaoesjpbac9kdg9wkp.jpg",
+        "caption": "IMG 0889",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722856/nookfinder/properties/xlvhqcob812839rl9lks.jpg",
+        "caption": "IMG 0890",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722858/nookfinder/properties/fnw3vpvtqtnmlbpx8cmh.jpg",
+        "caption": "IMG 0891",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722859/nookfinder/properties/vgfcvu6lqt9g0pnxq7iz.jpg",
+        "caption": "IMG 0887",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722861/nookfinder/properties/xnakmnyt52jz0s567jjd.jpg",
+        "caption": "IMG 0886",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722862/nookfinder/properties/hc9vamyrrg25grgy1hav.jpg",
+        "caption": "IMG 0885",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722864/nookfinder/properties/vadll83o2tipwg6eomur.jpg",
+        "caption": "IMG 0895",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722865/nookfinder/properties/ptj0g66mip3mgfhhrp06.jpg",
+        "caption": "IMG 0880",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Albany",
+      "state": "NY",
+      "street": "17 Lawnridge Avenue #17 & 19, Albany, NY 12208",
+      "zipCode": "12208",
+      "coordinates": {
+        "lat": 33.7279244423226,
+        "lng": -84.36580555710842
+      },
+      "neighborhood": "Pine Hills"
+    },
+    "tagline": "Extra Space. Flexible Living. One Property.",
+    "featured": true,
+    "listedAt": "2026-09-18T09:14:41.527Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Private Fenced Yard / Patio",
+      "Stainless Steel Kitchen Appliances",
+      "Attached Garage / Reserved Parking",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Presenting a rare chance to acquire two\ninterconnected single-family homes, both under the same ownership and sold exclusively as a pair. Both units are 3 bedroom, 1.5 baths, with a den. Perfect for investors or those in need of extra living space. This property provides the advantages of rental income along with the option for personal use. Seize this exceptional opportunity today! Sold as is. 17\nLawnridge: Currently leased at $2,000/month,",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "duplex",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-8171",
+    "agent": {
+      "name": "David Reynolds",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (317) 412-8871",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 5,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 64,
+      "verifiedLicense": "NF-STAFF-10293",
+      "isNookfinderStaff": true
+    },
+    "likes": 152,
+    "price": 65000,
+    "specs": {
+      "bedrooms": 2,
+      "bathrooms": 3,
+      "yearBuilt": 1992,
+      "hoaMonthly": 0,
+      "squareFeet": 1825,
+      "lotSizeSqFt": 7500,
+      "lotSizeAcres": 0.17,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Rossville Duplex with Serious Space and Flexibility",
+    "views": 682,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722441/nookfinder/properties/bmsvrfboxioovisinpjr.jpg",
+        "caption": "IMG 0861",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722444/nookfinder/properties/ff9vseadchsnerjumkub.jpg",
+        "caption": "IMG 0862",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722445/nookfinder/properties/d4bnf1mcil9urxp8wips.jpg",
+        "caption": "IMG 0863",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722446/nookfinder/properties/imwxiww3xebhhipzm0eg.jpg",
+        "caption": "IMG 0864",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722448/nookfinder/properties/xyjy4yc7stjeuzgsqdtc.jpg",
+        "caption": "IMG 0865",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722450/nookfinder/properties/dk8rbm9pyv2x9jnmx5ua.jpg",
+        "caption": "IMG 0866",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722451/nookfinder/properties/eh8ai3e7qnsudzhejohe.jpg",
+        "caption": "IMG 0867",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722453/nookfinder/properties/ql44was9yv0ptqpsxxeh.jpg",
+        "caption": "IMG 0868",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722454/nookfinder/properties/wwit9eclx5jgqqq4k6h5.jpg",
+        "caption": "IMG 0869",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722456/nookfinder/properties/mkbomkvtpefl3sjtcoj9.jpg",
+        "caption": "IMG 0870",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722458/nookfinder/properties/tniu8n1sio7y0kiijgmz.jpg",
+        "caption": "IMG 0871",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722460/nookfinder/properties/cnedkzsui0v2tawe65fa.jpg",
+        "caption": "IMG 0875",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722461/nookfinder/properties/bcaueydw6srxnxfrnx2w.jpg",
+        "caption": "IMG 0874",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722463/nookfinder/properties/usoik3cvhtoghrthlp6d.jpg",
+        "caption": "IMG 0872",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789722465/nookfinder/properties/kqck51dyy1hsreozz738.jpg",
+        "caption": "IMG 0873",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Staten Island",
+      "state": "NY",
+      "street": "10 Bar Ct, Staten Island, NY 10309",
+      "zipCode": "10309",
+      "coordinates": {
+        "lat": 33.711486264399205,
+        "lng": -84.42368389563212
+      },
+      "neighborhood": "Rossville"
+    },
+    "tagline": "More Room to Live, Work, and Unwind",
+    "featured": true,
+    "listedAt": "2026-09-18T09:07:58.171Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee"
+    ],
+    "isVerified": true,
+    "description": "Welcome to 10 Bar Court, a spacious two bedroom, three bathroom home in the heart of Rossville! The main level offers an open layout where the living room, dining room, and eat-in kitchen flow together, making it perfect for everyday living and entertaining.\nSliding doors off the kitchen lead to a deck and multi level backyard, giving you plenty of space to relax or entertain. Upstairs, you'll find two generously sized bedrooms, while the full finished basement provides even more living space. With a bathroom conveniently located on every floor, this home offers plenty of space, comfort, and functionality. Located close to shopping, dining, public transportation, and Route 440, everything you need is just minutes away!",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "duplex",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-0081",
+    "agent": {
+      "name": "Sarah Chen",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (614) 732-9011",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.8,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 38,
+      "verifiedLicense": "NF-STAFF-99120",
+      "isNookfinderStaff": true
+    },
+    "likes": 93,
+    "price": 76000,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "yearBuilt": 1946,
+      "hoaMonthly": 0,
+      "squareFeet": 1605,
+      "lotSizeSqFt": 13504,
+      "lotSizeAcres": 0.31,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Backyard Retreat with Pool in Marcellus",
+    "views": 598,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721955/nookfinder/properties/mjnbzyqongdfrsv8ss2v.jpg",
+        "caption": "IMG 0837",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721959/nookfinder/properties/jqpzuiftytq9r9evxlbz.jpg",
+        "caption": "IMG 0838",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721961/nookfinder/properties/ecsbpkljntckxzsmqqkn.jpg",
+        "caption": "IMG 0839",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721964/nookfinder/properties/j2d6mcx2k7sbscbuxihu.jpg",
+        "caption": "IMG 0840",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721966/nookfinder/properties/obtibnixiddfm8k74ia3.jpg",
+        "caption": "IMG 0841",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721967/nookfinder/properties/j2qjbny9i5o970zkwhtn.jpg",
+        "caption": "IMG 0842",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721969/nookfinder/properties/v0c1gqujgbscy4kymlss.jpg",
+        "caption": "IMG 0843",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721971/nookfinder/properties/a6yl6zl2d1iopk2lvqki.jpg",
+        "caption": "IMG 0844",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721973/nookfinder/properties/s8855hy51xer7ydmblr3.jpg",
+        "caption": "IMG 0845",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721975/nookfinder/properties/ldz2cpcdehmiqc55ul4q.jpg",
+        "caption": "IMG 0846",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721977/nookfinder/properties/vzjaafrawmahxxjnxew0.jpg",
+        "caption": "IMG 0847",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721979/nookfinder/properties/w5tdevbnqxhwdl9sfdpe.jpg",
+        "caption": "IMG 0848",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721980/nookfinder/properties/ds2l5odugp2vpqnve9ly.jpg",
+        "caption": "IMG 0849",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721982/nookfinder/properties/nv7w5p3mckkijnucyhzv.jpg",
+        "caption": "IMG 0850",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721984/nookfinder/properties/arzcmvq3pqlqpqqbagj1.jpg",
+        "caption": "IMG 0851",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721986/nookfinder/properties/pgmsbttsgus17whdeqb8.jpg",
+        "caption": "IMG 0852",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721988/nookfinder/properties/ji1nzwizd5ohmv9ex5ay.jpg",
+        "caption": "IMG 0854",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721991/nookfinder/properties/rv9ylrsg4h6xgendkqph.jpg",
+        "caption": "IMG 0856",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721993/nookfinder/properties/vk1uyhaas2l4jix4ctoc.jpg",
+        "caption": "IMG 0836",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721997/nookfinder/properties/vf5ci919eqsyczgkdrcm.jpg",
+        "caption": "IMG 0857",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Marcellus",
+      "state": "NY",
+      "street": "36 1st St, Marcellus, NY 13108",
+      "zipCode": "13108",
+      "coordinates": {
+        "lat": 33.72592763151858,
+        "lng": -84.35443415273205
+      },
+      "neighborhood": "Marcellus Village"
+    },
+    "tagline": "More Space. More Comfort. More Home.",
+    "featured": true,
+    "listedAt": "2026-09-18T09:00:10.081Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Welcome to 36 1st Street in the Village of Marcellus, a meticulously maintained and beautifully updated home offering a versatile floor plan and an incredible backyard retreat. Attractive landscaping, a tumbled paver walkway, Trex decking, and welcoming front sitting porch create an inviting first impression.\nInside, the first floor features a bright living room with built-in shelving and a large picture window, a formal dining room, and an updated kitchen with white cabinetry and stainless steel appliances. A sunken family/den room provides a cozy setting to gather and unwind, while beautiful hardwood floors add warmth and character throughout much of the main level.\nAlso on the first floor is a half bath and an additional bedroom or flex room, which opens to an impressive vaulted room filled with natural light. This versatile room offers exciting potential for a first-floor primary suite, guest quarters, or additional living area. Upstairs, you'll find three additional bedrooms and a full bathroom. The finished lower level adds even more versatility and is ideal for recreation, entertaining, hobbies, a media room, or home gym.\nOutside, the property truly shines with a fenced backyard, in-ground pool, expansive paver patio, pool house, tree house, and beautiful landscaping, creating a private retreat for entertaining, relaxing, and enjoying the warmer months.\nLocated in the Village of Marcellus, this inviting home combines a flexible layout, first-floor living possibilities, a finished lower level, and an exceptional backyard retreat-ready for its next owner to enjoy.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-9509",
+    "agent": {
+      "name": "Sarah Chen",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (614) 732-9011",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.8,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 38,
+      "verifiedLicense": "NF-STAFF-99120",
+      "isNookfinderStaff": true
+    },
+    "likes": 12,
+    "price": 67000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "yearBuilt": 1969,
+      "hoaMonthly": 0,
+      "squareFeet": 1200,
+      "lotSizeSqFt": 11326,
+      "lotSizeAcres": 0.26,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Classic Long Island Home with Room to Make It Yours",
+    "views": 65,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721450/nookfinder/properties/y0s8953ehe0zvib9q6eg.jpg",
+        "caption": "IMG 0813",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721454/nookfinder/properties/szwl5lavtpudwg3yemvx.jpg",
+        "caption": "IMG 0815",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721457/nookfinder/properties/hivak5xhxumdgng6nsnp.jpg",
+        "caption": "IMG 0818",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721460/nookfinder/properties/mwfcubu0tg9df0lnjhdk.jpg",
+        "caption": "IMG 0819",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721462/nookfinder/properties/fpzhgrxzwpfvgwlcyrco.jpg",
+        "caption": "IMG 0820",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721464/nookfinder/properties/pisb9pynx9kz9l7uugce.jpg",
+        "caption": "IMG 0821",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721466/nookfinder/properties/upovjzcbaafburrtygz5.jpg",
+        "caption": "IMG 0822",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721469/nookfinder/properties/r2hwovykoctgwnxovbvb.jpg",
+        "caption": "IMG 0823",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721471/nookfinder/properties/vimabajbyvlbkoq9dh4n.jpg",
+        "caption": "IMG 0824",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721473/nookfinder/properties/wa3aftnpafkjznn2eope.jpg",
+        "caption": "IMG 0825",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721476/nookfinder/properties/c7x87wex92xdklmxkhu0.jpg",
+        "caption": "IMG 0826",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721478/nookfinder/properties/uph7polrmzlurqokjihm.jpg",
+        "caption": "IMG 0827",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721480/nookfinder/properties/kzaf5q1yjbiehubh09tn.jpg",
+        "caption": "IMG 0828",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721482/nookfinder/properties/j9z1wzpxewi3vqdxedpt.jpg",
+        "caption": "IMG 0829",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721484/nookfinder/properties/nwqvhpklchpwhv2hqe3o.jpg",
+        "caption": "IMG 0830",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721487/nookfinder/properties/srfloy7arglgj9a9e0um.jpg",
+        "caption": "IMG 0832",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721490/nookfinder/properties/omght79km2avvdhmvko1.jpg",
+        "caption": "IMG 0831",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721493/nookfinder/properties/pqq4x1n1edgqcsqo9vdi.jpg",
+        "caption": "IMG 0817",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721495/nookfinder/properties/ezokc9kkuqajkmsrovkp.jpg",
+        "caption": "IMG 0811",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789721499/nookfinder/properties/j6u3te4w2ymx9favienu.jpg",
+        "caption": "IMG 0814",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Port Jefferson Station",
+      "state": "NY",
+      "street": "39 Superior Street, Port Jefferson Station, NY 11776",
+      "zipCode": "11776",
+      "coordinates": {
+        "lat": 33.749530372830996,
+        "lng": -84.40043626528491
+      },
+      "neighborhood": "Terryville"
+    },
+    "tagline": "Space, Privacy & Everyday Comfort",
+    "featured": true,
+    "listedAt": "2026-09-18T08:52:09.509Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "39 Superior Street offers the perfect blend of updated living space, functionality, and future potential in the heart of Port Jefferson Station. Situated on a well-sized .26-acre cleared and fully fenced property, this home features a sunlit living room with oversized picture windows, an attached 1-car garage with direct access into the home, and a beautifully maintained paver driveway and rear patio perfect for entertaining.\nThe updated kitchen is equipped with granite-style countertops, stainless steel appliances, and flows seamlessly into the main living area. Two fully renovated bathrooms and a new washer/dryer add to the home's move-in-ready appeal. Other updates include all new hi-hat lighting, new central air conditioning, new on demand hot water heater, and upgraded 200 amp electric. The walk-out lower level with a full bathroom offers excellent flexibility and potential for a future accessory apartment with proper permits. Additional highlights include setup already in place for a gas whole-house generator, ample outdoor space, and a convenient location close to Terryville Plaza Shopping Center, local farm stands, and Continental Park.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-2264",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 57,
+    "price": 160010,
+    "specs": {
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "yearBuilt": 1987,
+      "hoaMonthly": 0,
+      "squareFeet": 1022,
+      "lotSizeSqFt": 60984,
+      "lotSizeAcres": 1.4,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Charming 2-Bedroom San Diego Home with Attached Garage",
+    "views": 858,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720854/nookfinder/properties/sl6c3uigifasycvbgoka.jpg",
+        "caption": "IMG 0700",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720857/nookfinder/properties/izyrdkwptctz9nuqua8o.jpg",
+        "caption": "IMG 0701",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720860/nookfinder/properties/xwp04hy4sn4skic7jher.jpg",
+        "caption": "IMG 0702",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720862/nookfinder/properties/ulq2lciaoleaidneqzab.jpg",
+        "caption": "IMG 0703",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720865/nookfinder/properties/s6rkuscuvbkkcritpivj.jpg",
+        "caption": "IMG 0704",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720867/nookfinder/properties/c62ddog36ywyttz7wcp4.jpg",
+        "caption": "IMG 0705",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720870/nookfinder/properties/s6kms0j6knivyjif3qss.jpg",
+        "caption": "IMG 0706",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720872/nookfinder/properties/bvke1yeu43ysuftebod0.jpg",
+        "caption": "IMG 0707",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720874/nookfinder/properties/hvws97p1h1h1oo1euomd.jpg",
+        "caption": "IMG 0708",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720877/nookfinder/properties/buhfkftdkqjed4d7wcnm.jpg",
+        "caption": "IMG 0709",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720879/nookfinder/properties/p2hnnojokf9srjzknh8w.jpg",
+        "caption": "IMG 0710",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720882/nookfinder/properties/av3bb4hpntbxgdbyyn4r.jpg",
+        "caption": "IMG 0713",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720886/nookfinder/properties/h7zymy0s9vaxfteanwzd.jpg",
+        "caption": "IMG 0711",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720890/nookfinder/properties/qculaq0isy73gsnkfa63.jpg",
+        "caption": "IMG 0714",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720892/nookfinder/properties/qz0ykawlggf5ml1gaejl.jpg",
+        "caption": "IMG 0699",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720895/nookfinder/properties/mxn7i82ylkih6hb7jsh0.jpg",
+        "caption": "IMG 0712",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "San Diego",
+      "state": "CA",
+      "street": "7515 Jamacha Rd, San Diego, CA 92114",
+      "zipCode": "92114",
+      "coordinates": {
+        "lat": 33.755894778862604,
+        "lng": -84.42362659186246
+      },
+      "neighborhood": "Encanto"
+    },
+    "tagline": "Affordable Comfort in San Diego",
+    "featured": true,
+    "listedAt": "2026-09-18T08:41:50.136Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Welcome to 7515 Jamacha Rd! This move-in ready 2-bedroom, 1.5-bathroom townhouse with attached 2-car garage offers a RARE 2.99% VA ASSUMABLE RATE in a central San Diego location. Well maintained and thoughtfully cared for, this home features paid-off solar, making it an especially attractive opportunity for today's buyer. Enjoy an easy commute with convenient access to major freeways and nearby military installations, making this home ideal for military families, commuters, or anyone looking for a centrally located San Diego home. The spacious private patio and outdoor area provide the perfect setting for entertaining, relaxing, or enjoying San Diego's year-round weather. This home offers flexible financing options and is truly ready for its next owner. Whether you're a first-time buyer, military buyer, or looking for a low-maintenance San Diego home, 7515 Jamacha Rd is one you won't want to miss!",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "marketDemandBadge": "Price Drop",
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-7698",
+    "agent": {
+      "name": "Sarah Chen",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (614) 732-9011",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.8,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 38,
+      "verifiedLicense": "NF-STAFF-99120",
+      "isNookfinderStaff": true
+    },
+    "likes": 713,
+    "price": 250000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "yearBuilt": 1985,
+      "hoaMonthly": 0,
+      "squareFeet": 1270,
+      "lotSizeSqFt": 126324,
+      "lotSizeAcres": 2.9,
+      "parkingSpaces": 1,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "3-Bedroom Yorba Linda Townhome with 2-Car Garage",
+    "views": 12095,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720253/nookfinder/properties/hdupnsye5o6exa0cu0pg.jpg",
+        "caption": "IMG 0718",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720256/nookfinder/properties/stzig1u9ibsdj6vtu0vj.jpg",
+        "caption": "IMG 0719",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720258/nookfinder/properties/pj0pdr9m9kq0bviv9eyd.jpg",
+        "caption": "IMG 0720",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720261/nookfinder/properties/sf8x9blquzt6zre5p8us.jpg",
+        "caption": "IMG 0721",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720263/nookfinder/properties/pnbyhoxleibjjtpewixa.jpg",
+        "caption": "IMG 0722",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720266/nookfinder/properties/jfzlzwxt948dvayom38s.jpg",
+        "caption": "IMG 0723",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720269/nookfinder/properties/fd4qf9r75a6ddjo5zhyx.jpg",
+        "caption": "IMG 0724",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720272/nookfinder/properties/rwecflpxctp86y0arcof.jpg",
+        "caption": "IMG 0725",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720274/nookfinder/properties/qewyg4awv42vagsxpvzr.jpg",
+        "caption": "IMG 0726",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720277/nookfinder/properties/fq55v0u1gkyda9jf663t.jpg",
+        "caption": "IMG 0727",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720280/nookfinder/properties/cuvhjaayw4tselgmfa6r.jpg",
+        "caption": "KITCHEN",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720283/nookfinder/properties/r3cadtubezfdqtbf82q6.jpg",
+        "caption": "BATHROOM",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720286/nookfinder/properties/ya11kenvmqkebhyuea6o.jpg",
+        "caption": "IMG 0730",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720289/nookfinder/properties/s9nl5vlzl55cbogklh2s.jpg",
+        "caption": "IMG 0731",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720294/nookfinder/properties/irglhi7omxs5lcl9zexq.jpg",
+        "caption": "IMG 0732",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720299/nookfinder/properties/t7ezf7m0zqtjnsyhykhg.jpg",
+        "caption": "IMG 0734",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720301/nookfinder/properties/ok56gid2r1hirr0ke7hd.jpg",
+        "caption": "IMG 0717",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789720305/nookfinder/properties/t5l29iizg9yslgep8pjg.jpg",
+        "caption": "IMG 0733",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Yorba Linda",
+      "state": "CA",
+      "street": "6080 Cape Cod Ln #54, Yorba Linda, CA 92887",
+      "zipCode": "92887",
+      "coordinates": {
+        "lat": 33.716149123648805,
+        "lng": -84.36933930039484
+      },
+      "neighborhood": "East Lake Village"
+    },
+    "tagline": "Comfortable Living",
+    "featured": true,
+    "listedAt": "2026-09-18T08:33:02.049Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Seller will buy down your rate! Yorba Linda updated 3 bedroom, 2.5 bath home with vaulted ceilings, abundant natural light, remodeled kitchen, private backyard, attached 2 car garage, and easy 91 freeway access. This residence offers laminate wood flooring, dual pane windows, solid core interior doors, ceiling fans, central heat and air, smart home features, and a welcoming floor plan designed for everyday comfort.\nThe living room centers around a cozy gas fireplace and opens through a sliding door to the backyard, creating easy indoor outdoor flow for relaxing, or dining outside. The remodeled kitchen blends clean style with practical function, featuring white cabinetry, quartz countertops, herringbone backsplash, stainless steel appliances, and open connection to the main living areas. Updated bathrooms include refreshed vanities and fixtures, including a spacious dual vanity, while the updated powder room adds convenience for guests and daily living. Details continue throughout the home. A convenient doggie door adds ease for pets, and the large under stair closet has been converted into a dedicated puppy room or flexible storage nook.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "townhouse",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-3996",
+    "agent": {
+      "name": "Sarah Chen",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (614) 732-9011",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.8,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 38,
+      "verifiedLicense": "NF-STAFF-99120",
+      "isNookfinderStaff": true
+    },
+    "likes": 3062,
+    "price": 80000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "yearBuilt": 2025,
+      "hoaMonthly": 0,
+      "squareFeet": 2369,
+      "lotSizeSqFt": 7840,
+      "lotSizeAcres": 0.18,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Nearly New 3-Bedroom Saratoga Springs Townhome",
+    "views": 30089,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719810/nookfinder/properties/l64wplblonc9kky4gulm.jpg",
+        "caption": "IMG 0788",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719813/nookfinder/properties/mkouixkkf6b50xctxx3f.jpg",
+        "caption": "IMG 0789",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719816/nookfinder/properties/umo7kz434twt9yokuzrc.jpg",
+        "caption": "IMG 0790",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719818/nookfinder/properties/i1rilm0krs29cx02dnoy.jpg",
+        "caption": "IMG 0791",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719820/nookfinder/properties/lcw1ovgbjrr4lfpgcwly.jpg",
+        "caption": "IMG 0792",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719822/nookfinder/properties/qozgwzy3ygbgqrvui2o9.jpg",
+        "caption": "IMG 0793",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719824/nookfinder/properties/whvkeluwvxmn8y2e4aon.jpg",
+        "caption": "IMG 0794",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719826/nookfinder/properties/ycvcrb5zxqdkmcsletmf.jpg",
+        "caption": "IMG 0795",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719828/nookfinder/properties/n38n7u9avygziee2ezvv.jpg",
+        "caption": "IMG 0796",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719830/nookfinder/properties/jisonttitd9wjmmqxkha.jpg",
+        "caption": "IMG 0797",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719832/nookfinder/properties/ipqnnq36ddx7xxlaawqd.jpg",
+        "caption": "IMG 0798",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719833/nookfinder/properties/tf2vajtvo13wcze563tb.jpg",
+        "caption": "IMG 0799",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719835/nookfinder/properties/up1heg1ljil9p2hzd4wg.jpg",
+        "caption": "Bedroom",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719837/nookfinder/properties/fuj4vffev4gx73dygyyy.jpg",
+        "caption": "IMG 0801",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719843/nookfinder/properties/xscmorrpmjksshdlni0q.jpg",
+        "caption": "IMG 0802",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719845/nookfinder/properties/xfxtnnfexstsgxyudu4g.jpg",
+        "caption": "IMG 0803",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719848/nookfinder/properties/jguphhnmxxahmtirdsx7.jpg",
+        "caption": "IMG 0805",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719864/nookfinder/properties/t6fnjf3cv09wntacbzgh.jpg",
+        "caption": "IMG 0787",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789719867/nookfinder/properties/ysgaokb3mxlqskfyhzrl.jpg",
+        "caption": "IMG 0807",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "street": "48 Daintree Drive, Saratoga Springs, NY 12866",
+      "zipCode": "12866",
+      "coordinates": {
+        "lat": 33.76226291688663,
+        "lng": -84.38650980024866
+      },
+      "neighborhood": "Forest Grove"
+    },
+    "tagline": "Modern Comfort",
+    "featured": true,
+    "listedAt": "2026-09-18T08:25:04.190Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Nearly new and beautifully upgraded, this one-year-old twin home in the maintenance-free Forest Grove community offers the ease of new construction without the wait. Thoughtful upgrades are found throughout, including an upgraded staircase with oak treads and railings, a gas fireplace, stepped living room ceiling and enhanced lighting. The kitchen features quartz countertops, tile backsplash, upgraded cabinetry, gas range with vent hood, drawer microwave and upgraded appliances. Enjoy additional living and entertaining space on the screened porch and adjoining patio, overlooking protected green space for added privacy. The primary suite features an upgraded bath with tiled shower, Corian seat, frameless glass enclosure, double vanity and extended countertops. A spacious loft provides incredible flexibility as a home office, guest area or additional lounge space, while the lookout basement offers excellent potential for future finished living space.\nForest Grove is designed around an active, low-maintenance lifestyle, with exciting amenities underway including a 6,000 SF community center with fitness room and event space, pool, six pickleball courts, dog park and more than seven miles of walking trails. An exceptional opportunity to enjoy a practically brand-new home in one of the area's most exciting new communities. Furniture is avaialble for sale, see full list of details.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "townhouse",
+    "underMarketValue": true,
+    "marketDemandBadge": "Hot Home",
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-6416",
+    "agent": {
+      "name": "David Reynolds",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (317) 412-8871",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 5,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 64,
+      "verifiedLicense": "NF-STAFF-10293",
+      "isNookfinderStaff": true
+    },
+    "likes": 93,
+    "price": 215000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "yearBuilt": 1994,
+      "hoaMonthly": 0,
+      "squareFeet": 1855,
+      "lotSizeSqFt": 10018,
+      "lotSizeAcres": 0.23,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Spacious 3-Bedroom Naples Home with 2-Car Garage",
+    "views": 1457,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718689/nookfinder/properties/zwlm5i9rerdfanz4lsxi.jpg",
+        "caption": "IMG 0666",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718691/nookfinder/properties/vmxehwfokbwh9fmpajiz.jpg",
+        "caption": "IMG 0667",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718692/nookfinder/properties/pqqr7zgwjv2t1i0ksq6t.jpg",
+        "caption": "IMG 0668",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718693/nookfinder/properties/kdtmsg4w1nekmnkwizft.jpg",
+        "caption": "IMG 0669",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718695/nookfinder/properties/jq8vmcx9uwzn1jxtvsku.jpg",
+        "caption": "IMG 0670",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718696/nookfinder/properties/yx5dohool1rfoxyacslr.jpg",
+        "caption": "IMG 0671",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718697/nookfinder/properties/awussnsnqj93wadi1toc.jpg",
+        "caption": "IMG 0672",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718698/nookfinder/properties/rpdcws1vfugvvrzkmomd.jpg",
+        "caption": "IMG 0673",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718699/nookfinder/properties/u0trel12juhwwrbmmumn.jpg",
+        "caption": "IMG 0674",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718701/nookfinder/properties/hdghb3ebge7ylzfzaixa.jpg",
+        "caption": "IMG 0675",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718702/nookfinder/properties/x9kydxmao5izciio3kro.jpg",
+        "caption": "IMG 0676",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718704/nookfinder/properties/oiiuqetizrsnf6nyxppq.jpg",
+        "caption": "IMG 0677",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718705/nookfinder/properties/uzepmm3oklhtxvkx2cgd.jpg",
+        "caption": "IMG 0678",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718706/nookfinder/properties/ox5ozukno1xptfezozxu.jpg",
+        "caption": "IMG 0679",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718708/nookfinder/properties/nd8zfmfqqtishf6qampu.jpg",
+        "caption": "IMG 0680",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718709/nookfinder/properties/iylscoultolifs7xoa8e.jpg",
+        "caption": "IMG 0682",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718711/nookfinder/properties/ebtr5kzqofutg9ojybsx.jpg",
+        "caption": "IMG 0681",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Naples",
+      "state": "FL",
+      "street": "520 Raven WAY, NAPLES, FL 34110",
+      "zipCode": "30312",
+      "coordinates": {
+        "lat": 33.72141986268099,
+        "lng": -84.40174820294502
+      },
+      "neighborhood": "RSF-3 — Residential Single-Family District."
+    },
+    "tagline": "Comfort, Space & Value in Naples",
+    "featured": true,
+    "listedAt": "2026-09-16T08:23:00.629Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Beautifully reimagined for modern Florida living, this Naples pool home strikes the perfect balance between timeless warmth and a modern edge. Hand scraped wood floors blend effortlessly with bold, contemporary touches throughout, creating a home that feels distinctive, stylish and anything but ordinary.\nLush tropical landscaping and striking wrought-iron double entry",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
     "id": "prop-sale-4407",
     "agent": {
       "name": "Sarah Chen",
@@ -150,153 +2136,6 @@
     ],
     "isVerified": true,
     "description": "Beautiful Two-Story Home in Country Walk! Welcome to this charming two-story, 3-bedroom, 2.5-bathroom home with a 2-car garage in the beautiful and desirable Country Walk community in Kendall! This home offers a comfortable layout with plenty of space for everyday living and entertaining. The home features high ceilings, impact windows, a freshly painted exterior, and a spacious family room.",
-    "fhaEligible": true,
-    "listingType": "sale",
-    "propertyType": "house",
-    "underMarketValue": true,
-    "downPaymentAssistance": true
-  },
-  {
-    "id": "prop-sale-6416",
-    "agent": {
-      "name": "David Reynolds",
-      "email": "nookkfinder@gmail.com",
-      "phone": "+1 (317) 412-8871",
-      "title": "Nookfinder Dedicated Property Specialist",
-      "rating": 5,
-      "telegram": "https://t.me/nook_finder",
-      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80",
-      "reviewCount": 64,
-      "verifiedLicense": "NF-STAFF-10293",
-      "isNookfinderStaff": true
-    },
-    "likes": 93,
-    "price": 215000,
-    "specs": {
-      "bedrooms": 3,
-      "bathrooms": 2,
-      "yearBuilt": 1994,
-      "hoaMonthly": 0,
-      "squareFeet": 1855,
-      "lotSizeSqFt": 10018,
-      "lotSizeAcres": 0.23,
-      "parkingSpaces": 2,
-      "propertyTaxAnnual": 1950,
-      "estimatedUtilitiesMonthly": 120
-    },
-    "title": "Spacious 3-Bedroom Naples Home with 2-Car Garage",
-    "views": 1457,
-    "images": [
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718689/nookfinder/properties/zwlm5i9rerdfanz4lsxi.jpg",
-        "caption": "IMG 0666",
-        "isPrimary": true
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718691/nookfinder/properties/vmxehwfokbwh9fmpajiz.jpg",
-        "caption": "IMG 0667",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718692/nookfinder/properties/pqqr7zgwjv2t1i0ksq6t.jpg",
-        "caption": "IMG 0668",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718693/nookfinder/properties/kdtmsg4w1nekmnkwizft.jpg",
-        "caption": "IMG 0669",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718695/nookfinder/properties/jq8vmcx9uwzn1jxtvsku.jpg",
-        "caption": "IMG 0670",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718696/nookfinder/properties/yx5dohool1rfoxyacslr.jpg",
-        "caption": "IMG 0671",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718697/nookfinder/properties/awussnsnqj93wadi1toc.jpg",
-        "caption": "IMG 0672",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718698/nookfinder/properties/rpdcws1vfugvvrzkmomd.jpg",
-        "caption": "IMG 0673",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718699/nookfinder/properties/u0trel12juhwwrbmmumn.jpg",
-        "caption": "IMG 0674",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718701/nookfinder/properties/hdghb3ebge7ylzfzaixa.jpg",
-        "caption": "IMG 0675",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718702/nookfinder/properties/x9kydxmao5izciio3kro.jpg",
-        "caption": "IMG 0676",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718704/nookfinder/properties/oiiuqetizrsnf6nyxppq.jpg",
-        "caption": "IMG 0677",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718705/nookfinder/properties/uzepmm3oklhtxvkx2cgd.jpg",
-        "caption": "IMG 0678",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718706/nookfinder/properties/ox5ozukno1xptfezozxu.jpg",
-        "caption": "IMG 0679",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718708/nookfinder/properties/nd8zfmfqqtishf6qampu.jpg",
-        "caption": "IMG 0680",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718709/nookfinder/properties/iylscoultolifs7xoa8e.jpg",
-        "caption": "IMG 0682",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789718711/nookfinder/properties/ebtr5kzqofutg9ojybsx.jpg",
-        "caption": "IMG 0681",
-        "isPrimary": false
-      }
-    ],
-    "status": "available",
-    "address": {
-      "city": "Naples",
-      "state": "FL",
-      "street": "520 Raven WAY, NAPLES, FL 34110",
-      "zipCode": "30312",
-      "coordinates": {
-        "lat": 33.72141986268099,
-        "lng": -84.40174820294502
-      },
-      "neighborhood": "RSF-3 — Residential Single-Family District."
-    },
-    "tagline": "Comfort, Space & Value in Naples",
-    "featured": true,
-    "listedAt": "2026-09-16T08:23:00.629Z",
-    "amenities": [
-      "FHA Loan Grant Eligible",
-      "Under Market Value Appraisal",
-      "In-Unit Washer & Dryer",
-      "Zero Broker Fee Guarantee",
-      "Down Payment Assistance Available"
-    ],
-    "isVerified": true,
-    "description": "Beautifully reimagined for modern Florida living, this Naples pool home strikes the perfect balance between timeless warmth and a modern edge. Hand scraped wood floors blend effortlessly with bold, contemporary touches throughout, creating a home that feels distinctive, stylish and anything but ordinary.\nLush tropical landscaping and striking wrought-iron double entry",
     "fhaEligible": true,
     "listingType": "sale",
     "propertyType": "house",
