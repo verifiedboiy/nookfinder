@@ -58,6 +58,7 @@ export default function PropertyDetailPage() {
     'Hello, I would like to schedule a showing and inquire about this property.'
   );
   const [inquirySent, setInquirySent] = useState(false);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
 
   const [isLoading, setIsLoading] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -241,6 +242,89 @@ export default function PropertyDetailPage() {
   const monthlyInsurance = isRent ? 25 : Math.round((property.price * 0.005) / 12);
   const totalMonthly = monthlyPI + monthlyTax + monthlyInsurance + property.specs.hoaMonthly;
 
+  // Share listing with native Web Share API on mobile or clipboard fallback on desktop
+  const handleShare = async () => {
+    if (!property) return;
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : `https://nookfinder.com/listings/${property.id}`;
+    const shareTitle = `${property.title} | Nookfinder`;
+    const isRental = property.listingType === 'rent';
+    const priceText = isRental ? `$${property.price.toLocaleString()}/mo` : `$${property.price.toLocaleString()}`;
+    const shareText = `Check out this verified property on Nookfinder: ${property.title} in ${property.address.city}, ${property.address.state} (${priceText})`;
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch (err: any) {
+        if (err?.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = shareUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopiedShareLink(true);
+      setTimeout(() => setCopiedShareLink(false), 2500);
+    } catch (clipboardErr) {
+      console.warn('Failed to copy share link:', clipboardErr);
+    }
+  };
+
+  // Generate structured, clean pre-filled email mailto URI with complete listing details
+  const getPreFilledEmailHref = (customNote?: string) => {
+    if (!property) return 'mailto:nookkfinder@gmail.com';
+    const isRental = property.listingType === 'rent';
+    const priceText = isRental
+      ? `$${property.price.toLocaleString()} / month`
+      : `$${property.price.toLocaleString()}`;
+    const listingUrl =
+      typeof window !== 'undefined'
+        ? window.location.href
+        : `https://nookfinder.com/listings/${property.id}`;
+
+    const subject = `Inquiry: ${property.title} - ${property.address.city}, ${property.address.state} (Ref: ${property.id})`;
+
+    const bodyLines = [
+      'Hello Nookfinder Team,',
+      '',
+      customNote || 'I am interested in this verified property and would like to receive more details or schedule a private showing:',
+      '',
+      '--------------------------------------------------',
+      'VERIFIED PROPERTY SUMMARY',
+      '--------------------------------------------------',
+      `• Headline: ${property.title}`,
+      `• Listing ID: ${property.id}`,
+      `• Type: ${isRental ? 'For Rent' : 'For Sale'} (${property.propertyType})`,
+      `• Price: ${priceText}`,
+      `• Location: ${property.address.street}, ${property.address.neighborhood}, ${property.address.city}, ${property.address.state} ${property.address.zipCode}`,
+      `• Key Specs: ${property.specs.bedrooms} Beds | ${property.specs.bathrooms} Baths | ${property.specs.squareFeet.toLocaleString()} sq ft interior`,
+      `• Lot / Land Size: ${property.specs.lotSizeSqFt ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft` : `${property.specs.lotSizeAcres || '0.15'} acres`}`,
+      `• Parking Spaces: ${property.specs.parkingSpaces ?? 1}`,
+      `• Title & Deed: 100% Audited & Verified Guaranteed`,
+      `• Direct Listing Link: ${listingUrl}`,
+      '--------------------------------------------------',
+      '',
+      'Please let me know the upcoming showing times and the requirements to apply.',
+      '',
+      'Thank you!',
+    ];
+
+    const body = bodyLines.join('\n');
+    return `mailto:nookkfinder@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inquiryName.trim() || !inquiryEmail.trim()) return;
@@ -266,12 +350,11 @@ export default function PropertyDetailPage() {
 
     setInquirySent(true);
 
-    // Also trigger email client pre-filled to nookkfinder@gmail.com
-    const subject = encodeURIComponent(`[Nookfinder Inquiry] ${property.title} (${property.id})`);
-    const body = encodeURIComponent(
-      `Hello Nookfinder Staff,\n\nI would like to inquire about the following verified property:\n\nProperty: ${property.title}\nAddress: ${property.address.street}, ${property.address.city}, ${property.address.state}\nPrice: $${property.price.toLocaleString()}\n\nMy Contact Information:\nName: ${inquiryName.trim()}\nEmail: ${inquiryEmail.trim()}\n\nMessage:\n${inquiryMessage.trim() || 'I would like to schedule a showing.'}\n\nThank you!`
+    // Also trigger email client pre-filled with comprehensive listing summary
+    const emailHref = getPreFilledEmailHref(
+      `Name: ${inquiryName.trim()}\nEmail: ${inquiryEmail.trim()}\n\nClient Message:\n${inquiryMessage.trim() || 'I would like to schedule a showing.'}`
     );
-    window.open(`mailto:nookkfinder@gmail.com?subject=${subject}&body=${body}`, '_blank');
+    window.open(emailHref, '_blank');
   };
 
   const nextPhoto = () => {
@@ -329,10 +412,26 @@ export default function PropertyDetailPage() {
               <span>{isSaved ? 'Saved' : 'Save'}</span>
             </button>
             <button
-              onClick={() => alert('Listing link copied to clipboard.')}
-              className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 cursor-pointer"
+              type="button"
+              onClick={handleShare}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer border shadow-2xs ${
+                copiedShareLink
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                  : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300'
+              }`}
+              title="Share this listing"
             >
-              <Share2 className="w-3.5 h-3.5" /> Share
+              {copiedShareLink ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700 font-bold">Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Share</span>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -1099,10 +1198,11 @@ export default function PropertyDetailPage() {
               <div className="grid grid-cols-2 gap-2">
                 {/* Email Agent Button */}
                 <a
-                  href={`mailto:nookkfinder@gmail.com?subject=Inquiry%20regarding%20Nookfinder%20Listing%20${property.id}`}
+                  href={getPreFilledEmailHref()}
                   className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-xs"
+                  title="Email Verified Specialist (nookkfinder@gmail.com)"
                 >
-                  <Mail className="w-3.5 h-3.5" />
+                  <Mail className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Email Agent</span>
                 </a>
 
@@ -1187,10 +1287,12 @@ export default function PropertyDetailPage() {
 
                   <div className="pt-2 border-t border-emerald-200/60 flex flex-col gap-2 text-xs">
                     <a
-                      href={`mailto:nookkfinder@gmail.com?subject=${encodeURIComponent(`[Showing Request] ${property.title} (${property.id})`)}&body=${encodeURIComponent(`Name: ${inquiryName}\nEmail: ${inquiryEmail}\nProperty: ${property.title}\n\nMessage:\n${inquiryMessage || 'I would like to schedule a showing.'}`)}`}
+                      href={getPreFilledEmailHref(
+                        `Name: ${inquiryName.trim()}\nEmail: ${inquiryEmail.trim()}\n\nClient Message:\n${inquiryMessage.trim() || 'I would like to schedule a showing.'}`
+                      )}
                       className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors"
                     >
-                      <Mail className="w-3.5 h-3.5" />
+                      <Mail className="w-3.5 h-3.5 text-emerald-400" />
                       <span>Open Pre-Filled Email</span>
                     </a>
                     <a
@@ -1259,9 +1361,9 @@ export default function PropertyDetailPage() {
           <div className="flex items-center gap-2 shrink-0">
             {/* Email Agent */}
             <a
-              href={`mailto:nookkfinder@gmail.com?subject=Inquiry%20regarding%20Nookfinder%20Listing%20${property.id}`}
+              href={getPreFilledEmailHref()}
               className="inline-flex items-center justify-center gap-1.5 py-2 px-3 sm:px-4 rounded-lg text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 active:scale-98 transition-all shadow-xs"
-              title="Email Agent (nookkfinder@gmail.com)"
+              title="Email Specialist (nookkfinder@gmail.com)"
             >
               <Mail className="w-3.5 h-3.5 text-emerald-400" />
               <span>Email <span className="hidden sm:inline">Agent</span></span>

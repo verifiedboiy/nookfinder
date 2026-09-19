@@ -1,5 +1,1235 @@
 [
   {
+    "id": "prop-sale-8002",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 2070,
+    "price": 80999,
+    "specs": {
+      "bedrooms": 2,
+      "bathrooms": 3,
+      "yearBuilt": 2020,
+      "hoaMonthly": 0,
+      "squareFeet": 1689,
+      "lotSizeSqFt": 8276,
+      "lotSizeAcres": 0.19,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Contemporary Dallas Condo with Modern Finishes & Private Garage",
+    "views": 18900,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798027/nookfinder/properties/wamxoicvovre37zi9ri9.jpg",
+        "caption": "IMG 1143",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798029/nookfinder/properties/th0xdfi5oibkgpihtmmx.jpg",
+        "caption": "IMG 1144",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798032/nookfinder/properties/fq471owlqk9ueyj1jjl6.jpg",
+        "caption": "IMG 1145",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798034/nookfinder/properties/pewf9ubj3brppb6bzeuo.jpg",
+        "caption": "IMG 1146",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798035/nookfinder/properties/i1dglsmseb7zkoqevu3a.jpg",
+        "caption": "IMG 1147",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798037/nookfinder/properties/qvjgmo9lfhklx4xafndu.jpg",
+        "caption": "IMG 1148",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798039/nookfinder/properties/wv0ashkkpukoekp1bmii.jpg",
+        "caption": "IMG 1149",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798041/nookfinder/properties/zjo5fkxlb594hdqi7sni.jpg",
+        "caption": "IMG 1150",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798042/nookfinder/properties/dauh8lxkt58sxjbc1jkw.jpg",
+        "caption": "IMG 1151",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798044/nookfinder/properties/cetaif15zioyyopascyo.jpg",
+        "caption": "IMG 1152",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798046/nookfinder/properties/zdkmst5ualxrot3okzho.jpg",
+        "caption": "IMG 1153",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798048/nookfinder/properties/p3goqdmttftf4vnat2qe.jpg",
+        "caption": "IMG 1154",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798050/nookfinder/properties/tx8k4gthujjv1xesq4yf.jpg",
+        "caption": "IMG 1155",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798051/nookfinder/properties/m4jfapx49qwafxzmjbqs.jpg",
+        "caption": "IMG 1156",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798053/nookfinder/properties/rcfygsiumzrgcc7oisxd.jpg",
+        "caption": "IMG 1157",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798055/nookfinder/properties/zokom2bghttk21iv4e19.jpg",
+        "caption": "IMG 1158",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798056/nookfinder/properties/upcnfwemuqezfnhoausm.jpg",
+        "caption": "IMG 1159",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798059/nookfinder/properties/neathsvrkzlkb3if45wc.jpg",
+        "caption": "IMG 1160",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798060/nookfinder/properties/vpu5u8ethnevqvbvbqad.jpg",
+        "caption": "IMG 1161",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798062/nookfinder/properties/ft2d27a3sr1xfcvggm3o.jpg",
+        "caption": "IMG 1162",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798064/nookfinder/properties/ie4ugpqsff8pgz4zu4ay.jpg",
+        "caption": "IMG 1163",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798065/nookfinder/properties/qszrzxe8pc7kwdotzlil.jpg",
+        "caption": "IMG 1164",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798068/nookfinder/properties/sqzd1wsx8atkiut0d082.jpg",
+        "caption": "IMG 1166",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798070/nookfinder/properties/gf1dwhxquyf82umtxs2g.jpg",
+        "caption": "IMG 1167",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798071/nookfinder/properties/mgfzmsam9ft1n0snhcav.jpg",
+        "caption": "IMG 1168",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798073/nookfinder/properties/fpvl4cutqgo6h9zwkozu.jpg",
+        "caption": "IMG 1169",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798074/nookfinder/properties/ufbwbgtqjyheexanewiu.jpg",
+        "caption": "IMG 1170",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798076/nookfinder/properties/mo8tvx3lsw7fgzmpp1pq.jpg",
+        "caption": "IMG 1171",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798077/nookfinder/properties/g3qc9azqvtxjtot3ymul.jpg",
+        "caption": "IMG 1172",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798079/nookfinder/properties/rhatr61nu2z8raknryz2.jpg",
+        "caption": "IMG 1173",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798081/nookfinder/properties/hsytwfjqfk6y7eovrkvw.jpg",
+        "caption": "IMG 1175",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798083/nookfinder/properties/knioic0wjr3msmsxuyc9.jpg",
+        "caption": "IMG 1176",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798085/nookfinder/properties/qx2mje7gurvnoi66vqkp.jpg",
+        "caption": "IMG 1142",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789798087/nookfinder/properties/xco4whbqwzsobitrnero.jpg",
+        "caption": "IMG 1174",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Dallas",
+      "state": "TX",
+      "street": "145 N Henderson Ave Unit 102, Dallas, TX 75214",
+      "zipCode": "75214",
+      "coordinates": {
+        "lat": 33.78075520417761,
+        "lng": -84.37971896985853
+      },
+      "neighborhood": "Henderson"
+    },
+    "tagline": "City Convenience with a Clean, Modern Edge",
+    "featured": true,
+    "listedAt": "2026-09-19T06:08:58.002Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Check out this condo for sale at 145 N Henderson Ave Unit 102, Dallas, TX 75214 listed by The Cannon Team (LPT) for $399,900. It features 2 bedrooms, 3 bathrooms, and 1,689 sq ft of space with modern finishes and contemporary cabinetry throughout. Built in 2020, the property includes 2 attached garage spaces, costs $237 per sq ft, has a $300/mo HOA fee, and carries an estimated monthly payment of $3,323.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "marketDemandBadge": "Rare Opportunity",
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-2002",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 500,
+    "price": 82690,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 2,
+      "yearBuilt": 2026,
+      "hoaMonthly": 0,
+      "squareFeet": 1865,
+      "lotSizeSqFt": 6098,
+      "lotSizeAcres": 0.14,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "A Fresh 2026 Build Made for Easy San Antonio Living",
+    "views": 8904,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797579/nookfinder/properties/lgapxq5px3rlzk0qqbre.jpg",
+        "caption": "IMG 1113",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797580/nookfinder/properties/keeghitoc9jszccu9nig.jpg",
+        "caption": "IMG 1114",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797582/nookfinder/properties/kxwpbh7cryhtpelenk0j.jpg",
+        "caption": "IMG 1115",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797584/nookfinder/properties/olqxkmttpdlkic74kwdn.jpg",
+        "caption": "IMG 1116",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797586/nookfinder/properties/pf4ovhkzzbiqjpzyws8b.jpg",
+        "caption": "IMG 1117",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797588/nookfinder/properties/x5acdl2doy2qup2ixfcy.jpg",
+        "caption": "IMG 1118",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797590/nookfinder/properties/pnjw8nhbjscviwr9gg1w.jpg",
+        "caption": "IMG 1119",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797592/nookfinder/properties/jmqo96pcsijpe5qkw5jo.jpg",
+        "caption": "IMG 1120",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797594/nookfinder/properties/u9cqsexwjslxl31pbuix.jpg",
+        "caption": "IMG 1121",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797597/nookfinder/properties/g3s4uxyh6mufa3ftbqxi.jpg",
+        "caption": "IMG 1122",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797599/nookfinder/properties/vqncljlmddndvfqvqj8x.jpg",
+        "caption": "IMG 1123",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797601/nookfinder/properties/npsjfq8dyngejngnljgu.jpg",
+        "caption": "IMG 1124",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797602/nookfinder/properties/o9v2p3y1n1hfreg4cajn.jpg",
+        "caption": "IMG 1125",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797604/nookfinder/properties/rqykch0e7jcruhijudjy.jpg",
+        "caption": "IMG 1126",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797606/nookfinder/properties/tn7bdnaanergp4ovncth.jpg",
+        "caption": "IMG 1127",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797608/nookfinder/properties/ywbnxz0jlpnfumsorzgk.jpg",
+        "caption": "IMG 1128",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797611/nookfinder/properties/eh5wedu3twd64xq15mzw.jpg",
+        "caption": "IMG 1128",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797612/nookfinder/properties/qfxnfqqpvzenopsy0kz1.jpg",
+        "caption": "IMG 1130",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797614/nookfinder/properties/btfzp50vym0qbbzaifta.jpg",
+        "caption": "IMG 1131",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797616/nookfinder/properties/q1uqobrsoknkxrck4894.jpg",
+        "caption": "IMG 1132",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797619/nookfinder/properties/fo6lr2nk2cmxycdfyx1e.jpg",
+        "caption": "IMG 1133",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797623/nookfinder/properties/w7peel7aozz1qa4nejfn.jpg",
+        "caption": "IMG 1134",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797626/nookfinder/properties/inkb5qgbo5wvwjdoxmud.jpg",
+        "caption": "IMG 1135",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797629/nookfinder/properties/wfvxvybxjzmprhdwd9ev.jpg",
+        "caption": "IMG 1136",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797632/nookfinder/properties/weyrts8krzzpjiv3jrqx.jpg",
+        "caption": "IMG 1138",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797635/nookfinder/properties/zqrznp7mg95knrpcwsut.jpg",
+        "caption": "IMG 1139",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797636/nookfinder/properties/f5xs8f7vy1dtqxoh6qsm.jpg",
+        "caption": "IMG 1140",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797639/nookfinder/properties/o1uwvygogvjoevvipmhf.jpg",
+        "caption": "IMG 1112",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789797641/nookfinder/properties/p9skseefzbrv4jn7h5zw.jpg",
+        "caption": "IMG 1137",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "San Antonio",
+      "state": "TX",
+      "street": "13526 Valjean Ave, San Antonio, TX 78253",
+      "zipCode": "78253",
+      "coordinates": {
+        "lat": 33.78746823178952,
+        "lng": -84.39610438080214
+      },
+      "neighborhood": "Veranda"
+    },
+    "tagline": "New Home Feel, Covered Outdoor Spaces, Smart Everyday Comfort",
+    "featured": true,
+    "listedAt": "2026-09-19T06:01:02.002Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Welcome to the Comal plan, a beautiful residential home located in the heart of San Antonio, built by Beazer Homes. This stunning home features 4 beds and 2 baths, offering ample space for comfortable living. The 1,865 sq ft layout includes a spacious living room, a modern kitchen with stainless steel appliances, and a cozy dining area. The primary suite boasts a walk in closet, while the additional bedrooms provide plenty of room for family or guests. Step outside to enjoy the covered patio, perfect for entertaining or relaxing. Additional highlights include covered back porch, covered front entry, and a 2-car Garage. Located in the desirable Veranda\nneighborhood, this home is close to Lackland Air Force Base, Loop 1604, Westover Hills Baptist Hospital and local eateries, making it an ideal choice for those seeking convenience and comfort. Veranda features a recreation center, pool, splash pad, and spaces for all ages to play! Beazer Homes is proud to be America's\n#1 Energy-Efficient homebuilder. In 2024, our homes achieved an average net HERS score of 37 (including solar) and a gross HERS score of 42-the lowest publicly reported scores among the top 30 U.S. homebuilders identified by Builder Magazine's Top 100 list (ranked by 2024 closings). Take advantage of our special buyer incentives which may include closing costs, design studio upgrades, FLEX dollars, and more. And don't just enjoy your home, enjoy the life that comes with it.\nBeazer is proud to have built a better home that will cost you less to own and live in every month. Reach out to us today to learn more about how you can benefit from these exclusive offers. Ready for move in now!",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-6849",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 44,
+    "price": 69999,
+    "specs": {
+      "bedrooms": 5,
+      "bathrooms": 4,
+      "yearBuilt": 2023,
+      "hoaMonthly": 0,
+      "squareFeet": 3002,
+      "lotSizeSqFt": 6403,
+      "lotSizeAcres": 0.15,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Five Bedrooms, Four Baths, and a Bold Modern Dallas Look",
+    "views": 525,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796378/nookfinder/properties/zeisxwiqcmfw84yhq4ec.jpg",
+        "caption": "IMG 1091",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796379/nookfinder/properties/o3saerxd9is4fmr3bmo9.jpg",
+        "caption": "IMG 1092",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796381/nookfinder/properties/dsjlbyef4alwnrcl9zfy.jpg",
+        "caption": "IMG 1093",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796382/nookfinder/properties/akqyogddrqtr7rf7isby.jpg",
+        "caption": "IMG 1094",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796384/nookfinder/properties/d9mmpyhgsi1ygsq7enke.jpg",
+        "caption": "IMG 1095",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796385/nookfinder/properties/mtk13kfsspffeh4wlqin.jpg",
+        "caption": "IMG 1096",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796386/nookfinder/properties/btuojltftsrvoejcarri.jpg",
+        "caption": "IMG 1097",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796387/nookfinder/properties/ojqpd8bvd7pvdpeqm9aj.jpg",
+        "caption": "IMG 1098",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796389/nookfinder/properties/l8vv1vqfiob4eohwabwp.jpg",
+        "caption": "IMG 1099",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796390/nookfinder/properties/stktt8hdr6brvwwhq7cb.jpg",
+        "caption": "IMG 1100",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796391/nookfinder/properties/xkxy2k4ujuxymy3hnvy6.jpg",
+        "caption": "IMG 1101",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796393/nookfinder/properties/zrzyxcztpeborb9lrjxx.jpg",
+        "caption": "IMG 1102",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796394/nookfinder/properties/gltfvzthuga8sh6r7tim.jpg",
+        "caption": "IMG 1103",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796395/nookfinder/properties/veprpeejqmyexlaatlvb.jpg",
+        "caption": "IMG 1104",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796397/nookfinder/properties/ex7fke1vktirfq15krz9.jpg",
+        "caption": "IMG 1105",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796398/nookfinder/properties/k26tsp7og7uo15ioe2az.jpg",
+        "caption": "IMG 1106",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796399/nookfinder/properties/xjhchulw18kp5i5rbhhm.jpg",
+        "caption": "IMG 1107",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796401/nookfinder/properties/rrlgyliztx5t4lfqkqvv.jpg",
+        "caption": "IMG 1108",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Dallas",
+      "state": "TX",
+      "street": "7909 Ivory Lane",
+      "zipCode": "75216",
+      "coordinates": {
+        "lat": 32.7143044,
+        "lng": -96.7485882
+      },
+      "neighborhood": "Dallas District"
+    },
+    "tagline": "More Home for the Money",
+    "featured": true,
+    "listedAt": "2026-09-19T05:40:56.849Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Experience modern elegance in this beautifully designed home featuring two bedrooms on the main level, including a luxurious primary suite and a secondary bedroom perfect for guests or a private home office. The open concept layout is ideal for entertaining, while upstairs offers a spacious game room or flex space, three additional bedrooms, and two full bathrooms, providing comfort and versatility for family and guests. Thoughtfully designed with style and functionality in mind, this home offers the perfect blend of luxury and everyday living.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-1419",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 307,
+    "price": 76999,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "yearBuilt": 2021,
+      "hoaMonthly": 0,
+      "squareFeet": 1871,
+      "lotSizeSqFt": 5227,
+      "lotSizeAcres": 0.12,
+      "parkingSpaces": 0,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Mountain-View Living with a Covered Porch & Private Yard",
+    "views": 8642,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796099/nookfinder/properties/lnedquetvqyvkeq4lcbx.jpg",
+        "caption": "IMG 1069",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796101/nookfinder/properties/ksvpmarwznahbnuh4sjh.jpg",
+        "caption": "IMG 1070",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796104/nookfinder/properties/tk5mvifgxqjx2e8j8zud.jpg",
+        "caption": "IMG 1071",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796106/nookfinder/properties/cjo267elt6q0blontenk.jpg",
+        "caption": "IMG 1072",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796107/nookfinder/properties/jhplrec1etuxtwwiufhe.jpg",
+        "caption": "IMG 1073",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796109/nookfinder/properties/n6u415df1jcpbfkad59j.jpg",
+        "caption": "IMG 1074",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796111/nookfinder/properties/oojaptqxk4frbvaqxdnw.jpg",
+        "caption": "IMG 1075",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796113/nookfinder/properties/ulatepifqw3nygwgpohz.jpg",
+        "caption": "IMG 1076",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796115/nookfinder/properties/w64ybnv5wxylc9muswhq.jpg",
+        "caption": "IMG 1077",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796117/nookfinder/properties/z1n02ds7jmc73ujyjtxt.jpg",
+        "caption": "IMG 1078",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796119/nookfinder/properties/bb9yq2k9aswopdvcq3fi.jpg",
+        "caption": "IMG 1079",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796121/nookfinder/properties/fu1pdmc3ysmkk9ezeoug.jpg",
+        "caption": "IMG 1080",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796122/nookfinder/properties/je7hsw5m6roerlzhmatt.jpg",
+        "caption": "IMG 1081",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796124/nookfinder/properties/drrarw4mrexgk5xkfmqt.jpg",
+        "caption": "IMG 1082",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796126/nookfinder/properties/petrgseslxfbxwexed2d.jpg",
+        "caption": "IMG 1083",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796127/nookfinder/properties/wx1yzp4fadvqo6r57cf9.jpg",
+        "caption": "IMG 1084",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796129/nookfinder/properties/jtqrcnmdfz3jrgvxjls9.jpg",
+        "caption": "IMG 1085",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796130/nookfinder/properties/qhdqme3zn5ef5h7tmwmr.jpg",
+        "caption": "IMG 1086",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796133/nookfinder/properties/tqejmnlbgxamuk2luay3.jpg",
+        "caption": "IMG 1087",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789796135/nookfinder/properties/z4esegqn24nw4cwmayu9.jpg",
+        "caption": "IMG 1068",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "El Paso",
+      "state": "TX",
+      "street": "7328 Glacier Drive",
+      "zipCode": "79911",
+      "coordinates": {
+        "lat": 31.9159817,
+        "lng": -106.5652611
+      },
+      "neighborhood": "El Paso District"
+    },
+    "tagline": "Scenic Views, Smart Space, Everyday Comfort",
+    "featured": true,
+    "listedAt": "2026-09-19T05:36:01.419Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Enjoy mountain views from the front porch, with a neighborhood park just up the street. This single story home in Desert Springs was built in 2021 and offers four bedrooms, three baths, and 1,870 square feet.\nRuidosa Sierra tile runs throughout with no carpet, the home has refrigerated air, and spray foam insulation throughout.\nOne of the secondary bedrooms is a private junior suite with its own full bath, ideal for guests. The primary suite has a walk in shower and a granite vanity. The kitchen features granite counters and blackwash cabinetry throughout.\nThe backyard is finished with brand new turf and rock landscaping, a privacy fence, and more mountain views. The covered patio is the upgraded 10 by 14 rather than the builder standard 8 by 10. The front yard is landscaped as well, with a true covered porch and added iron security gates.\nJust 5 minutes from the outlet mall, Walmart Supercenter, Providence Hospital, and many great dining options, with quick access to I-10 and Transmountain.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-9415",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 2780,
+    "price": 70000,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "yearBuilt": 2024,
+      "hoaMonthly": 0,
+      "squareFeet": 3300,
+      "lotSizeSqFt": 11326,
+      "lotSizeAcres": 0.26,
+      "parkingSpaces": 3,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Fresh-Built Luxury with 3,300 Sq Ft to Live Big",
+    "views": 57622,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788956/nookfinder/properties/swlv6ij0mbysckmfdwnt.jpg",
+        "caption": "IMG 1045",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788959/nookfinder/properties/ebkqycd4fsrz6zisw4ml.jpg",
+        "caption": "IMG 1046",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788961/nookfinder/properties/kvnpygvmhgztx2przflu.jpg",
+        "caption": "IMG 1047",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788964/nookfinder/properties/ybnk6lyieabfu1zgtphw.jpg",
+        "caption": "IMG 1048",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788966/nookfinder/properties/vgjadlgztrrrb73i0gll.jpg",
+        "caption": "IMG 1049",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788968/nookfinder/properties/no8tyzsumnmfoqbkcdcm.jpg",
+        "caption": "IMG 1050",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788969/nookfinder/properties/zbtiw2gxmpbf0kiexism.jpg",
+        "caption": "IMG 1051",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788972/nookfinder/properties/bz3s5mjwsrdrmrc44zbw.jpg",
+        "caption": "IMG 1052",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788973/nookfinder/properties/jk1afvudduxkhxwibcwf.jpg",
+        "caption": "IMG 1053",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788975/nookfinder/properties/qgkha4rzymyprf9kvq5l.jpg",
+        "caption": "IMG 1054",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788977/nookfinder/properties/jthcvymo7hdyv1c1g6dm.jpg",
+        "caption": "IMG 1055",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788979/nookfinder/properties/f1tf7zivtrz45rg65dju.jpg",
+        "caption": "IMG 1056",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788981/nookfinder/properties/rxqqptzthztrwgncnyzg.jpg",
+        "caption": "IMG 1057",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788982/nookfinder/properties/bixuueq2lopnfawnibz3.jpg",
+        "caption": "IMG 1058",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788984/nookfinder/properties/f8qvqzlfl4uzqzekzubj.jpg",
+        "caption": "IMG 1059",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788986/nookfinder/properties/kuqb1ih6qmyoxovjlbko.jpg",
+        "caption": "IMG 1060",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788987/nookfinder/properties/nk4rxazvwwvuxzddyhgr.jpg",
+        "caption": "IMG 1061",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788988/nookfinder/properties/sezxqwbddbf0qw0rpawc.jpg",
+        "caption": "IMG 1062",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788990/nookfinder/properties/btzwtns7bezxlclfx2fk.jpg",
+        "caption": "IMG 1063",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788991/nookfinder/properties/bcywzfcuacq2x3amzc5i.jpg",
+        "caption": "IMG 1064",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Missouri City",
+      "state": "TX",
+      "street": "9802 Hunters Run Dr, Missouri City, TX 77459",
+      "zipCode": "77459",
+      "coordinates": {
+        "lat": 33.75132562403825,
+        "lng": -84.37681540493696
+      },
+      "neighborhood": "Sienna"
+    },
+    "tagline": "New Construction",
+    "featured": true,
+    "listedAt": "2026-09-19T05:30:52.879Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Dream It.. Tour It. Love It. Live It. Your search has ended. This is a stunning 2-story home thoughtfully designed with 4 spacious bedrooms, including 2 bedrooms conveniently located downstairs, 3 full bathrooms, and a 3-car garage. This home offers the perfect blend of style and functionality. A study where you can work from home and an entertaining bar.\nFrom the moment you enter, you'll be captivated by the dramatic soaring ceilings, abundant natural light, and the inviting open-concept floor plan that's perfect for entertaining family and friends. Upstairs, enjoy a spacious game room and media room for movie nights, a play area, or your own private retreat. Relax and unwind on the extended outdoor covered patio with stacking slider glass doors, creating the perfect outdoor living space for year-round enjoyment.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": false,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-9194",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 109,
+    "price": 61000,
+    "specs": {
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "yearBuilt": 2020,
+      "hoaMonthly": 0,
+      "squareFeet": 2332,
+      "lotSizeSqFt": 43560,
+      "lotSizeAcres": 1,
+      "parkingSpaces": 7,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Acreage Living with a 7-Car Garage and Custom Workshop",
+    "views": 477,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783154/nookfinder/properties/h3mrok4k4vnicw2r0onf.jpg",
+        "caption": "IMG 0983",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783157/nookfinder/properties/w04a7dt3vjkgbo8obk2i.jpg",
+        "caption": "IMG 0984",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783161/nookfinder/properties/uwtljfvnyznuaisnqvdg.jpg",
+        "caption": "IMG 0985",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783163/nookfinder/properties/hpmni0vldszhuy7ivll4.jpg",
+        "caption": "IMG 0986",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783165/nookfinder/properties/x2cdsqwb9nbvd0nqnxez.jpg",
+        "caption": "IMG 0987",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783167/nookfinder/properties/ukpidgovigflvb2llff3.jpg",
+        "caption": "IMG 0988",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783169/nookfinder/properties/pon8fcohkjvpuh14xylx.jpg",
+        "caption": "IMG 0989",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783171/nookfinder/properties/blminivqbnktyb3qeza6.jpg",
+        "caption": "IMG 0990",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783172/nookfinder/properties/cxpduf4evp9fuicihrkg.jpg",
+        "caption": "IMG 0991",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783174/nookfinder/properties/jv6kiv6exbqib0uitalz.jpg",
+        "caption": "IMG 0992",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783176/nookfinder/properties/oy7ebztdsbizrgzsbcqz.jpg",
+        "caption": "IMG 0993",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783178/nookfinder/properties/zxlzfktvk1v4dykdqpjj.jpg",
+        "caption": "IMG 0994",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783180/nookfinder/properties/yn0hduli96xbztfk3jmu.jpg",
+        "caption": "IMG 0995",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783182/nookfinder/properties/qd4yx9xquqjvbcrmv2pb.jpg",
+        "caption": "IMG 0996",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783183/nookfinder/properties/uasfxfkbwon4yyuicina.jpg",
+        "caption": "IMG 0997",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783185/nookfinder/properties/zowdrpzxv3tswugi3o5f.jpg",
+        "caption": "IMG 0998",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783187/nookfinder/properties/jnb65micumsqd0rrryak.jpg",
+        "caption": "IMG 0982",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783189/nookfinder/properties/srvd8wxb019qpybktimq.jpg",
+        "caption": "IMG 0999",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "Reno",
+      "state": "TX",
+      "street": "709 Hidden Branch Ln, Azle, TX 76020",
+      "zipCode": "76020",
+      "coordinates": {
+        "lat": 33.741958398328116,
+        "lng": -84.35559672693259
+      },
+      "neighborhood": "Scenic Wood Estates"
+    },
+    "tagline": "Built for Space, Storage, and Serious Flexibility",
+    "featured": true,
+    "listedAt": "2026-09-19T05:28:41.398Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Custom craftsmanship, exceptional functionality and room to pursue the things you love set this distinctive one-acre property apart. Inside, the home immediately makes an impression with soaring beamed cathedral ceilings, a gorgeous fireplace and custom wood-look tile flooring. A spacious study overlooks the front entry.\nThe dramatic kitchen is thoughtfully designed for both daily living and entertaining, with double ovens, a five-burner gas cooktop and convenient slide-out cabinetry for exceptional storage and accessibility. Abundant storage throughout adds to the home's thoughtful design. The private primary suite is a standout with a designer wood tray ceiling, a beautifully designed ensuite with separate vanities, oversized custom shower. Primary bedroom has a convenient door leading directly to the covered patio.\nStep outside into tremendous privacy and versatility.\nThe covered patio, with its soaring wood-accented ceiling and outdoor fireplace, creates a beautiful space for enjoying nature, quiet evenings and outdoor living.\nThe backyard is fully fenced. A premium workshop gives you immediate workspace, storage or room for hobbies, this 20x40 fully insulated shop is a tremendous bonus - featuring 10-foot ceilings, an 8-foot roll-up door, 220V power and a 10x40 covered porch and covered area for parking.\nFrench doors add style and a back door leads separate fenced yard. This offers incredible flexibility and best of all - it's already completed and ready for you to move right in!\nAn oversized three-car garage with generator wiring and additional storage rounds out a property that delivers something increasingly difficult to find: a beautifully finished custom home paired with exceptional garage, shop and outdoor space.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
+    "id": "prop-sale-9641",
+    "agent": {
+      "name": "Marcus Vance",
+      "email": "nookkfinder@gmail.com",
+      "phone": "+1 (404) 890-1244",
+      "title": "Nookfinder Dedicated Property Specialist",
+      "rating": 4.9,
+      "telegram": "https://t.me/nook_finder",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+      "reviewCount": 42,
+      "verifiedLicense": "NF-STAFF-40918",
+      "isNookfinderStaff": true
+    },
+    "likes": 6,
+    "price": 60622,
+    "specs": {
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "yearBuilt": 2020,
+      "hoaMonthly": 0,
+      "squareFeet": 2720,
+      "lotSizeSqFt": 7405,
+      "lotSizeAcres": 0.17,
+      "parkingSpaces": 2,
+      "propertyTaxAnnual": 1950,
+      "estimatedUtilitiesMonthly": 120
+    },
+    "title": "Room to Grow in a Stylish New Braunfels Home",
+    "views": 363,
+    "images": [
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788552/nookfinder/properties/zru5ozsgwx930u95oabs.jpg",
+        "caption": "IMG 1022",
+        "isPrimary": true
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788555/nookfinder/properties/aysvztgqyqbmiryrykda.jpg",
+        "caption": "IMG 1023",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788557/nookfinder/properties/nln4cl27dwbgsojz7ub4.jpg",
+        "caption": "IMG 1024",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788559/nookfinder/properties/wqzdoozvsnrxvrdujhoy.jpg",
+        "caption": "IMG 1025",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788562/nookfinder/properties/j4fadigft8trh3pxswuj.jpg",
+        "caption": "IMG 1026",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788564/nookfinder/properties/lbm1xc7tkozbs6d06p6f.jpg",
+        "caption": "IMG 1027",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788566/nookfinder/properties/j8bszyivsscwbbhpucit.jpg",
+        "caption": "IMG 1028",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788569/nookfinder/properties/yk8m1slgeouqipp3wrf2.jpg",
+        "caption": "IMG 1029",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788570/nookfinder/properties/br8h9sbpiojti2s3cac0.jpg",
+        "caption": "IMG 1030",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788572/nookfinder/properties/xzbgh93r9bvh6z6cy8ao.jpg",
+        "caption": "IMG 1031",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788575/nookfinder/properties/ufc4ytvpmkiq1s0c6yek.jpg",
+        "caption": "IMG 1032",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788577/nookfinder/properties/eadfgkv3c0wdhsk5imzm.jpg",
+        "caption": "IMG 1033",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788580/nookfinder/properties/sihrghdmpycj9d74wifw.jpg",
+        "caption": "IMG 1034",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788582/nookfinder/properties/p0oh2ya1nzdtmi5sdrbp.jpg",
+        "caption": "IMG 1035",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788584/nookfinder/properties/gt5kdb2ethouvl0zqrch.jpg",
+        "caption": "IMG 1036",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788586/nookfinder/properties/fmcwj4gk6kjos9wg5v6h.jpg",
+        "caption": "IMG 1037",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788587/nookfinder/properties/fzwrgwva5f2hyz4njrv1.jpg",
+        "caption": "IMG 1038",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788590/nookfinder/properties/atvzpekksnlbiy6fyab4.jpg",
+        "caption": "IMG 1039",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788592/nookfinder/properties/isfv6yi5mlujern8qmfq.jpg",
+        "caption": "IMG 1040",
+        "isPrimary": false
+      },
+      {
+        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789788595/nookfinder/properties/x7lzg6yqqvsjvlt5nzyf.jpg",
+        "caption": "IMG 1021",
+        "isPrimary": false
+      }
+    ],
+    "status": "available",
+    "address": {
+      "city": "New Braunfels",
+      "state": "TX",
+      "street": "2282 Kiskadee Dr, New Braunfels, TX 78132",
+      "zipCode": "78132",
+      "coordinates": {
+        "lat": 33.72183800891825,
+        "lng": -84.38764628085555
+      },
+      "neighborhood": "Veramendi"
+    },
+    "tagline": "Generous Space, Modern Comfort, Easy Texas Living",
+    "featured": true,
+    "listedAt": "2026-09-19T03:30:39.641Z",
+    "amenities": [
+      "FHA Loan Grant Eligible",
+      "Under Market Value Appraisal",
+      "In-Unit Washer & Dryer",
+      "Zero Broker Fee Guarantee",
+      "Down Payment Assistance Available"
+    ],
+    "isVerified": true,
+    "description": "Located in the sought-after Veramendi community, this spacious 4-bedroom, 3-bath home offers a flexible floor plan designed for both everyday living and entertaining. The open main living areas flow into a bright, spacious kitchen featuring a large center island, plenty of workspace, and room to gather. An office nook, upstairs bonus room, and separate media room provide plenty of options for working, relaxing, or hosting. The primary suite and an additional bedroom are both located on the main floor, each with access to its own full bath-an ideal setup for guests, extended family, or multigenerational living. Outside, enjoy a large lot with a low-maintenance turf backyard, inviting sitting area, and underground drip irrigation in the front yard to help keep the landscaping looking its best year-round. All of this in Veramendi, one of New Braunfels' most sought-after communities, with convenient access to shopping, dining, schools, and everything New Braunfels has to offer.",
+    "fhaEligible": true,
+    "listingType": "sale",
+    "propertyType": "house",
+    "underMarketValue": true,
+    "downPaymentAssistance": true
+  },
+  {
     "id": "prop-sale-0521",
     "agent": {
       "name": "Marcus Vance",
@@ -155,158 +1385,6 @@
     ],
     "isVerified": true,
     "description": "Brand new 3-story build with 7 bedrooms, 4.5 baths, an office and a game room in 3,257 sq ft.\nAll the cabinetry in this house came out of the builder's own shop. The kitchen is rift-cut oak with a quartz island, farmhouse sink, and lighting under and inside the cabinets. A red oak staircase with lit treads runs up all three floors.\nThe second floor has its own living room with a tiled fireplace wall and a wine bar. The primary bedroom opens onto a covered balcony with glass railing and a stained wood ceiling, and the walk-in closet has full built-ins and a center island. Navy tile and brass fixtures in the secondary baths.\nTurf and paver landscaping out front, glass garage doors, and accent lighting around the whole exterior.\nSome photos are virtually staged",
-    "fhaEligible": true,
-    "listingType": "sale",
-    "propertyType": "house",
-    "underMarketValue": true,
-    "downPaymentAssistance": true
-  },
-  {
-    "id": "prop-sale-9194",
-    "agent": {
-      "name": "Marcus Vance",
-      "email": "nookkfinder@gmail.com",
-      "phone": "+1 (404) 890-1244",
-      "title": "Nookfinder Dedicated Property Specialist",
-      "rating": 4.9,
-      "telegram": "https://t.me/nook_finder",
-      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
-      "reviewCount": 42,
-      "verifiedLicense": "NF-STAFF-40918",
-      "isNookfinderStaff": true
-    },
-    "likes": 109,
-    "price": 61000,
-    "specs": {
-      "bedrooms": 3,
-      "bathrooms": 3,
-      "yearBuilt": 2020,
-      "hoaMonthly": 0,
-      "squareFeet": 2332,
-      "lotSizeSqFt": 43560,
-      "lotSizeAcres": 1,
-      "parkingSpaces": 6,
-      "propertyTaxAnnual": 1950,
-      "estimatedUtilitiesMonthly": 120
-    },
-    "title": "Acreage Living with a 7-Car Garage and Custom Workshop",
-    "views": 477,
-    "images": [
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783154/nookfinder/properties/h3mrok4k4vnicw2r0onf.jpg",
-        "caption": "IMG 0983",
-        "isPrimary": true
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783157/nookfinder/properties/w04a7dt3vjkgbo8obk2i.jpg",
-        "caption": "IMG 0984",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783161/nookfinder/properties/uwtljfvnyznuaisnqvdg.jpg",
-        "caption": "IMG 0985",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783163/nookfinder/properties/hpmni0vldszhuy7ivll4.jpg",
-        "caption": "IMG 0986",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783165/nookfinder/properties/x2cdsqwb9nbvd0nqnxez.jpg",
-        "caption": "IMG 0987",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783167/nookfinder/properties/ukpidgovigflvb2llff3.jpg",
-        "caption": "IMG 0988",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783169/nookfinder/properties/pon8fcohkjvpuh14xylx.jpg",
-        "caption": "IMG 0989",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783171/nookfinder/properties/blminivqbnktyb3qeza6.jpg",
-        "caption": "IMG 0990",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783172/nookfinder/properties/cxpduf4evp9fuicihrkg.jpg",
-        "caption": "IMG 0991",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783174/nookfinder/properties/jv6kiv6exbqib0uitalz.jpg",
-        "caption": "IMG 0992",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783176/nookfinder/properties/oy7ebztdsbizrgzsbcqz.jpg",
-        "caption": "IMG 0993",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783178/nookfinder/properties/zxlzfktvk1v4dykdqpjj.jpg",
-        "caption": "IMG 0994",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783180/nookfinder/properties/yn0hduli96xbztfk3jmu.jpg",
-        "caption": "IMG 0995",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783182/nookfinder/properties/qd4yx9xquqjvbcrmv2pb.jpg",
-        "caption": "IMG 0996",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783183/nookfinder/properties/uasfxfkbwon4yyuicina.jpg",
-        "caption": "IMG 0997",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783185/nookfinder/properties/zowdrpzxv3tswugi3o5f.jpg",
-        "caption": "IMG 0998",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783187/nookfinder/properties/jnb65micumsqd0rrryak.jpg",
-        "caption": "IMG 0982",
-        "isPrimary": false
-      },
-      {
-        "url": "https://res.cloudinary.com/eamqdjfo/image/upload/v1789783189/nookfinder/properties/srvd8wxb019qpybktimq.jpg",
-        "caption": "IMG 0999",
-        "isPrimary": false
-      }
-    ],
-    "status": "available",
-    "address": {
-      "city": "Reno",
-      "state": "TX",
-      "street": "709 Hidden Branch Ln, Azle, TX 76020",
-      "zipCode": "76020",
-      "coordinates": {
-        "lat": 33.741958398328116,
-        "lng": -84.35559672693259
-      },
-      "neighborhood": "Scenic Wood Estates"
-    },
-    "tagline": "Built for Space, Storage, and Serious Flexibility",
-    "featured": true,
-    "listedAt": "2026-09-19T02:00:59.194Z",
-    "amenities": [
-      "FHA Loan Grant Eligible",
-      "Under Market Value Appraisal",
-      "In-Unit Washer & Dryer",
-      "Zero Broker Fee Guarantee",
-      "Down Payment Assistance Available"
-    ],
-    "isVerified": true,
-    "description": "Custom craftsmanship, exceptional functionality and room to pursue the things you love set this distinctive one-acre property apart. Inside, the home immediately makes an impression with soaring beamed cathedral ceilings, a gorgeous fireplace and custom wood-look tile flooring. A spacious study overlooks the front entry.\nThe dramatic kitchen is thoughtfully designed for both daily living and entertaining, with double ovens, a five-burner gas cooktop and convenient slide-out cabinetry for exceptional storage and accessibility. Abundant storage throughout adds to the home's thoughtful design. The private primary suite is a standout with a designer wood tray ceiling, a beautifully designed ensuite with separate vanities, oversized custom shower. Primary bedroom has a convenient door leading directly to the covered patio.\nStep outside into tremendous privacy and versatility.\nThe covered patio, with its soaring wood-accented ceiling and outdoor fireplace, creates a beautiful space for enjoying nature, quiet evenings and outdoor living.\nThe backyard is fully fenced. A premium workshop gives you immediate workspace, storage or room for hobbies, this 20x40 fully insulated shop is a tremendous bonus - featuring 10-foot ceilings, an 8-foot roll-up door, 220V power and a 10x40 covered porch and covered area for parking.\nFrench doors add style and a back door leads separate fenced yard. This offers incredible flexibility and best of all - it's already completed and ready for you to move right in!\nAn oversized three-car garage with generator wiring and additional storage rounds out a property that delivers something increasingly difficult to find: a beautifully finished custom home paired with exceptional garage, shop and outdoor space.",
     "fhaEligible": true,
     "listingType": "sale",
     "propertyType": "house",
