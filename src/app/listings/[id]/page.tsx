@@ -294,35 +294,46 @@ export default function PropertyDetailPage() {
         ? window.location.href
         : `https://nookfinder.com/listings/${property.id}`;
 
-    const subject = `Inquiry: ${property.title} - ${property.address.city}, ${property.address.state} (Ref: ${property.id})`;
+    const subject = `Property Inquiry: ${property.title} (ID: ${property.id})`;
 
-    const bodyLines = [
-      'Hello Nookfinder Team,',
-      '',
-      customNote || 'I am interested in this verified property and would like to receive more details or schedule a private showing:',
-      '',
-      '--------------------------------------------------',
+    const CRLF = '\r\n';
+    const DBL = '\r\n\r\n';
+
+    let introText = '';
+    if (customNote) {
+      const cleanNote = customNote.replace(/\r?\n/g, CRLF);
+      introText = `Hello Nookfinder Team,${DBL}${cleanNote}${DBL}Here is the verified listing I am inquiring about:`;
+    } else {
+      introText = `Hello Nookfinder Team,${DBL}I am interested in this verified property and would like to receive additional details or schedule a private showing.`;
+    }
+
+    const summaryBox = [
+      '=======================================================',
       'VERIFIED PROPERTY SUMMARY',
-      '--------------------------------------------------',
-      `• Headline: ${property.title}`,
-      `• Listing ID: ${property.id}`,
-      `• Type: ${isRental ? 'For Rent' : 'For Sale'} (${property.propertyType})`,
-      `• Price: ${priceText}`,
-      `• Location: ${property.address.street}, ${property.address.neighborhood}, ${property.address.city}, ${property.address.state} ${property.address.zipCode}`,
-      `• Key Specs: ${property.specs.bedrooms} Beds | ${property.specs.bathrooms} Baths | ${property.specs.squareFeet.toLocaleString()} sq ft interior`,
-      `• Lot / Land Size: ${property.specs.lotSizeSqFt ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft` : `${property.specs.lotSizeAcres || '0.15'} acres`}`,
-      `• Parking Spaces: ${property.specs.parkingSpaces ?? 1}`,
-      `• Title & Deed: 100% Audited & Verified Guaranteed`,
-      `• Direct Listing Link: ${listingUrl}`,
-      '--------------------------------------------------',
-      '',
+      '=======================================================',
+      `Property Title:    ${property.title}`,
+      `Listing ID:        ${property.id}`,
+      `Offering:          ${isRental ? 'For Rent' : 'For Sale'} (${property.propertyType})`,
+      `Price:             ${priceText}`,
+      `Address:           ${property.address.street}, ${property.address.neighborhood}, ${property.address.city}, ${property.address.state} ${property.address.zipCode}`,
+      `Bedrooms / Baths:  ${property.specs.bedrooms} Beds | ${property.specs.bathrooms} Baths`,
+      `Living Area:       ${property.specs.squareFeet.toLocaleString()} sq ft interior`,
+      `Lot / Land Size:   ${property.specs.lotSizeSqFt ? `${property.specs.lotSizeSqFt.toLocaleString()} sq ft` : `${property.specs.lotSizeAcres || '0.15'} acres`}`,
+      `Parking Spaces:    ${property.specs.parkingSpaces ?? 1} space(s)`,
+      `Audit Status:      100% Audited Title & Deed Guaranteed`,
+      `Direct Web Link:   ${listingUrl}`,
+      '=======================================================',
+    ].join(CRLF);
+
+    const closingText = [
       'Please let me know the upcoming showing times and the requirements to apply.',
       '',
       'Thank you!',
-    ];
+    ].join(CRLF);
 
-    const body = bodyLines.join('\n');
-    return `mailto:nookkfinder@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const fullEmailBody = `${introText}${DBL}${summaryBox}${DBL}${closingText}`;
+
+    return `mailto:nookkfinder@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullEmailBody)}`;
   };
 
   const handleInquirySubmit = async (e: React.FormEvent) => {
