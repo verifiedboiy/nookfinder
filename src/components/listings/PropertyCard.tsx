@@ -24,8 +24,17 @@ export default function PropertyCard({ property, compact = false }: PropertyCard
   const handlePrefetch = useCallback(() => {
     try {
       router.prefetch(`/listings/${property.id}`);
+      if (typeof window !== 'undefined' && property.images && property.images.length > 0) {
+        // Pre-warm the first 8 gallery photos in browser cache so details page photos open instantly
+        property.images.slice(0, 8).forEach((img) => {
+          if (!img?.url) return;
+          const preImg = new window.Image();
+          preImg.decoding = 'async';
+          preImg.src = img.url;
+        });
+      }
     } catch {}
-  }, [router, property.id]);
+  }, [router, property.id, property.images]);
 
   useEffect(() => {
     setIsSaved(isPropertySaved(property.id));

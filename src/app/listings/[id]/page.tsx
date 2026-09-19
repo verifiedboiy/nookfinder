@@ -173,6 +173,33 @@ export default function PropertyDetailPage() {
     return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
   }, [property]);
 
+  // Instant Background Photo Pre-Caching:
+  // Pre-downloads and decodes ALL gallery photos (1 to 50) directly into browser memory
+  // the moment the user views this listing, so opening "See More Photos" or the Lightbox is 0ms instant!
+  useEffect(() => {
+    if (!property?.images || property.images.length === 0) return;
+
+    const schedulePreload =
+      typeof window !== 'undefined' && 'requestIdleCallback' in window
+        ? (window as any).requestIdleCallback
+        : (fn: () => void) => setTimeout(fn, 50);
+
+    const idleId = schedulePreload(() => {
+      property.images.forEach((img) => {
+        if (!img?.url) return;
+        const imgObj = new window.Image();
+        imgObj.decoding = 'async';
+        imgObj.src = img.url;
+      });
+    });
+
+    return () => {
+      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && typeof idleId === 'number') {
+        (window as any).cancelIdleCallback(idleId);
+      }
+    };
+  }, [property?.id, property?.images]);
+
   if (isLoading && !property) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
@@ -855,6 +882,23 @@ export default function PropertyDetailPage() {
           </div>
         </div>
 
+        {/* Instant Gallery Pre-cache Engine: Pre-decodes all remaining photos (4 to 50) in browser memory */}
+        {property?.images && property.images.length > 4 && (
+          <div aria-hidden="true" className="hidden pointer-events-none select-none opacity-0 fixed -top-[9999px] -left-[9999px]">
+            {property.images.slice(4).map((img, idx) => (
+              <img
+                key={idx}
+                src={img.url}
+                alt=""
+                loading="eager"
+                decoding="async"
+                width={1}
+                height={1}
+              />
+            ))}
+          </div>
+        )}
+
         {/* FULLSCREEN LIGHTBOX MODAL */}
         {lightboxOpen && (
           <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col justify-between p-4 sm:p-6 animate-in fade-in duration-200">
@@ -941,6 +985,7 @@ export default function PropertyDetailPage() {
                     unoptimized={img.url.startsWith('data:')}
                     className="object-cover"
                     sizes="64px"
+                    loading="eager"
                   />
                 </button>
               ))}
