@@ -34,6 +34,7 @@ import {
   Trees,
   Layers,
   TrendingUp,
+  Sparkles,
 } from 'lucide-react';
 import { isPropertySaved, toggleSaveProperty } from '@/lib/savedProperties';
 
@@ -173,31 +174,18 @@ export default function PropertyDetailPage() {
     return () => window.removeEventListener('nookfinder_saved_homes_updated', handleSavedChange);
   }, [property]);
 
-  // Instant Background Photo Pre-Caching:
+  // Instant Photo Pre-Caching:
   // Pre-downloads and decodes ALL gallery photos (1 to 50) directly into browser memory
-  // the moment the user views this listing, so opening "See More Photos" or the Lightbox is 0ms instant!
+  // the instant any user (both new or old) visits this listing!
   useEffect(() => {
     if (!property?.images || property.images.length === 0) return;
 
-    const schedulePreload =
-      typeof window !== 'undefined' && 'requestIdleCallback' in window
-        ? (window as any).requestIdleCallback
-        : (fn: () => void) => setTimeout(fn, 50);
-
-    const idleId = schedulePreload(() => {
-      property.images.forEach((img) => {
-        if (!img?.url) return;
-        const imgObj = new window.Image();
-        imgObj.decoding = 'async';
-        imgObj.src = img.url;
-      });
+    property.images.forEach((img) => {
+      if (!img?.url) return;
+      const imgObj = new window.Image();
+      imgObj.decoding = 'async';
+      imgObj.src = img.url;
     });
-
-    return () => {
-      if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && typeof idleId === 'number') {
-        (window as any).cancelIdleCallback(idleId);
-      }
-    };
   }, [property?.id, property?.images]);
 
   if (isLoading && !property) {
@@ -566,10 +554,16 @@ export default function PropertyDetailPage() {
         <div className="space-y-3">
           {/* Header Bar */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-              <ImageIcon className="w-4 h-4 text-emerald-700" />
-              <span>Verified Photo Gallery ({property.images.length} Photos)</span>
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                <ImageIcon className="w-4 h-4 text-emerald-700" />
+                <span>Verified Photo Gallery ({property.images.length} Photos)</span>
+              </span>
+              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <span>All Photos Open & Ready</span>
+              </span>
+            </div>
 
             <button
               type="button"
@@ -580,7 +574,7 @@ export default function PropertyDetailPage() {
               className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline cursor-pointer"
             >
               <Maximize2 className="w-3.5 h-3.5" />
-              <span>View All {property.images.length} Photos</span>
+              <span>Fullscreen Lightbox</span>
             </button>
           </div>
 
@@ -690,79 +684,42 @@ export default function PropertyDetailPage() {
               </div>
             )}
 
-            {/* Mobile 3-Card Mini Preview Strip */}
-            <div className="grid grid-cols-3 gap-2 pt-0.5">
-              {/* Preview 1 (Photo 2) */}
-              {property.images[1] && (
-                <div
-                  onClick={() => setMobilePhotoIdx(1)}
-                  className={`relative aspect-[4/3] rounded-xl overflow-hidden border cursor-pointer group shadow-2xs ${
-                    mobilePhotoIdx === 1
-                      ? 'border-emerald-600 ring-2 ring-emerald-500/40'
-                      : 'border-slate-200'
-                  }`}
-                >
-                  <Image
-                    src={property.images[1].url}
-                    alt={property.images[1].caption || 'Room photo 2'}
-                    fill
-                    unoptimized={property.images[1].url.startsWith('data:')}
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="33vw"
-                  />
-                  <span className="absolute bottom-1.5 inset-x-1.5 bg-slate-950/80 backdrop-blur-xs text-white text-[9px] px-1 py-0.2 rounded truncate text-center">
-                    {property.images[1].caption || 'Photo 2'}
-                  </span>
-                </div>
-              )}
-
-              {/* Preview 2 (Photo 3) */}
-              {property.images[2] && (
-                <div
-                  onClick={() => setMobilePhotoIdx(2)}
-                  className={`relative aspect-[4/3] rounded-xl overflow-hidden border cursor-pointer group shadow-2xs ${
-                    mobilePhotoIdx === 2
-                      ? 'border-emerald-600 ring-2 ring-emerald-500/40'
-                      : 'border-slate-200'
-                  }`}
-                >
-                  <Image
-                    src={property.images[2].url}
-                    alt={property.images[2].caption || 'Room photo 3'}
-                    fill
-                    unoptimized={property.images[2].url.startsWith('data:')}
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="33vw"
-                  />
-                  <span className="absolute bottom-1.5 inset-x-1.5 bg-slate-950/80 backdrop-blur-xs text-white text-[9px] px-1 py-0.2 rounded truncate text-center">
-                    {property.images[2].caption || 'Photo 3'}
-                  </span>
-                </div>
-              )}
-
-              {/* Preview 3: View All Photos Card */}
-              <div
-                onClick={() => {
-                  setActivePhotoIdx(0);
-                  setLightboxOpen(true);
-                }}
-                className="relative aspect-[4/3] rounded-xl overflow-hidden border border-slate-800 bg-slate-950 text-white flex flex-col items-center justify-center gap-1 cursor-pointer group hover:bg-slate-900 transition-colors shadow-2xs p-1 text-center"
-              >
-                <ImageIcon className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
-                <span className="text-[11px] font-bold leading-tight">
-                  {property.images.length > 3
-                    ? `+${property.images.length - 3} More`
-                    : 'View All'}
-                </span>
-                <span className="text-[9px] text-emerald-300 underline font-medium">
-                  {property.images.length} Photos
-                </span>
+            {/* Mobile 3-Card Mini Preview Strip: Real open photos without dark overlays */}
+            {property.images.length > 1 && (
+              <div className="grid grid-cols-3 gap-2 pt-0.5">
+                {property.images.slice(1, 4).map((img, idx) => {
+                  const photoIdx = idx + 1;
+                  return (
+                    <div
+                      key={photoIdx}
+                      onClick={() => setMobilePhotoIdx(photoIdx)}
+                      className={`relative aspect-[4/3] rounded-xl overflow-hidden border cursor-pointer group shadow-2xs ${
+                        mobilePhotoIdx === photoIdx
+                          ? 'border-emerald-600 ring-2 ring-emerald-500/40'
+                          : 'border-slate-200'
+                      }`}
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `Photo ${photoIdx + 1}`}
+                        fill
+                        unoptimized={img.url.startsWith('data:')}
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="33vw"
+                        loading="eager"
+                      />
+                      <span className="absolute bottom-1.5 inset-x-1.5 bg-slate-950/80 backdrop-blur-xs text-white text-[9px] px-1 py-0.5 rounded truncate text-center">
+                        {img.caption || `Photo ${photoIdx + 1}`}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
           </div>
 
-          {/* 2. DESKTOP EXPERIENCE: Elegant 4-Photo Bento Grid (>= md) */}
-          <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-3 h-[380px] w-full">
+          {/* 2. DESKTOP EXPERIENCE: Unblocked 5-Photo Bento Grid (>= md) */}
+          <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-3 h-[400px] w-full">
             {/* Main Primary Hero (Spans 2 cols, 2 rows) */}
             <div
               onClick={() => {
@@ -811,6 +768,7 @@ export default function PropertyDetailPage() {
                   unoptimized={property.images[1].url.startsWith('data:')}
                   className="object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
                   sizes="25vw"
+                  loading="eager"
                 />
                 <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
                   {property.images[1].caption || 'Photo 2'}
@@ -834,6 +792,7 @@ export default function PropertyDetailPage() {
                   unoptimized={property.images[2].url.startsWith('data:')}
                   className="object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
                   sizes="25vw"
+                  loading="eager"
                 />
                 <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
                   {property.images[2].caption || 'Photo 3'}
@@ -841,63 +800,122 @@ export default function PropertyDetailPage() {
               </div>
             )}
 
-            {/* Tile 4 (Spans Col 3 & 4, Row 2): 4th photo with "View All Photos" Overlay */}
-            <div
-              onClick={() => {
-                setActivePhotoIdx(property.images.length > 3 ? 3 : 0);
-                setLightboxOpen(true);
-              }}
-              className="col-span-2 relative h-full rounded-xl overflow-hidden border border-slate-200 bg-slate-950 cursor-pointer group shadow-xs select-none"
-            >
-              <Image
-                src={
-                  property.images[3]?.url ||
-                  property.images[0]?.url ||
-                  ''
-                }
-                alt={property.images[3]?.caption || 'Additional views'}
-                fill
-                unoptimized={property.images[3]?.url?.startsWith('data:') || property.images[0]?.url?.startsWith('data:')}
-                className="object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
-                sizes="50vw"
-              />
+            {/* Tile 4 (Col 3, Row 2) - Clean unblocked photo */}
+            {property.images[3] && (
+              <div
+                onClick={() => {
+                  setActivePhotoIdx(3);
+                  setLightboxOpen(true);
+                }}
+                className={`${
+                  property.images[4] ? 'col-span-1' : 'col-span-2'
+                } relative h-full rounded-xl overflow-hidden border border-slate-200 bg-slate-950 cursor-pointer group shadow-xs select-none`}
+              >
+                <Image
+                  src={property.images[3].url}
+                  alt={property.images[3].caption || 'Photo 4'}
+                  fill
+                  unoptimized={property.images[3].url.startsWith('data:')}
+                  className="object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
+                  sizes={property.images[4] ? '25vw' : '50vw'}
+                  loading="eager"
+                />
+                <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
+                  {property.images[3].caption || 'Photo 4'}
+                </span>
+              </div>
+            )}
 
-              {/* Frosted Glass Overlay */}
-              <div className="absolute inset-0 bg-slate-950/70 hover:bg-slate-950/60 backdrop-blur-2xs text-white font-bold flex items-center justify-center gap-3 transition-colors p-4">
-                <div className="w-10 h-10 rounded-full bg-emerald-900/80 border border-emerald-500/50 flex items-center justify-center text-emerald-300 shadow-md">
-                  <ImageIcon className="w-5 h-5" />
+            {/* Tile 5 (Col 4, Row 2) - Clean unblocked photo if 5+ photos */}
+            {property.images[4] && (
+              <div
+                onClick={() => {
+                  setActivePhotoIdx(4);
+                  setLightboxOpen(true);
+                }}
+                className="col-span-1 relative h-full rounded-xl overflow-hidden border border-slate-200 bg-slate-950 cursor-pointer group shadow-xs select-none"
+              >
+                <Image
+                  src={property.images[4].url}
+                  alt={property.images[4].caption || 'Photo 5'}
+                  fill
+                  unoptimized={property.images[4].url.startsWith('data:')}
+                  className="object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
+                  sizes="25vw"
+                  loading="eager"
+                />
+                <span className="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded truncate max-w-[85%]">
+                  {property.images[4].caption || 'Photo 5'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* 3. COMPLETE OPEN PHOTO GALLERY: ALL REMAINING PHOTOS OPEN & DOWNLOADED */}
+          {property.images.length > (property.images[4] ? 5 : 4) && (
+            <div className="pt-3 space-y-3">
+              <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                    All Property & Room Photos ({property.images.length} Photos Open)
+                  </h2>
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <span>Always Open & Downloaded</span>
+                  </span>
                 </div>
-                <div>
-                  <div className="text-sm font-bold text-white">
-                    {property.images.length > 4
-                      ? `+${property.images.length - 3} More Photos`
-                      : 'View All Photos'}
-                  </div>
-                  <div className="text-xs text-emerald-300 font-medium underline">
-                    Open verified gallery ({property.images.length} total)
-                  </div>
-                </div>
+
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Click any photo to zoom fullscreen
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {property.images.slice(property.images[4] ? 5 : 4).map((img, idx) => {
+                  const actualIdx = (property.images[4] ? 5 : 4) + idx;
+                  return (
+                    <div
+                      key={actualIdx}
+                      onClick={() => {
+                        setActivePhotoIdx(actualIdx);
+                        setLightboxOpen(true);
+                      }}
+                      className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-slate-950 cursor-pointer shadow-2xs hover:shadow-md hover:border-slate-400 transition-all duration-200 select-none"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `Property Photo ${actualIdx + 1}`}
+                        fill
+                        unoptimized={img.url.startsWith('data:')}
+                        className="object-cover group-hover:scale-104 transition-transform duration-300 ease-out"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        loading="eager"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-60 group-hover:opacity-85 transition-opacity" />
+
+                      {/* Photo Index Tag */}
+                      <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-md border border-white/10">
+                        #{actualIdx + 1}
+                      </div>
+
+                      {/* Zoom Indicator on Hover */}
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/75 p-1.5 rounded-full text-white">
+                        <Maximize2 className="w-3 h-3 text-emerald-400" />
+                      </div>
+
+                      {/* Room Caption */}
+                      <div className="absolute bottom-2 inset-x-2 bg-slate-950/80 backdrop-blur-xs text-white text-[11px] px-2 py-1 rounded truncate flex items-center gap-1.5">
+                        <span className="truncate">{img.caption || `Photo ${actualIdx + 1}`}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </div>
+          )}
         </div>
-
-        {/* Instant Gallery Pre-cache Engine: Pre-decodes all remaining photos (4 to 50) in browser memory */}
-        {property?.images && property.images.length > 4 && (
-          <div aria-hidden="true" className="hidden pointer-events-none select-none opacity-0 fixed -top-[9999px] -left-[9999px]">
-            {property.images.slice(4).map((img, idx) => (
-              <img
-                key={idx}
-                src={img.url}
-                alt=""
-                loading="eager"
-                decoding="async"
-                width={1}
-                height={1}
-              />
-            ))}
-          </div>
-        )}
 
         {/* FULLSCREEN LIGHTBOX MODAL */}
         {lightboxOpen && (
